@@ -83,6 +83,7 @@
 * 源码授权业务全流程基础价格10w+，根据版本、模块和服务价格不等。 
 * 针对企业管理咨询公司提供业务合作和上云优惠。
 * 针对小微企业提供租用SAAS，即开即用、功能完整、无终端数限制、价格超低。
+* 更多信息欢迎访问 http://www.njrsun.com
 
 <br>
 微信支持：<img src="https://gitee.com/baijigan/sunerp/raw/master/image/wx.jpg" width="256px">
