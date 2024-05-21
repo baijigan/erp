@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html>
+<head lang="en">
+    <meta charset="UTF-8">
+    <title></title>
+    <script src="https://cdn.jsdelivr.net/npm/vue/dist/vue.js"></script>
+    <script src="https://unpkg.com/axios/dist/axios.min.js"></script>
+</head>
+<body>
+<div id="app">
+    <button @click="send">发送ajax请求</button>
+</div>
+<script>
+    new Vue({
+        el:"#app",
+        methods:{
+            send(){
+                axios({
+                    method:'get',
+                    url:'list2'
+                }).then(function(res){
+                    console.log(res.data.name);
+                });
+            }
+        }
+    });
+</script>
+</body>
+</html>

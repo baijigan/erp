@@ -1,0 +1,19 @@
+######################################################################
+# Build Tools
+
+/unpackage/cache
+/unpackage/dist
+/unpackage/release
+/node_modules/*
+
+######################################################################
+# Development Tools
+
+.DS_Store
+/.idea/*
+/.vscode/*
+/.hbuilderx/*
+
+package-lock.json
+yarn.lock
+deploy.sh

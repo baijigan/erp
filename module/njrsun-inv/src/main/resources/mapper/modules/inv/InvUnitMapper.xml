@@ -1,0 +1,101 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.njrsun.modules.inv.mapper.InvUnitMapper">
+    
+    <resultMap type="InvUnit" id="InvUnitResult">
+        <result property="uniqueId"    column="unique_id"    />
+        <result property="code"    column="code"    />
+        <result property="name"    column="name"    />
+        <result property="status"    column="status"    />
+        <result property="delFlag"    column="del_flag"    />
+        <result property="createBy"    column="create_by"    />
+        <result property="createTime"    column="create_time"    />
+        <result property="updateBy"    column="update_by"    />
+        <result property="updateTime"    column="update_time"    />
+        <result property="version"    column="version"    />
+    </resultMap>
+
+    <sql id="selectInvUnitVo">
+        select unique_id, code, name, status, del_flag, create_by, create_time, update_by, update_time, version from inv_unit
+    </sql>
+
+    <select id="selectInvUnitList" parameterType="InvUnit" resultMap="InvUnitResult">
+        <include refid="selectInvUnitVo"/>
+        <where>  
+            <if test="code != null  and code != ''"> and code = #{code}</if>
+            <if test="name != null  and name != ''"> and name like concat('%', #{name}, '%')</if>
+            <if test="status != null  and status != ''"> and status = #{status}</if>
+             and del_flag = 0
+        </where>
+    </select>
+    
+    <select id="selectInvUnitById" parameterType="Long" resultMap="InvUnitResult">
+        <include refid="selectInvUnitVo"/>
+        where unique_id = #{uniqueId}
+    </select>
+    <select id="isSameName" resultType="com.njrsun.modules.inv.domain.InvUnit">
+        <include refid="selectInvUnitVo"/>
+    where name = #{name} and del_flag = 0 limit 1
+    </select>
+    <select id="isSameCode" resultType="com.njrsun.modules.inv.domain.InvUnit">
+        <include refid="selectInvUnitVo"/>
+        where code = #{code} and del_flag = 0 limit 1
+    </select>
+    <select id="selectCodeByName" resultType="java.lang.String">
+        select code  from inv_unit where name = #{unitName} and del_flag = 0
+    </select>
+
+    <insert id="insertInvUnit" parameterType="InvUnit" useGeneratedKeys="true" keyProperty="uniqueId" keyColumn="unique_id">
+        insert into inv_unit
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="code != null and code != ''">code,</if>
+            <if test="name != null and name != ''">name,</if>
+            <if test="status != null">status,</if>
+            <if test="delFlag != null">del_flag,</if>
+            <if test="createBy != null">create_by,</if>
+            <if test="createTime != null">create_time,</if>
+            <if test="updateBy != null">update_by,</if>
+            <if test="updateTime != null">update_time,</if>
+            <if test="version != null">version,</if>
+         </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="code != null and code != ''">#{code},</if>
+            <if test="name != null and name != ''">#{name},</if>
+            <if test="status != null">#{status},</if>
+            <if test="delFlag != null">#{delFlag},</if>
+            <if test="createBy != null">#{createBy},</if>
+            <if test="createTime != null">#{createTime},</if>
+            <if test="updateBy != null">#{updateBy},</if>
+            <if test="updateTime != null">#{updateTime},</if>
+         </trim>
+    </insert>
+
+    <update id="updateInvUnit" parameterType="InvUnit">
+        update inv_unit
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="code != null and code != ''">code = #{code},</if>
+            <if test="name != null and name != ''">name = #{name},</if>
+            <if test="status != null">status = #{status},</if>
+            <if test="delFlag != null">del_flag = #{delFlag},</if>
+            <if test="createBy != null">create_by = #{createBy},</if>
+            <if test="createTime != null">create_time = #{createTime},</if>
+            <if test="updateBy != null">update_by = #{updateBy},</if>
+            <if test="updateTime != null">update_time = #{updateTime},</if>
+            version = version + 1
+        </trim>
+        where unique_id = #{uniqueId} and version = #{version}
+    </update>
+
+    <update id="deleteInvUnitById" parameterType="Long">
+        update inv_unit set del_flag = 1 where unique_id = #{uniqueId}
+    </update>
+
+    <update  id="deleteInvUnitByIds" parameterType="String">
+        update  inv_unit set del_flag = 1 where unique_id in
+        <foreach item="uniqueId" collection="array" open="(" separator="," close=")">
+            #{uniqueId}
+        </foreach>
+    </update>
+</mapper>

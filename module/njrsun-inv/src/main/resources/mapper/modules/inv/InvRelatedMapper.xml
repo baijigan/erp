@@ -1,0 +1,152 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.njrsun.modules.inv.mapper.InvRelatedMapper">
+    
+    <resultMap type="InvRelatedMaster" id="InvRelatedResult">
+        <result property="uniqueId"    column="unique_id"    />
+        <result property="invSortRoot"    column="inv_sort_root"    />
+        <result property="invSortId"    column="inv_sort_id"    />
+        <result property="invCode"    column="inv_code"    />
+        <result property="invName"    column="inv_name"    />
+        <result property="invAttribute"    column="inv_attribute"    />
+        <collection property="children"    ofType="com.njrsun.modules.inv.domain.InvRelatedChild">
+        <result property="relSortRoot"    column="rel_sort_root"    />
+        <result property="relSortId"    column="rel_sort_id"    />
+        <result property="relCode"    column="rel_code"    />
+        <result property="relName"    column="rel_name"    />
+        <result property="relAttribute"    column="rel_attribute"    />
+        <result property="relParam"    column="rel_param"    />
+        </collection>
+    </resultMap>
+
+    <sql id="selectInvRelatedVo">
+        select unique_id, inv_sort_root, inv_sort_id, inv_code, inv_name, inv_attribute, rel_sort_root, rel_sort_id, rel_code, rel_name, rel_attribute, rel_param from inv_related
+    </sql>
+
+    <select id="selectInvRelatedList" parameterType="java.util.Map" resultType="com.njrsun.modules.inv.domain.InvRelated">
+        <include refid="selectInvRelatedVo"/>
+        <where>  
+            <if test="invSortRoot != null "> and inv_sort_root = #{invSortRoot}</if>
+            <if test="invSortId != null "> and inv_sort_id = #{invSortId}</if>
+            <if test="invCode != null  and invCode != ''"> and inv_code = #{invCode}</if>
+            <if test="invAttribute != null  and invAttribute != ''"> and inv_attribute = #{invAttribute}</if>
+            <if test="relSortRoot != null "> and rel_sort_root = #{relSortRoot}</if>
+            <if test="relSortId != null "> and rel_sort_id = #{relSortId}</if>
+            <if test="relCode != null  and relCode != ''"> and rel_code = #{relCode}</if>
+            <if test="relName != null  and relName != ''"> and rel_name like concat('%', #{relName}, '%')</if>
+            <if test="relAttribute != null  and relAttribute != ''"> and rel_attribute = #{relAttribute}</if>
+            <if test="relParam != null  and relParam != ''"> and rel_param = #{relParam}</if>
+        </where>
+    </select>
+    
+    <select id="selectInvRelatedById" parameterType="Long" resultMap="InvRelatedResult">
+        <include refid="selectInvRelatedVo"/>
+        where unique_id = #{uniqueId}
+    </select>
+    <select id="selectInvRelatedByCode" resultType="com.njrsun.modules.inv.domain.InvRelated">
+        <include refid="selectInvRelatedVo"/>
+        where inv_code = #{invCode}
+    </select>
+    <select id="isExistRelated" resultType="com.njrsun.modules.inv.domain.InvRelated">
+    <include refid="selectInvRelatedVo"/>
+    where inv_code = #{code} and rel_code = #{relCode} limit 1
+
+    </select>
+    <select id="selectInvRelated" resultType="com.njrsun.modules.inv.domain.InvRelatedChild">
+        select rel_sort_root,rel_sort_id,rel_code,rel_name,rel_attribute,rel_param from inv_related
+        where inv_code = #{code} and rel_name in (
+            <foreach collection="ex" item="item" separator="," open="" close="" index="index">
+                #{item}
+            </foreach>
+            )
+<!--order by field(rel_name,<foreach collection="ex" index="index" close="" open="" separator="," item="item">-->
+<!--        #{item}-->
+<!--    </foreach> )-->
+    </select>
+    <select id="selectInvCodeByNameAndParam" resultType="java.lang.String">
+        select inv_code from inv_related where rel_name = #{relName} and rel_param = #{relParam} and inv_attribute = #{invAttribute}
+    </select>
+    <select id="countCode" resultType="java.lang.Integer">
+        select count(0) from inv_related where inv_code = #{s}
+    </select>
+
+    <select id="selectInvBySortId" resultType="com.njrsun.modules.inv.domain.InvRelated">
+        select  inv_name
+        from inv_related where  inv_sort_id  in (select sort_id from inv_sort where  find_in_set(#{sortId},ancestors) or  sort_id = #{sortId}  and del_flag = 0)
+
+
+
+
+    </select>
+
+    <insert id="insertInvRelated" parameterType="InvRelated" useGeneratedKeys="true" keyProperty="uniqueId">
+    insert into inv_related (inv_sort_root,inv_sort_id,inv_code,inv_name,inv_attribute,rel_sort_root,rel_sort_id,rel_code,rel_name,rel_attribute,rel_param)
+    values
+    <foreach collection="list" index="index" close="" open="" separator="," item="item">(
+        #{item.invSortRoot},
+        #{item.invSortId},
+        #{item.invCode},
+        #{item.invName},
+        #{item.invAttribute},
+        #{item.relSortRoot},
+        #{item.relSortId},
+        #{item.relCode},
+        #{item.relName},
+        #{item.relAttribute},
+        #{item.relParam}
+     )
+</foreach>
+    </insert>
+    <insert id="insertInvRelatedOne" parameterType="InvRelated">
+        insert into inv_related (inv_sort_root,inv_sort_id,inv_code,inv_name,inv_attribute,rel_sort_root,rel_sort_id,rel_code,rel_name,rel_attribute,rel_param)
+        values( #{invSortRoot},
+                #{invSortId},
+                #{invCode},
+                #{invName},
+                #{invAttribute},
+                #{relSortRoot},
+                #{relSortId},
+                #{relCode},
+                #{relName},
+                #{relAttribute},
+                #{relParam})
+    </insert>
+
+    <update id="updateInvRelated" parameterType="InvRelated">
+        update inv_related
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="invSortRoot != null">inv_sort_root = #{invSortRoot},</if>
+            <if test="invSortId != null">inv_sort_id = #{invSortId},</if>
+            <if test="invCode != null and invCode != ''">inv_code = #{invCode},</if>
+            <if test="invName != null and invName != ''">inv_name = #{invName},</if>
+            <if test="invAttribute != null">inv_attribute = #{invAttribute},</if>
+            <if test="relSortRoot != null">rel_sort_root = #{relSortRoot},</if>
+            <if test="relSortId != null">rel_sort_id = #{relSortId},</if>
+            <if test="relCode != null and relCode != ''">rel_code = #{relCode},</if>
+            <if test="relName != null and relName != ''">rel_name = #{relName},</if>
+            <if test="relAttribute != null">rel_attribute = #{relAttribute},</if>
+            <if test="relParam != null">rel_param = #{relParam},</if>
+        </trim>
+        where inv_code = #{invCode} and rel_code = #{relCode}
+    </update>
+
+    <delete id="deleteInvRelatedById" parameterType="Long">
+        delete from inv_related where unique_id = #{uniqueId}
+    </delete>
+
+    <delete id="deleteInvRelatedByIds" parameterType="String">
+        delete from inv_related where unique_id in 
+        <foreach item="uniqueId" collection="array" open="(" separator="," close=")">
+            #{uniqueId}
+        </foreach>
+    </delete>
+    <delete id="deleteInvRelatedByCode">
+        delete  from  inv_related where inv_code = #{invCode}
+    </delete>
+    <delete id="deleteInvRelatedBySortId">
+        delete  from inv_related where inv_sort_id = #{sortId}
+    </delete>
+
+</mapper>

@@ -1,0 +1,135 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.njrsun.modules.inv.mapper.InvQuantityMapper">
+    
+    <resultMap type="InvQuantity" id="InvQuantityResult">
+        <result property="uniqueId"    column="unique_id"    />
+        <result property="code"    column="code"    />
+        <result property="name"    column="name"    />
+        <result property="attribute"    column="attribute"    />
+        <result property="unitCode"    column="unit_code"    />
+        <result property="unitName"    column="unit_name"    />
+        <result property="quantity"    column="quantity"    />
+        <result property="mp"    column="mp"    />
+        <result property="om"    column="om"    />
+        <result property="po"    column="po"    />
+        <result property="prs"    column="prs"    />
+        <result property="pu"    column="pu"    />
+        <result property="available"    column="available"    />
+        <result property="updateBy"    column="update_by"    />
+        <result property="updateTime"    column="update_time"    />
+        <result property="version"    column="version"    />
+    </resultMap>
+
+    <sql id="selectInvQuantityVo">
+        select unique_id, code, name, attribute, unit_code, unit_name, quantity, mp, om, po, prs, pu, available, update_by, update_time, version from inv_quantity
+    </sql>
+
+    <select id="selectInvQuantityList" parameterType="InvQuantity" resultMap="InvQuantityResult">
+        <include refid="selectInvQuantityVo"/>
+        <where>  
+            <if test="code != null  and code != ''"> and code = #{code}</if>
+            <if test="name != null  and name != ''"> and name like concat('%', #{name}, '%')</if>
+            <if test="attribute != null  and attribute != ''"> and attribute = #{attribute}</if>
+            <if test="unitCode != null  and unitCode != ''"> and unit_code = #{unitCode}</if>
+            <if test="unitName != null  and unitName != ''"> and unit_name like concat('%', #{unitName}, '%')</if>
+            <if test="quantity != null "> and quantity = #{quantity}</if>
+            <if test="mp != null "> and mp = #{mp}</if>
+            <if test="om != null "> and om = #{om}</if>
+            <if test="po != null "> and po = #{po}</if>
+            <if test="prs != null "> and prs = #{prs}</if>
+            <if test="pu != null "> and pu = #{pu}</if>
+            <if test="available != null "> and available = #{available}</if>
+            <if test="version != null "> and version = #{version}</if>
+        </where>
+    </select>
+    
+    <select id="selectInvQuantityById" parameterType="Long" resultMap="InvQuantityResult">
+        <include refid="selectInvQuantityVo"/>
+        where unique_id = #{uniqueId}
+    </select>
+    <select id="selectInvQuantityByName" resultType="com.njrsun.modules.inv.domain.InvQuantity">
+        <include refid="selectInvQuantityVo"/>
+        where name =#{name}
+    </select>
+    <select id="selectInvQuantityByCode" resultType="com.njrsun.modules.inv.domain.InvQuantity">
+        <include refid="selectInvQuantityVo"/>
+        where code =#{code}
+    </select>
+
+    <insert id="insertInvQuantity" parameterType="InvQuantity" useGeneratedKeys="true" keyProperty="uniqueId">
+        insert into inv_quantity
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="code != null and code != ''">code,</if>
+            <if test="name != null and name != ''">name,</if>
+            <if test="attribute != null">attribute,</if>
+            <if test="unitCode != null and unitCode != ''">unit_code,</if>
+            <if test="unitName != null and unitName != ''">unit_name,</if>
+            <if test="initial != null and initial != '' ">initial,</if>
+            <if test="quantity != null">quantity,</if>
+            <if test="mp != null">mp,</if>
+            <if test="om != null">om,</if>
+            <if test="po != null">po,</if>
+            <if test="prs != null">prs,</if>
+            <if test="pu != null">pu,</if>
+            <if test="available != null">available,</if>
+            <if test="updateBy != null">update_by,</if>
+            <if test="updateTime != null">update_time,</if>
+         </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="code != null and code != ''">#{code},</if>
+            <if test="name != null and name != ''">#{name},</if>
+            <if test="attribute != null">#{attribute},</if>
+            <if test="unitCode != null and unitCode != ''">#{unitCode},</if>
+            <if test="unitName != null and unitName != ''">#{unitName},</if>
+            <if test="initial != null and initial != '' ">#{initial},</if>
+            <if test="quantity != null">#{quantity},</if>
+            <if test="mp != null">#{mp},</if>
+            <if test="om != null">#{om},</if>
+            <if test="po != null">#{po},</if>
+            <if test="prs != null">#{prs},</if>
+            <if test="pu != null">#{pu},</if>
+            <if test="available != null">#{available},</if>
+            <if test="updateBy != null">#{updateBy},</if>
+            <if test="updateTime != null">#{updateTime},</if>
+         </trim>
+    </insert>
+
+    <update id="updateInvQuantity" parameterType="InvQuantity">
+        update inv_quantity
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="name != null and name != ''">name = #{name},</if>
+            <if test="attribute != null">attribute = #{attribute},</if>
+            <if test="unitCode != null and unitCode != ''">unit_code = #{unitCode},</if>
+            <if test="unitName != null and unitName != ''">unit_name = #{unitName},</if>
+            <if test="quantity != null">quantity = #{quantity},</if>
+            <if test="mp != null">mp = #{mp},</if>
+            <if test="om != null">om = #{om},</if>
+            <if test="po != null">po = #{po},</if>
+            <if test="prs != null">prs = #{prs},</if>
+            <if test="pu != null">pu = #{pu},</if>
+            <if test="available != null">available = #{available},</if>
+            <if test="updateBy != null">update_by = #{updateBy},</if>
+            <if test="updateTime != null">update_time = #{updateTime},</if>
+            version = version + 1
+        </trim>
+        where  code=#{code}  and version = #{version}
+    </update>
+
+    <delete id="deleteInvQuantityById" parameterType="Long">
+        delete from inv_quantity where unique_id = #{uniqueId}
+    </delete>
+    <update id="deleteInvQuantityByCode">
+        update inv_quantity set del_flag = 1, version = #{version}
+        where code = #{code} and version >= 0
+    </update>
+
+    <update id="deleteInvQuantityByIds" parameterType="String">
+        update  inv_quantity  set del_flag = 1 where unique_id in
+        <foreach item="uniqueId" collection="array" open="(" separator="," close=")">
+            #{uniqueId}
+        </foreach>
+    </update>
+</mapper>

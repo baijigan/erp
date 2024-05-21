@@ -1,0 +1,657 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.njrsun.modules.inv.mapper.InvItemsMapper">
+
+    <resultMap type="com.njrsun.modules.inv.domain.InvItems" id="InvItemsResult">
+        <result property="uniqueId" column="unique_id"/>
+        <result property="code" column="code"/>
+        <result property="sortId" column="sort_id"/>
+        <result property="sortRoot" column="sort_root"/>
+        <result property="name" column="name"/>
+        <result property="attribute" column="attribute"/>
+        <result property="unitCode" column="unit_code"/>
+        <result property="unitName" column="unit_name"/>
+        <result property="status" column="status"/>
+        <result property="delFlag" column="del_flag"/>
+        <result property="createBy" column="create_by"/>
+        <result property="createTime" column="create_time"/>
+        <result property="updateBy" column="update_by"/>
+        <result property="updateTime" column="update_time"/>
+        <result property="version" column="version"/>
+        <result property="quantity" column="quantity"/>
+        <result property="property" column="property"/>
+        <result property="enableDebt" column="enable_debt"/>
+        <result property="supplyType" column="supply_type"/>
+        <result property="lockQuantity" column="lock_quantity"/>
+        <result property="wayQuantity" column="way_quantity"/>
+        <result property="drawingNo" column="drawing_no"/>
+    </resultMap>
+    <resultMap type="com.njrsun.modules.inv.domain.InvItems" id="InvItemsResult2">
+        <result property="uniqueId" column="unique_id"/>
+        <result property="code" column="code"/>
+        <result property="sortId" column="sort_id"/>
+        <result property="sortRoot" column="sort_root"/>
+        <result property="name" column="name"/>
+        <result property="attribute" column="attribute"/>
+        <result property="unitCode" column="unit_code"/>
+        <result property="unitName" column="unit_name"/>
+
+        <result property="status" column="status"/>
+        <result property="delFlag" column="del_flag"/>
+        <result property="createBy" column="create_by"/>
+        <result property="createTime" column="create_time"/>
+        <result property="updateBy" column="update_by"/>
+        <result property="updateTime" column="update_time"/>
+        <result property="version" column="version"/>
+        <result property="supplyType" column="supply_type"/>
+        <result property="quantity" column="quantity"/>
+        <result property="lockQuantity" column="lock_quantity"/>
+        <result property="wayQuantity" column="way_quantity"/>
+    </resultMap>
+
+    <sql id="selectInvItemsVo">
+        select unique_id
+             , sort_id
+             , code
+             , supply_type
+             , name
+             , attribute
+             , unit_code
+             , unit_name
+             , sort_root
+             , enable_debt
+             , quantity
+             , status
+             , del_flag
+             , create_by
+             , create_time
+             , update_by
+             , update_time
+             , version
+             , property
+             , lock_quantity
+             , way_quantity
+             , drawing_no
+             , upper_limit
+             , lower_limit
+        from inv_items
+    </sql>
+
+
+    <update id="delOutSalve">
+        update inv_items
+        set quantity = quantity - #{quantity}
+        where code = #{invCode}
+          and del_flag = 0
+    </update>
+    <delete id="deleteInvItemsBySortId">
+        delete
+        from inv_items
+        where sort_id in (select sort_id from inv_sort where find_in_set(#{sortId}, ancestors))
+           or sort_id = #{sortId}
+    </delete>
+
+
+    <select id="selectInvItemsList" resultMap="InvItemsResult">
+        <include refid="selectInvItemsVo"/>
+        <where>
+
+            <if test="invItems.code != null  and invItems.code != ''">and code like concat('%' ,#{invItems.code} ,'%')
+            </if>
+            <if test="invItems.name != null  and invItems.name != ''">and name like concat('%',#{invItems.name},'%')
+            </if>
+            <if test="invItems.sortId != null  and invItems.sortId != ''">and (sort_id in (
+                select sort_id from inv_sort where find_in_set(#{invItems.sortId},ancestors) and del_flag = 0
+                ) or sort_id = #{invItems.sortId})
+            </if>
+            <if test="sortCodes !=null and sortCodes.size() != 0">and sort_root in
+                <foreach collection="sortCodes" open="(" close=")" separator="," item="item" index="index">
+                    #{item}
+                </foreach>
+            </if>
+            and del_flag = 0
+        </where>
+
+        <choose>
+            <when test="invItems.sortRoots!=null and invItems.sortRoots!=''">
+                order by unique_id asc
+            </when>
+            <otherwise>
+                order by unique_id DESC
+            </otherwise>
+        </choose>
+    </select>
+
+    <select id="selectInvItemsById" parameterType="Long" resultMap="InvItemsResult">
+        <include refid="selectInvItemsVo"/>
+        where unique_id = #{uniqueId} and del_flag = 0
+    </select>
+
+    <select id="selectInvItemsByName" resultType="com.njrsun.modules.inv.domain.InvItems">
+        <include refid="selectInvItemsVo"/>
+        where name = #{name} and attribute = #{attribute} and sort_id = #{sortId} and del_flag = 0 limit 1
+    </select>
+    <select id="selectInvItemBySortId" resultType="com.njrsun.modules.inv.domain.InvItems">
+        <include refid="selectInvItemsVo"/>
+        where sort_id = #{sortId} and del_flag = 0 limit 1
+    </select>
+    <select id="selectInvItemsByNameAndAttribute" resultType="com.njrsun.modules.inv.domain.InvItems">
+        <include refid="selectInvItemsVo"/>
+        where name = #{name} and attribute=#{attribute} and version <![CDATA[ < ]]> 0 order by version ASC limit 1
+    </select>
+    <select id="selectInvItemsListLeft" resultType="com.njrsun.modules.inv.domain.InvItems">
+        <include refid="selectInvItemsVo"/>
+        <where>
+            <if test="invItems.sortRoot != null and invItems.sortRoot.size() != 0">
+                sort_root in
+                <foreach collection="array" open="(" close=")" index="index" item="item" separator=",">
+                    #{item}
+                </foreach>
+            </if>
+            <if test="invItems.code != null  and invItems.code != ''">and code like concat(#{invItems.code},'%')</if>
+            <if test="invItems.name != null  and invItems.name != ''">and name like concat('%',#{invItems.name},'%')
+            </if>
+            <if test="invItems.sortId != null  and invItems.sortId != ''">and (sort_id in (
+                select sort_id from inv_sort where find_in_set(#{invItems.sortId},ancestors) and del_flag = 0
+                ) or sort_id = #{invItems.sortId})
+            </if>
+            <if test="sortCodes !=null and sortCodes.size() != 0">and sort_root in
+                <foreach collection="sortCodes" open="(" close=")" separator="," item="item" index="index">
+                    #{item}
+                </foreach>
+            </if>
+            and del_flag = 0
+        </where>
+        order by unique_id DESC
+    </select>
+    <select id="selectInvItemByCode" resultType="com.njrsun.modules.inv.domain.InvItems">
+        <include refid="selectInvItemsVo"/>
+        where code = #{code} and sort_id = #{sortId} and del_flag = 0 limit 1
+    </select>
+    <select id="selectInvItemListBySortId" resultType="com.njrsun.modules.inv.domain.InvItems">
+        <include refid="selectInvItemsVo"/>
+        where sort_root =#{sortId} and del_flag = 0
+    </select>
+    <select id="selectInvItemsBySortIdNameAttribute" resultType="com.njrsun.modules.inv.domain.InvItems">
+        <include refid="selectInvItemsVo"/>
+        where sort_id =#{sortId} and name = #{name} and attribute = #{attribute} and version <![CDATA[ < ]]> 0 order by
+        version ASC limit 1
+    </select>
+    <select id="selectInvItemByCodes" resultType="com.njrsun.modules.inv.domain.InvItems">
+        <include refid="selectInvItemsVo"/>
+        where code = #{invCode} and del_flag = 0
+    </select>
+    <select id="selectInvItemByAbsName" resultType="com.njrsun.modules.inv.domain.InvItems">
+        <include refid="selectInvItemsVo"/>
+        where name = #{itemName} and del_flag = 0 limit 1
+    </select>
+    <select id="selectInvItemsAndRelated" resultType="com.njrsun.modules.inv.domain.InvItems"
+            parameterType="java.util.Map">
+        select ii.unique_id,ii.sort_id,ii.code, ii.name, ii.attribute, ii.unit_code,
+        ii.unit_name,ii.sort_root,ii.enable_debt,
+        ii.supply_type,ii.quantity, ii.status,ii.way_quantity,ii.lock_quantity, ii.del_flag, ii.create_by,
+        ii.create_time, ii.update_by, ii.update_time, ii.version,ii.property,(ii.quantity-ii.lock_quantity +
+        ii.way_quantity) as 'availableQuantity '
+        from inv_items ii
+        left join inv_sort si on si.sort_id = ii.sort_root
+        <where>
+            <if test="sortRoot != null and sortRoot.size() != 0">
+                sort_root in
+                <foreach collection="array" open="(" close=")" index="index" item="item" separator=",">
+                    #{item}
+                </foreach>
+            </if>
+            <if test="sortId != null and sortId !='' ">and ii.sort_id = #{sortId}</if>
+            <if test="sortId != null  and sortId != ''">and ii.sort_id in (
+                select sort_id from inv_sort where find_in_set(#{sortId},ancestors) and del_flag = 0
+                ) or ii.sort_id = #{sortId}
+            </if>
+            <if test="code != null and code !='' ">and ii.code like concat(#{code},'%')</if>
+            <if test="name != null  and name != ''">and name like concat('%',#{name},'%')</if>
+            and ii.del_flag = 0
+        </where>
+        order by unique_id DESC
+    </select>
+    <select id="selectInvItemsExport" resultType="com.njrsun.modules.inv.domain.InvItems"
+            parameterType="com.njrsun.modules.inv.domain.InvItems">
+        <include refid="selectInvItemsVo"/>
+        <where>
+            <if test="sortRoot != null and sortRoot != ''">
+                sort_root in
+                <foreach collection="sortRoots" open="(" close=")" index="index" item="item" separator=",">
+                    #{item}
+                </foreach>
+            </if>
+            <if test="code != null  and code != ''">and code like concat(#{code},'%')</if>
+            <if test="name != null  and name != ''">and name like concat(#{name},'%')</if>
+            <if test="sortId != null  and sortId != ''">and (inv_items.sort_id in (
+                select sort_id from inv_sort where find_in_set(#{sortId},ancestors) and del_flag = 0
+                ) or sort_id = #{sortId})
+            </if>
+            and inv_items.del_flag = 0
+        </where>
+        order by code asc
+    </select>
+    <select id="selectItemsByName" resultType="com.njrsun.modules.inv.domain.InvItems">
+
+        select ii.unique_id,
+               ii.sort_id,
+               ii.code,
+               ii.name,
+               ii.attribute,
+               ii.unit_code,
+               ii.unit_name,
+               ii.sort_root,
+               ii.drawing_no,
+               ii.supply_type,
+               ii.quantity,
+               ii.status,
+               ii.way_quantity,
+               ii.lock_quantity,
+               ii.del_flag,
+               ii.create_by,
+               ii.create_time,
+               ii.update_by,
+               ii.update_time,
+               ii.version,
+               ii.property
+        from inv_items ii
+                 left join inv_sort ise on ise.sort_id = ii.sort_root
+        where ii.name like concat('%', #{name}, '%')
+          and ii.del_flag = 0
+
+
+    </select>
+    <select id="selectInvItemsByCode" resultType="com.njrsun.modules.inv.domain.InvItems">
+        <include refid="selectInvItemsVo"/>
+        where code = #{code} and del_flag = 0
+    </select>
+    <select id="selectVersionByCode" resultType="java.lang.Long">
+        select version
+        from inv_items
+        where code = #{code}
+    </select>
+    <select id="selectSortRootByCode" resultType="java.lang.String">
+        select sort_root
+        from inv_items
+        where code = #{invCode}
+    </select>
+    <select id="selectInvItemsBySortId" resultType="com.njrsun.modules.inv.domain.InvItems">
+        <include refid="selectInvItemsVo"/>
+        where sort_id = #{sortId} and del_flag = 0
+    </select>
+    <select id="selectInvItemByContainsSortId" resultType="com.njrsun.modules.inv.domain.InvItems">
+        select ii.unique_id,ii.sort_id,ii.code, ii.name,ii.way_quantity,ii.lock_quantity, ii.attribute, ii.unit_code,
+        ii.unit_name,ii.sort_root,quantity-ii.way_quantity-ii.lock_quantity as 'availableQuantity'
+        ,ii.supply_type,ii.quantity, ii.status, ii.del_flag, ii.create_by, ii.create_time, ii.update_by, ii.update_time,
+        ii.version,ii.property
+        from inv_items ii
+        left join inv_sort ise on ise.sort_id = ii.sort_id
+        <where>
+            <if test="sortId !=null and sortId != ''">and (locate(#{sortId},ise.ancestors) or ii.sort_id = #{sortId})
+            </if>
+            <if test="invName != null and invName!= ''">and ii.name like concat('%',#{invName},'%')</if>
+            <if test="invCode != null and invCode!= ''">and ii.code like concat('%',#{invCode},'%')</if>
+            and ii.del_flag = 0
+        </where>
+        order by ii.code
+    </select>
+    <select id="selectBatchBySortId" resultType="com.njrsun.modules.inv.domain.InvItems"
+            parameterType="java.util.Map">
+        select ii.unique_id,ii.sort_id,ii.code,ii.supply_type,ii.way_quantity,ii.lock_quantity, ii.name, ii.attribute,
+        ii.unit_code, ii.unit_name,ii.sort_root,ii.enable_debt
+        ,ii.quantity, ii.status, ii.del_flag, ii.create_by, ii.create_time, ii.update_by, ii.update_time,
+        ii.version,ii.property
+        from inv_items ii
+        left join inv_sort ise on ise.sort_id = ii.sort_id
+        <where>
+            <if test="sortId !=null and sortId != ''">and (locate(#{sortId},ise.ancestors) or ii.sort_id = #{sortId})
+            </if>
+            <if test="invName != null and invName!= ''">and ii.name like concat('%',#{invName},'%')</if>
+            <if test="invCode != null and invCode!= ''">and ii.code like concat('%',#{invCode},'%')</if>
+            <if test="enableDebt != null and enableDebt != ''">and ii.enable_debt = #{enableDebt}</if>
+            and ii.del_flag = 0
+        </where>
+    </select>
+    <select id="selectInvItemsDetailByCode" resultType="java.util.HashMap">
+        select ii.unique_id,
+               ii.sort_id,
+               ii.code,
+               ii.supply_type,
+               ii.way_quantity,
+               ii.lock_quantity,
+               ii.name,
+               ii.attribute,
+               ii.unit_code,
+               ii.unit_name,
+               ii.sort_root,
+               ii.quantity,
+               ii.status,
+               ii.del_flag,
+               ii.create_by,
+               ii.create_time,
+               ii.update_by,
+               ii.update_time,
+               ii.version,
+               ii.property
+        from inv_items ii
+                 left join inv_sort ise on ise.sort_id = ii.sort_id
+        where ii.code = #{invCode}
+          and ii.del_flag = 0
+    </select>
+    <select id="selectBatchInvByCode" resultType="com.njrsun.modules.inv.domain.InvItems">
+        <include refid="selectInvItemsVo"/>
+        where del_flag = 0
+        <if test="list != null">and
+            <foreach collection="list" separator="or" open="(" close=")" index="index" item="item">
+                code = #{item}
+            </foreach>
+        </if>
+        for update
+    </select>
+    <select id="selectInvDto" resultType="com.njrsun.common.dto.InvItemDTO">
+        select unique_id,
+               sort_root,
+               sort_id,
+               supply_type,
+               code,
+               name,
+               lock_quantity,
+               way_quantity,
+               attribute,
+               property,
+               unit_code,
+               unit_name,
+               enable_debt,
+
+               quantity,
+               lower_limit,
+               upper_limit,
+               status
+        from inv_items
+        where name = #{name}
+          and del_flag = 0
+    </select>
+    <select id="selectInvDtoByCode" resultType="com.njrsun.common.dto.InvItemDTO">
+        select unique_id,
+               sort_root,
+               sort_id,
+               supply_type,
+               code,
+               name,
+               lock_quantity,
+               way_quantity,
+               attribute,
+               property,
+               unit_code,
+               unit_name,
+
+               enable_debt,
+
+               quantity,
+               lower_limit,
+               upper_limit,
+               status
+        from inv_items
+        where code = #{code}
+          and del_flag = 0
+    </select>
+    <select id="selectInvFromRd" resultType="com.njrsun.common.dto.InvItemDTO">
+        select unique_id,
+               sort_root,
+               sort_id,
+               supply_type,
+               code,
+               name,
+               lock_quantity,
+               way_quantity,
+               attribute,
+               property,
+               unit_code,
+               unit_name,
+
+               enable_debt,
+
+               quantity,
+               lower_limit,
+               upper_limit,
+               status
+        from inv_items
+        where name = #{name}
+          and del_flag = 0
+          and (sort_root = '104' or sort_root = '103')
+    </select>
+    <select id="selectInvIsExist" resultType="com.njrsun.common.dto.InvItemDTO">
+
+    </select>
+    <select id="selectInvByName" resultType="com.njrsun.modules.inv.domain.InvItems">
+        select unique_id,
+               sort_root,
+               sort_id,
+               code,
+               name,
+               attribute,
+               property,
+               unit_code,
+               unit_name,
+
+               enable_debt,
+
+               quantity,
+               lower_limit,
+               upper_limit,
+               status
+        from inv_items
+        where code like concat('02', '%')
+          and name = #{name}
+        limit 1
+    </select>
+    <select id="selectInvBySortId" resultType="com.njrsun.modules.inv.domain.InvItems">
+        select unique_id,
+               sort_root,
+               sort_id,
+               code,
+               name,
+               attribute,
+               property,
+               unit_code,
+               unit_name,
+              lock_quantity,
+               enable_debt,
+
+               quantity,
+               lower_limit,
+               upper_limit,
+               status
+        from inv_items
+        where sort_id in (select inv_sort.sort_id
+                          from inv_sort
+                          where (inv_sort.sort_id = #{sortId} or find_in_set(#{sortId}, ancestors))
+                            and del_flag = 0)
+          and del_flag = 0
+
+
+    </select>
+    <select id="selectInvPesticideBySortId" resultType="com.njrsun.modules.inv.domain.InvItems">
+        select unique_id,
+               sort_root,
+               sort_id,
+               code,
+               name,
+               attribute,
+               property,
+               unit_code,
+               unit_name,
+
+               enable_debt,
+
+               quantity,
+               lower_limit,
+               upper_limit,
+               status
+        from inv_items
+        where sort_id in (
+            select inv_sort.sort_id
+            from inv_sort
+            where (inv_sort.sort_id = #{sortId} or find_in_set(#{sortId}, ancestors))
+              and del_flag = 0
+        )
+          and del_flag = 0
+    </select>
+    <select id="selectInvExport" resultType="com.njrsun.modules.inv.domain.InvItem">
+        <include refid="selectInvItemsVo"/>
+        <where>
+            <if test="code != null  and code != ''">and code like concat(#{code},'%')</if>
+            <if test="name != null  and name != ''">and name like concat(#{name},'%')</if>
+            <if test="sortId != null  and sortId != ''">and sort_id in (
+                select sort_id from inv_sort where find_in_set(#{sortId},ancestors) and del_flag = 0
+                ) or sort_id = #{sortId}
+            </if>
+            <if test="sortRoot != null and sortRoot != ''">
+                and sort_root in
+                <foreach collection="sortRoots" open="(" close=")" index="index" item="item" separator=",">
+                    #{item}
+                </foreach>
+            </if>
+            and del_flag = 0
+        </where>
+    </select>
+    <select id="selectInvSort" resultType="com.njrsun.modules.inv.domain.InvSort">
+        select distinct inv_sort.sort_id, sort_name
+        from inv_sort
+                 left join inv_items ii on inv_sort.sort_id = ii.sort_id and ii.del_flag = 0
+        where ii.supply_type in ('1', '2', '3')
+          and inv_sort.del_flag = 0
+        order by inv_sort.sort_id
+    </select>
+    <select id="selectInvByCodeForUpdate" resultType="com.njrsun.modules.inv.domain.InvItems">
+        select unique_id,
+               sort_root,
+               sort_id,
+               code,
+               name,
+               attribute,
+               property,
+               unit_code,
+               unit_name,
+               enable_debt,
+               quantity,
+               lower_limit,
+               upper_limit,
+               status,
+               del_flag,
+               create_by,
+               create_time,
+               update_by,
+               update_time,
+               version,
+               supply_type,
+               lock_quantity,
+               way_quantity,
+               drawing_no
+        from inv_items
+        where code = #{invCode}
+          and del_flag = 0
+        limit 1
+        for
+        update
+    </select>
+
+
+    <insert id="insertInvItems" parameterType="InvItems" useGeneratedKeys="true" keyProperty="uniqueId"
+            keyColumn="unique_id">
+        insert into inv_items
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="code != null and code != ''">code,</if>
+            <if test="name != null and name != ''">name,</if>
+            <if test="sortId !=null and sortId != ''">sort_id,</if>
+            <if test="sortRoot != null and sortRoot != ''">sort_root,</if>
+            <if test="attribute != null">attribute,</if>
+            <if test="unitCode != null">unit_code,</if>
+            <if test="unitName != null">unit_name,</if>
+
+            <if test="enableDebt != null and enableDebt != ''">enable_debt,</if>
+
+            <if test="status != null">status,</if>
+            <if test="createBy != null">create_by,</if>
+            <if test="property != null">property,</if>
+            <if test="supplyType != null">supply_type,</if>
+            <if test="drawingNo != null">drawing_no,</if>
+            create_time,
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="code != null and code != ''">#{code},</if>
+            <if test="name != null and name != ''">#{name},</if>
+            <if test="sortId != null and sortId != ''">#{sortId},</if>
+            <if test="sortRoot != null and sortRoot != ''">#{sortRoot},</if>
+            <if test="attribute != null">#{attribute},</if>
+            <if test="unitCode != null">#{unitCode},</if>
+            <if test="unitName != null">#{unitName},</if>
+
+            <if test="enableDebt != null and enableDebt != ''">#{enableDebt},</if>
+
+            <if test="status != null">#{status},</if>
+            <if test="createBy != null">#{createBy},</if>
+            <if test="property != null">#{property},</if>
+            <if test="supplyType != null">#{supplyType},</if>
+            <if test="drawingNo != null">#{drawingNo},</if>
+            sysDate(),
+        </trim>
+    </insert>
+
+    <update id="addInvQuantity">
+        update inv_items
+        set quantity = quantity + #{quantity}
+        where code = #{invCode}
+          and del_flag = 0
+    </update>
+    <update id="addLockQuantity">
+        update inv_items
+        set lock_quantity = lock_quantity + #{quantity}
+        where code = #{invCode}
+          and del_flag = 0
+    </update>
+
+    <update id="updateInvItems" parameterType="InvItems">
+        update inv_items
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="name != null and name != ''">name = #{name},</if>
+            <if test="attribute != null">attribute = #{attribute},</if>
+            <if test="unitCode != null and unitCode != ''">unit_code = #{unitCode},</if>
+            <if test="unitName != null and unitName != ''">unit_name = #{unitName},</if>
+            <if test="status != null">status = #{status},</if>
+            <if test="updateBy != null">update_by = #{updateBy},</if>
+            <if test="property != null">property = #{property},</if>
+            <if test="enableDebt != null">enable_debt = #{enableDebt},</if>
+
+            <if test="supplyType != null">supply_type = #{supplyType},</if>
+            <if test="drawingNo != null">drawing_no = #{drawingNo},</if>
+            update_time = sysDate(),
+            version = version + 1
+        </trim>
+        where unique_id = #{uniqueId} and version = #{version}
+    </update>
+
+    <update id="deleteInvItemsByCode">
+        update inv_items
+        set del_flag = 1
+        where code = #{code}
+          and del_flag = 0
+    </update>
+
+    <update id="deleteInvItemsByIds" parameterType="String">
+        update inv_items set del_flag = 1 where unique_id in
+        <foreach item="uniqueId" collection="array" open="(" separator="," close=")">
+            #{uniqueId}
+        </foreach>
+    </update>
+    <update id="reduceQuantity">
+        update inv_items
+        set quantity      = quantity - #{quantity},
+            lock_quantity = lock_quantity - #{quantity}
+        where code = #{invCode}
+          and del_flag = 0
+    </update>
+</mapper>

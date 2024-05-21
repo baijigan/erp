@@ -1,0 +1,426 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.njrsun.modules.rd.mapper.RdTwinMasterMapper">
+
+    <resultMap type="RdTwinMaster" id="RdTwinMasterResult">
+        <result property="uniqueId"    column="unique_id_"/>
+        <result property="rdCode"    column="rd_code_"/>
+        <result property="invoiceDate"    column="invoice_date"/>
+        <result property="invoiceStatus"    column="invoice_status"/>
+        <result property="invoiceType"    column="invoice_type"/>
+        <result property="workStatus"    column="work_status"/>
+        <result property="workType"    column="work_type"/>
+        <result property="workDept"    column="work_dept"/>
+        <result property="workStaff"    column="work_staff"/>
+        <result property="formConfig"    column="form_config"/>
+        <result property="checkDate"    column="check_date"/>
+        <result property="userOper"    column="user_oper"/>
+        <result property="userCheck"    column="user_check"/>
+        <result property="title"    column="title"/>
+        <result property="remarks"    column="remarks_"/>
+        <result property="delFlag"    column="del_flag_"/>
+        <result property="createDate"    column="create_date"/>
+        <result property="createBy"    column="create_by_"/>
+        <result property="updateDate"    column="update_date"/>
+        <result property="updateBy"    column="update_by_"/>
+        <result property="version"    column="version"/>
+    </resultMap>
+
+    <sql id="selectRdTwinMasterVo">
+        select unique_id as unique_id_, rd_code as rd_code_, invoice_date, invoice_status, invoice_type, work_status, work_type, work_dept, work_staff, form_config, check_date, user_oper, user_check, title, remarks as remarks_, del_flag as del_flag_, create_date, create_by as create_by_, update_date, update_by as update_by_, version from rd_twin_master
+    </sql>
+
+    <resultMap type="RdTwinSalve" id="RdTwinSalveResult">
+        <result property="uniqueId"    column="unique_id"/>
+        <result property="rdCode"    column="rd_code"/>
+        <result property="invSortRoot"    column="inv_sort_root"/>
+        <result property="invSortId"    column="inv_sort_id"/>
+        <result property="invCode"    column="inv_code"/>
+        <result property="invName"    column="inv_name"/>
+        <result property="invAttribute"    column="inv_attribute"/>
+        <result property="unitCode"    column="unit_code"/>
+        <result property="unitName"    column="unit_name"/>
+        <result property="colour"    column="colour"/>
+        <result property="priority"    column="priority"/>
+        <result property="remarks"    column="remarks"/>
+        <result property="createTime"    column="create_time"/>
+        <result property="createBy"    column="create_by"/>
+        <result property="updateTime"    column="update_time"/>
+        <result property="updateBy"    column="update_by"/>
+        <result property="delFlag"    column="del_flag"/>
+    </resultMap>
+
+    <resultMap id="RdTwinMasterRdTwinSalveResult" type="RdTwinMaster" extends="RdTwinMasterResult">
+        <collection property="rdTwinSalveList" notNullColumn="unique_id" javaType="java.util.List" resultMap="RdTwinSalveResult" />
+    </resultMap>
+
+    <sql id="selectRdTwinSalveVo">
+        select unique_id, rd_code, inv_sort_root, inv_sort_id, inv_code, inv_name, inv_attribute, unit_code, unit_name, colour, priority, remarks, create_time, create_by, update_time, update_by, del_flag from rd_twin_salve
+    </sql>
+
+    <select id="selectRdTwinMasterList" parameterType="RdTwinMaster" resultMap="RdTwinMasterResult">
+        <include refid="selectRdTwinMasterVo"/>
+        <where>
+            <if test="rdCode != null  and rdCode != ''"> and rd_code = #{rdCode}</if>
+            <if test="invoiceDate != null "> and invoice_date = #{invoiceDate}</if>
+            <if test="invoiceStatus != null  and invoiceStatus != ''"> and invoice_status = #{invoiceStatus}</if>
+            <if test="invoiceType != null  and invoiceType != ''"> and invoice_type = #{invoiceType}</if>
+            <if test="workStatus != null  and workStatus != ''"> and work_status = #{workStatus}</if>
+            <if test="workType != null  and workType != ''"> and work_type = #{workType}</if>
+            <if test="workDept != null  and workDept != ''"> and work_dept = #{workDept}</if>
+            <if test="workStaff != null  and workStaff != ''"> and work_staff = #{workStaff}</if>
+            <if test="formConfig != null  and formConfig != ''"> and form_config = #{formConfig}</if>
+            <if test="checkDate != null "> and check_date = #{checkDate}</if>
+            <if test="userOper != null  and userOper != ''"> and user_oper = #{userOper}</if>
+            <if test="userCheck != null  and userCheck != ''"> and user_check = #{userCheck}</if>
+            <if test="title != null  and title != ''"> and title = #{title}</if>
+            <if test="remarks != null  and remarks != ''"> and remarks = #{remarks}</if>
+            <if test="createDate != null "> and create_date = #{createDate}</if>
+            <if test="updateDate != null "> and update_date = #{updateDate}</if>
+            <if test="version != null "> and version = #{version}</if>
+            <if test="startDate != null and startDate !=''">and invoice_date >= #{startDate}</if>
+            <if test="endDate != null and endDate !=''">and #{endDate} >= invoice_date</if>
+            <include refid="com.njrsun.modules.rd.mapper.commonMapper.baseDataScope"/>
+            and del_flag = 0
+        </where>
+        order by unique_id desc
+    </select>
+
+    <select id="selectRdTwinMasterBySelf" parameterType="RdTwinMaster" resultMap="RdTwinMasterRdTwinSalveResult">
+        select  a.unique_id as unique_id_  , a.rd_code as rd_code_  ,  a.invoice_date ,  a.invoice_status ,  a.invoice_type ,  a.work_status ,  a.work_type ,  a.work_dept ,  a.work_staff ,  a.form_config ,  a.check_date ,  a.user_oper ,  a.user_check ,  a.title , a.remarks as remarks_  , a.del_flag as del_flag_  ,  a.create_date , a.create_by as create_by_  ,  a.update_date , a.update_by as update_by_  ,  a.version 
+            , b.unique_id, b.rd_code, b.inv_sort_root, b.inv_sort_id, b.inv_code, b.inv_name, b.inv_attribute, b.unit_code, b.unit_name, b.colour, b.priority, b.remarks, b.create_time, b.create_by, b.update_time, b.update_by, b.del_flag        from rd_twin_master a left join rd_twin_salve b on b.rd_code = a.rd_code and b.del_flag = 0
+        where a.rd_code = #{rdCode}
+    </select>
+
+    <select id="selectRdTwinMasterByCode" parameterType="String" resultMap="RdTwinMasterRdTwinSalveResult">
+        select  a.unique_id as unique_id_  , a.rd_code as rd_code_  ,  a.invoice_date ,  a.invoice_status ,  a.invoice_type ,  a.work_status ,  a.work_type ,  a.work_dept ,  a.work_staff ,  a.form_config ,  a.check_date ,  a.user_oper ,  a.user_check ,  a.title , a.remarks as remarks_  , a.del_flag as del_flag_  ,  a.create_date , a.create_by as create_by_  ,  a.update_date , a.update_by as update_by_  ,  a.version 
+            , b.unique_id, b.rd_code, b.inv_sort_root, b.inv_sort_id, b.inv_code, b.inv_name, b.inv_attribute, b.unit_code, b.unit_name, b.colour, b.priority, b.remarks, b.create_time, b.create_by, b.update_time, b.update_by, b.del_flag        from rd_twin_master a left join rd_twin_salve b on b.rd_code = a.rd_code and b.del_flag = 0
+        where a.rd_code = #{rdCode}
+    </select>
+
+    <select id="selectRdTwinMasterById" parameterType="Long" resultMap="RdTwinMasterRdTwinSalveResult">
+        select  a.unique_id as unique_id_  , a.rd_code as rd_code_  ,  a.invoice_date ,  a.invoice_status ,  a.invoice_type ,  a.work_status ,  a.work_type ,  a.work_dept ,  a.work_staff ,  a.form_config ,  a.check_date ,  a.user_oper ,  a.user_check ,  a.title , a.remarks as remarks_  , a.del_flag as del_flag_  ,  a.create_date , a.create_by as create_by_  ,  a.update_date , a.update_by as update_by_  ,  a.version 
+            , b.unique_id, b.rd_code, b.inv_sort_root, b.inv_sort_id, b.inv_code, b.inv_name, b.inv_attribute, b.unit_code, b.unit_name, b.colour, b.priority, b.remarks, b.create_time, b.create_by, b.update_time, b.update_by, b.del_flag        from rd_twin_master a left join rd_twin_salve b on b.rd_code = a.rd_code and b.del_flag = 0
+        where a.unique_id = #{id}
+    </select>
+
+    <select id="selectRdTwinMasterDetail" parameterType="RdTwinMaster" resultType="java.util.Map">
+        select b.unique_id, a.Rd_code, a.form_config, a.title, inv_sort_root,inv_sort_id, b.inv_code, b.inv_name, b.inv_attribute, b.unit_name, b.unit_code, 0 as quantity, 0 as price, 0 as amount,
+        invoice_date, invoice_status, work_status, invoice_type as invoice_type_id, work_type as work_type_id, work_dept, work_staff
+        from rd_twin_salve b
+        left join rd_twin_master a on b.rd_code = a.rd_code
+        <where>
+            <if test="rdCode != null and rdCode !=''">and a.rd_code = #{rdCode}</if>
+            <if test="ppNumber != null and ppNumber !=''">and a.pp_number = #{ppNumber}</if>
+            <if test="startDate != null and startDate !=''">and invoice_date >= #{startDate}</if>
+            <if test="endDate != null and endDate !=''">and #{endDate} >= invoice_date</if>
+            <if test="workStaff != null and workStaff !=''">and work_staff = #{workStaff}</if>
+            <if test="invoiceStatus != null and invoiceStatus !=''">and invoice_status = #{invoiceStatus}</if>
+            <if test="invCode != null and invCode !=''">and b.inv_code = #{invCode}</if>
+            <if test="invName != null and invName !=''">and b.inv_name like concat('%',#{invName},'%')</if>
+            <if test="workType != null and workType !=''">and work_type = #{workType}</if>
+            and b.del_flag = 0
+            <include refid="com.njrsun.modules.rd.mapper.commonMapper.baseDataScope"/>
+        </where>
+        order by a.unique_id desc
+    </select>
+
+    <insert id="insertRdTwinMaster" parameterType="RdTwinMaster" useGeneratedKeys="true" keyProperty="uniqueId">
+        insert into rd_twin_master
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="rdCode != null and rdCode != ''">rd_code,</if>
+            <if test="invoiceDate != null">invoice_date,</if>
+            <if test="invoiceType != null">invoice_type,</if>
+            <if test="workStatus != null">work_status,</if>
+            <if test="workType != null">work_type,</if>
+            <if test="workDept != null">work_dept,</if>
+            <if test="workStaff != null">work_staff,</if>
+            <if test="formConfig != null">form_config,</if>
+            <if test="checkDate != null">check_date,</if>
+            <if test="userOper != null">user_oper,</if>
+            <if test="userCheck != null">user_check,</if>
+            <if test="title != null">title,</if>
+            <if test="remarks != null">remarks,</if>
+            <if test="createBy != null">create_by,</if>
+            <if test="updateDate != null">update_date,</if>
+            <if test="updateBy != null">update_by,</if>
+            invoice_status, version, create_date, del_flag
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="rdCode != null and rdCode != ''">#{rdCode},</if>
+            <if test="invoiceDate != null">#{invoiceDate},</if>
+            <if test="invoiceType != null">#{invoiceType},</if>
+            <if test="workStatus != null">#{workStatus},</if>
+            <if test="workType != null">#{workType},</if>
+            <if test="workDept != null">#{workDept},</if>
+            <if test="workStaff != null">#{workStaff},</if>
+            <if test="formConfig != null">#{formConfig},</if>
+            <if test="checkDate != null">#{checkDate},</if>
+            <if test="userOper != null">#{userOper},</if>
+            <if test="userCheck != null">#{userCheck},</if>
+            <if test="title != null">#{title},</if>
+            <if test="remarks != null">#{remarks},</if>
+            <if test="createBy != null">#{createBy},</if>
+            <if test="updateDate != null">#{updateDate},</if>
+            <if test="updateBy != null">#{updateBy},</if>
+            0, 0, SysDate(), 0
+        </trim>
+    </insert>
+
+    <insert id="insertRdTwinSalve" useGeneratedKeys="true" keyProperty="uniqueId">
+        insert into rd_twin_salve(
+            rd_code,inv_sort_root,inv_sort_id,inv_code,inv_name,inv_attribute,unit_code,unit_name,colour,priority,remarks,create_by,update_time,update_by, create_time, del_flag
+        )
+        values
+        <foreach item="item" index="index" collection="list" separator=",">
+            (
+            #{item.rdCode},#{item.invSortRoot},#{item.invSortId},#{item.invCode},#{item.invName},#{item.invAttribute},#{item.unitCode},#{item.unitName},#{item.colour},#{item.priority},#{item.remarks},#{item.createBy},#{item.updateTime},#{item.updateBy}, SysDate(), 0
+        )
+        </foreach>
+    </insert>
+
+    <select id="selectRdTwinMasterByCodeForUpdate" resultType="RdTwinMaster">
+        select invoice_status, work_status
+        from rd_twin_master
+        where rd_code = #{code}
+            for
+                update
+    </select>
+
+    <select id="selectRdTwinSalveUniqueIdsByCode" resultType="java.lang.Long">
+        select unique_id
+        from rd_twin_salve
+        where rd_code = #{code}
+          and del_flag = 0
+            for
+                update
+    </select>
+
+    <update id="deleteRdTwinSalveByUniqueIds">
+        update rd_twin_salve set del_flag = 1 where unique_id in
+        <foreach collection="array" separator="," index="index" open="(" close=")" item="ids">
+            #{item}
+        </foreach>
+    </update>
+
+    <update id="updateRdTwinSalve">
+        <foreach collection="list" item="item" index="index" separator=";">
+        update rd_twin_salve
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="item.invSortRoot != null">inv_sort_root = #{item.invSortRoot},</if>
+            <if test="item.invSortId != null">inv_sort_id = #{item.invSortId},</if>
+            <if test="item.invCode != null and item.invCode != ''">inv_code = #{item.invCode},</if>
+            <if test="item.invName != null">inv_name = #{item.invName},</if>
+            <if test="item.invAttribute != null">inv_attribute = #{item.invAttribute},</if>
+            <if test="item.unitCode != null and item.unitCode != ''">unit_code = #{item.unitCode},</if>
+            <if test="item.unitName != null and item.unitName != ''">unit_name = #{item.unitName},</if>
+            <if test="item.colour != null">colour = #{item.colour},</if>
+            <if test="item.priority != null">priority = #{item.priority},</if>
+            <if test="item.remarks != null">remarks = #{item.remarks},</if>
+            <if test="item.updateBy != null">update_by = #{item.updateBy},</if>
+            update_time= SysDate()
+        </trim>
+        where unique_id = #{item.uniqueId}
+        </foreach>
+    </update>
+
+    <update id="updateRdTwinMaster" parameterType="RdTwinMaster">
+        update rd_twin_master
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="invoiceDate != null">invoice_date = #{invoiceDate},</if>
+            <if test="invoiceType != null">invoice_type = #{invoiceType},</if>
+            <if test="workStatus != null">work_status = #{workStatus},</if>
+            <if test="workType != null">work_type = #{workType},</if>
+            <if test="workDept != null">work_dept = #{workDept},</if>
+            <if test="workStaff != null">work_staff = #{workStaff},</if>
+            <if test="formConfig != null">form_config = #{formConfig},</if>
+            <if test="checkDate != null">check_date = #{checkDate},</if>
+            <if test="title != null">title = #{title},</if>
+            <if test="remarks != null">remarks = #{remarks},</if>
+            <if test="updateBy != null">update_by = #{updateBy},</if>
+            invoice_status = 0, version = #{version} +1, update_date = SysDate()
+        </trim>
+            where unique_id = #{uniqueId} and version = #{version}
+        <include refid="com.njrsun.modules.rd.mapper.commonMapper.baseDataScope"/>
+    </update>
+
+    <select id="selectInvoiceStatusByCode" resultType="java.lang.String" parameterType="java.lang.String">
+        select invoice_status from rd_twin_master where rd_code
+        in
+        <foreach collection="list" open="(" close=")" item="item" index="index" separator=",">
+            #{item}
+        </foreach>
+        and del_flag = 0
+    </select>
+
+    <update id="deleteRdTwinSalveByRdCodes" parameterType="String">
+        update rd_twin_salve set del_flag = 1 where rd_code in
+        <foreach item="rdCode" collection="list" open="(" separator="," close=")">
+            #{rdCode}
+        </foreach>
+    </update>
+
+    <update id="deleteRdTwinMasterByRdCodes" parameterType="String">
+        <foreach collection="list" separator=";" index="index" item="item">
+            update rd_twin_master set del_flag = 1 where rd_code = #{item.rdCode}
+            <include refid="com.njrsun.modules.rd.mapper.commonMapper.batchDataScope"/>
+        </foreach>
+    </update>
+
+    <select id="selectRdTwinMasterUniqueIds" resultType="java.lang.Long">
+        select unique_id from rd_twin_master where del_flag = 0
+        <include refid="com.njrsun.modules.rd.mapper.commonMapper.baseDataScope"/>
+    </select>
+
+    <select id="queryInvoiceStatusForUpdate" resultType="java.lang.String">
+        select invoice_status from rd_twin_master where rd_code in
+        <foreach collection="array" open="(" close=")" item="item" index="index" separator=",">
+            #{item}
+        </foreach>
+        for
+            update
+    </select>
+
+    <select id="selectRdTwinSalveByCode" resultType="RdTwinSalve">
+        <include refid="selectRdTwinSalveVo"/>
+        where rd_code = #{rdCode} and wo_unique_id  != 0  and del_flag = 0 order by wo_code
+    </select>
+
+    <select id="selectRdTwinSalveById" resultType="RdTwinSalve">
+        <include refid="selectRdTwinSalveVo"/>
+        where unique_id = #{woUniqueId}
+    </select>
+
+    <update id="changeQuantity">
+        update rd_twin_salve
+        set wi_quantity = wi_quantity + #{quantity}
+        where unique_id = #{id}
+    </update>
+
+    <select id="updateWorkStatus">
+        update rd_twin_master
+        set work_status = #{status}
+        where rd_code = #{code}
+    </select>
+
+    <update id="updateWorkStatusOnVersion">
+        update rd_twin_master
+        set work_status = #{value}
+        where rd_code = #{item.rdCode} and version = #{item.version}
+        <include refid="com.njrsun.modules.rd.mapper.commonMapper.batchDataScope"/>
+    </update>
+
+    <update id="updateCheck">
+        update rd_twin_master
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="opera != null"> user_check = #{opera},check_date= SysDate(),</if>
+            <if test="opera == null">user_check ='',check_date=null,</if>
+            invoice_status = #{status},
+        </trim>
+        where rd_code = #{item.rdCode}
+        <include refid="com.njrsun.modules.rd.mapper.commonMapper.batchDataScope"/>
+    </update>
+
+    <select id="selectRdTwinSalveWoById" resultType="java.util.Map">
+        select  ods.wo_code as code,
+                ods.inv_code,
+                ods.inv_name,
+                ods.inv_attribute,
+                ods.unit_name,
+                wo_quantity  as 'quantity',
+                wo_invoice as invoice,
+                wo_invoice_id as invoice_id,
+                wo_type as type,
+                wo_type_id as type_id,
+                date_format(wo_date,'%Y-%m-%d') as date,
+               wo_config as form_config
+        from rd_twin_salve ods left join rd_twin_master odm on odm.rd_code = ods.rd_code
+        where ods.unique_id = #{uniqueId} and wo_type !=''
+    </select>
+
+    <select id="linkDetail" resultType="java.util.Map">
+        select odm.rd_code code,
+               ods.inv_code,
+               ods.inv_name,
+               ods.inv_attribute,
+               ods.unit_name,
+               ods.quantity,
+               odm.form_config,
+               odm.work_type as type_id,
+               odm.invoice_type as invoice_id,
+               date_format(odm.invoice_date,'%Y-%m-%d') as  date
+        from rd_twin_salve ods left join rd_twin_master odm on ods.rd_code = odm.rd_code
+        where odm.invoice_status = 1 and ods.wo_unique_id = #{uniqueId}  and ods.del_flag = 0
+    </select>
+
+    <select id="lead" parameterType="java.util.Map" resultType="java.util.Map">
+        select  unique_id, rd_code, invoice_date, invoice_status, invoice_type, work_status, form_config,
+                work_type, work_dept, work_staff, check_date,
+                user_oper, user_check, remarks
+        from rd_twin_master a
+        <where>
+            <if test="rdCode != null and rdCode !=''">
+                and a.rd_code = #{rdCode}
+            </if>
+            <if test="startDate != null and startDate !=''">
+                and a.invoice_date >= #{startDate}
+            </if>
+            <if test="endDate != null and endDate !=''">
+                and a.invoice_date <![CDATA[ <= ]]> #{endDate}
+            </if>
+            <if test="workType != null and workType !=''">
+                and a.work_type = #{workType}
+            </if>
+            <if test="ppNumber != null and ppNumber != ''">
+                and pp_number = #{ppNumber}
+            </if>
+            and  rd_code in (
+                        select DISTINCT rd_code
+                        from rd_twin_salve
+                        where quantity-wi_quantity > 0 and del_flag = 0
+                        )
+            and invoice_status = '1' and work_status = '0'
+        </where>
+        order by unique_id desc
+    </select>
+
+    <select id="leadInto" parameterType="java.util.Map" resultType="java.util.Map">
+        select b.unique_id, b.rd_code,
+        pp_number, inv_sort_id,inv_sort_root,
+        b.inv_code, b.inv_name, b.inv_attribute, b.unit_code, b.unit_name,
+        b.quantity, wi_quantity, quantity-wi_quantity as surplus ,
+        invoice_date as 'invoiceDate',
+        work_type as work_type_id,
+        invoice_type as invoice_type_id,
+        form_config, b.remarks
+        from rd_twin_salve b left join rd_twin_master a on b.rd_code = a.rd_code
+        <where>
+            <if test="rdCode != null and rdCode !=''">
+                and a.rd_code = #{rdCode}
+            </if>
+            <if test="startDate != null and startDate !=''">
+                and a.invoice_date >= #{startDate}
+            </if>
+            <if test="endDate != null and endDate !=''">
+                and a.invoice_date <![CDATA[ <= ]]> #{endDate}
+            </if>
+            <if test="workType != null and workType !=''">
+                and a.work_type = #{workType}
+            </if>
+            <if test="invName != null  and invName !=''">
+                and b.inv_name = #{invName}
+            </if>
+            <if test="invCode != null  and invCode !=''">
+                and b.inv_Code = #{invCode}
+            </if>
+            <if test="ppNumber != null and ppNumber != ''">
+                and pp_number = #{ppNumber}
+            </if>
+            and b.del_flag = 0 and invoice_status = 1 and quantity-wi_quantity > 0
+        </where>
+        order by a.unique_id desc
+    </select>
+</mapper>
+

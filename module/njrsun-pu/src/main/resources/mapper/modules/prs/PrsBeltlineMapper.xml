@@ -1,0 +1,87 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.njrsun.modules.prs.mapper.PrsBeltlineMapper">
+    
+    <resultMap type="PrsBeltline" id="PrsBeltlineResult">
+        <result property="uniqueId"    column="unique_id"    />
+        <result property="workType"    column="work_type"    />
+        <result property="code"    column="code"    />
+        <result property="name"    column="name"    />
+        <result property="processRoute"    column="process_route"    />
+        <result property="status"    column="status"    />
+        <result property="createBy"    column="create_by"    />
+        <result property="updateDate"    column="update_date"    />
+        <result property="updateBy"    column="update_by"    />
+    </resultMap>
+
+    <sql id="selectPrsBeltlineVo">
+        select unique_id, work_type, code, name, process_route, order_id, status, create_by, update_date, update_by from prs_beltline
+    </sql>
+
+    <select id="selectPrsBeltlineList" parameterType="PrsBeltline" resultMap="PrsBeltlineResult">
+        <include refid="selectPrsBeltlineVo"/>
+        <where>  
+            <if test="workType != null  and workType != ''"> and work_type = #{workType}</if>
+            <if test="code != null  and code != ''"> and code = #{code}</if>
+            <if test="processRoute != null  and processRoute != ''"> and process_route = #{processRoute}</if>
+            <if test="status != null  and status != ''"> and status = #{status}</if>
+        </where>
+        order by order_id
+    </select>
+    
+    <select id="selectPrsBeltlineById" parameterType="Long" resultMap="PrsBeltlineResult">
+        <include refid="selectPrsBeltlineVo"/>
+        where unique_id = #{uniqueId}
+    </select>
+        
+    <insert id="insertPrsBeltline" parameterType="PrsBeltline" useGeneratedKeys="true" keyProperty="uniqueId">
+        insert into prs_beltline
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="workType != null">work_type,</if>
+            <if test="code != null and code != ''">code,</if>
+            <if test="name != null and name != ''">name,</if>
+            <if test="processRoute != null">process_route,</if>
+            <if test="orderId != null">order_id,</if>
+            update_date,
+            <if test="status != null">status,</if>
+            <if test="createBy != null">create_by,</if>
+         </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="workType != null">#{workType},</if>
+            <if test="code != null and code != ''">#{code},</if>
+            <if test="name != null and name != ''">#{name},</if>
+            <if test="processRoute != null">#{processRoute},</if>
+            <if test="orderId != null">#{orderId},</if>
+            sysDate(),
+            <if test="status != null">#{status},</if>
+            <if test="createBy != null">#{createBy},</if>
+         </trim>
+    </insert>
+
+    <update id="updatePrsBeltline" parameterType="PrsBeltline">
+        update prs_beltline
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="workType != null">work_type = #{workType},</if>
+            <if test="name != null and name != ''">name = #{name},</if>
+            <if test="processRoute != null">process_route = #{processRoute},</if>
+            <if test="orderId != null">order_id = #{orderId},</if>
+            <if test="status != null">status = #{status},</if>
+            <if test="updateDate != null">update_date = SysDate(),</if>
+            <if test="updateBy != null">update_by = #{updateBy},</if>
+        </trim>
+        where unique_id = #{uniqueId}
+    </update>
+
+    <delete id="deletePrsBeltlineById" parameterType="Long">
+        delete from prs_beltline where unique_id = #{uniqueId}
+    </delete>
+
+    <delete id="deletePrsBeltlineByIds" parameterType="String">
+        delete from prs_beltline where unique_id in 
+        <foreach item="uniqueId" collection="array" open="(" separator="," close=")">
+            #{uniqueId}
+        </foreach>
+    </delete>
+</mapper>

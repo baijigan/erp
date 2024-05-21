@@ -1,0 +1,145 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.njrsun.modules.prs.mapper.PrsProcessRouteMapper">
+    
+    <resultMap type="com.njrsun.modules.prs.domain.PrsProcessRoute" id="PrsProcessRouteResult">
+        <result property="uniqueId"    column="unique_id"    />
+        <result property="invoiceDate"    column="invoice_date"    />
+        <result property="invoiceStatus"    column="invoice_status"    />
+        <result property="processCode"    column="process_code"    />
+        <result property="name"    column="name"    />
+        <result property="orderId"    column="order_id"    />
+        <result property="checkDate"    column="check_date"    />
+        <result property="userOper"    column="user_oper"    />
+        <result property="userCheck"    column="user_check"    />
+        <result property="remarks"    column="remarks"    />
+        <result property="delFlag"    column="del_flag"    />
+        <result property="createDate"    column="create_date"    />
+        <result property="createBy"    column="create_by"    />
+        <result property="updateDate"    column="update_date"    />
+        <result property="updateBy"    column="update_by"    />
+        <result property="version"    column="version"    />
+    </resultMap>
+
+    <resultMap id="PrsProcessRoutePrsProcessSectionResult" type="com.njrsun.modules.prs.domain.PrsProcessRoute" extends="PrsProcessRouteResult">
+        <collection property="prsProcessSectionList" notNullColumn="unique_id" javaType="java.util.List" resultMap="PrsProcessSectionResult" />
+    </resultMap>
+
+    <resultMap type="com.njrsun.modules.prs.domain.PrsProcessSection" id="PrsProcessSectionResult">
+        <result property="uniqueId"    column="id"    />
+        <result property="processCode"    column="process_code"    />
+        <result property="code"    column="code"    />
+        <result property="name"    column="sectionName"    />
+        <result property="duration"    column="duration"    />
+        <result property="isQuality"    column="is_quality"    />
+        <result property="countType"    column="count_type"    />
+        <result property="orderId"    column="orderId"    />
+    </resultMap>
+
+    <sql id="selectPrsProcessRouteVo">
+        select unique_id, invoice_date, invoice_status, process_code, name, order_id, check_date, user_oper, user_check, remarks, del_flag, create_date, create_by, update_date, update_by, version from prs_process_route
+    </sql>
+
+    <select id="selectPrsProcessRouteList" parameterType="com.njrsun.modules.prs.domain.PrsProcessRoute" resultMap="PrsProcessRouteResult">
+        <include refid="selectPrsProcessRouteVo"/>
+        <where>  
+            <if test="invoiceDate != null "> and invoice_date = #{invoiceDate}</if>
+            <if test="invoiceStatus != null  and invoiceStatus != ''"> and invoice_status = #{invoiceStatus}</if>
+            <if test="processCode != null  and processCode != ''"> and process_code = #{processCode}</if>
+            <if test="name != null  and name != ''"> and name like concat('%', #{name}, '%')</if>
+            <if test="orderId != null "> and order_id = #{orderId}</if>
+            <if test="checkDate != null "> and check_date = #{checkDate}</if>
+            <if test="startDate != null"> and invoice_date >= #{startDate}</if>
+            <if test="endDate != null"> and #{endDate} >= invoice_date</if>
+            and del_flag = 0
+        </where>
+            order by order_id
+    </select>
+    
+    <select id="selectPrsProcessRouteById" parameterType="String" resultMap="PrsProcessRoutePrsProcessSectionResult">
+        select a.unique_id, a.invoice_date, a.invoice_status, a.process_code, a.name, a.order_id, a.check_date, a.user_oper, a.user_check, a.remarks, a.del_flag, a.create_date, a.create_by, a.update_date, a.update_by, a.version,
+            b.unique_id id , b.process_code, b.code, b.name  as sectionName , b.duration, b.is_quality, b.count_type, b.order_id orderId
+        from prs_process_route a
+        left join prs_process_section b on b.process_code = a.process_code
+        where a.process_code = #{processCode} and a.del_flag = 0
+        order by b.order_id
+    </select>
+    <select id="selectPrsStatusList" resultType="com.njrsun.modules.prs.domain.PrsProcessRoute">
+        select unique_id, invoice_date, invoice_status, process_code, name, order_id, check_date, user_oper, user_check, remarks
+        from prs_process_route where process_code in
+        <foreach collection="list" open="(" close=")" index="index" item="item" separator=",">
+            #{item.processCode}
+        </foreach>
+        and del_flag = 0
+    </select>
+
+    <insert id="insertPrsProcessRoute" parameterType="com.njrsun.modules.prs.domain.PrsProcessRoute" useGeneratedKeys="true" keyProperty="uniqueId">
+        insert into prs_process_route
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="invoiceDate != null">invoice_date,</if>
+            <if test="invoiceStatus != null">invoice_status,</if>
+            <if test="processCode != null and processCode != ''">process_code,</if>
+            <if test="orderId != null">order_id,</if>
+            <if test="checkDate != null">check_date,</if>
+            <if test="userOper != null">user_oper,</if>
+            <if test="userCheck != null">user_check,</if>
+            <if test="remarks != null">remarks,</if>
+
+            create_date,
+            <if test="createBy != null">create_by,</if>
+
+         </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="invoiceDate != null">#{invoiceDate},</if>
+            <if test="invoiceStatus != null">#{invoiceStatus},</if>
+            <if test="processCode != null and processCode != ''">#{processCode},</if>
+            <if test="name != null and name != ''">#{name},</if>
+            <if test="orderId != null">#{orderId},</if>
+            <if test="checkDate != null">#{checkDate},</if>
+            <if test="userOper != null">#{userOper},</if>
+            <if test="userCheck != null">#{userCheck},</if>
+            <if test="remarks != null">#{remarks},</if>
+            SysDate(),
+            <if test="createBy != null">#{createBy},</if>
+         </trim>
+    </insert>
+
+    <delete id="deletePrsProcessRouteById" parameterType="Long">
+        delete from prs_process_route where unique_id = #{uniqueId}
+    </delete>
+
+    <update id="deletePrsProcessRouteByIds" parameterType="String">
+        update   prs_process_route  set del_flag = 1  where prs_process_route.process_code in
+        <foreach item="code" collection="list" open="(" separator="," close=")">
+            #{code}
+        </foreach>
+    </update>
+    <update id="check">
+        update  prs_process_route set
+                                      invoice_status = #{status},check_date = SysDate(),user_check = #{user} where process_code = #{code}
+    </update>
+    <update id="anticheck">
+        update  prs_process_route set
+                                      invoice_status = #{status},check_date = null,user_check = null where process_code = #{code}
+    </update>
+
+    <delete id="deletePrsProcessSectionByProcessCodes" parameterType="String">
+        delete from prs_process_section where process_code in 
+        <foreach item="processCode" collection="list" open="(" separator="," close=")">
+            #{processCode}
+        </foreach>
+    </delete>
+
+    <delete id="deletePrsProcessSectionByProcessCode" parameterType="String">
+        delete from prs_process_section where process_code = #{processCode}
+    </delete>
+
+    <insert id="batchPrsProcessSection">
+        insert into prs_process_section( unique_id, process_code, code, name, duration, is_quality, count_type, order_id) values
+		<foreach item="item" index="index" collection="list" separator=",">
+            ( #{item.uniqueId}, #{item.processCode}, #{item.code}, #{item.name}, #{item.duration}, #{item.isQuality}, #{item.countType}, #{item.orderId})
+        </foreach>
+    </insert>
+</mapper>

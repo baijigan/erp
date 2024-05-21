@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.njrsun.modules.rd.mapper.commonMapper">
+    <sql id="baseDataScope">
+        <if test="params.user_oper != null">
+            and (user_oper = ${params.user_oper}
+            <if test="params.user_agent != null">
+                or user_oper in (${params.user_agent})
+            </if>
+            )</if>
+        <if test="params.workType != null">
+            and (work_type in (${params.workType})
+            )</if>
+    </sql>
+
+    <sql id="batchDataScope">
+        <if test="item.params.user_oper != null">
+            and (user_oper = ${item.params.user_oper}
+            <if test="item.params.user_agent != null">
+                or user_oper in (${item.params.user_agent})
+            </if>
+            )</if>
+        <if test="item.params.workType != null">
+            and (work_type in (${item.params.workType})
+            )</if>
+    </sql>
+
+</mapper>

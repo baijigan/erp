@@ -1,0 +1,568 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.njrsun.modules.om.mapper.OmFapiaoMasterMapper">
+    
+    <resultMap type="OmFapiaoMaster" id="OmFapiaoMasterResult">
+        <result property="uniqueId"    column="unique_id"    />
+        <result property="omCode"    column="om_code"    />
+        <result property="invoiceDate"    column="invoice_date"    />
+        <result property="invoiceStatus"    column="invoice_status"    />
+        <result property="invoiceType"    column="invoice_type"    />
+        <result property="workStatus"    column="work_status"    />
+        <result property="workType"    column="work_type"    />
+        <result property="workDept"    column="work_dept"    />
+        <result property="workStaff"    column="work_staff"    />
+        <result property="formConfig"    column="form_config"    />
+        <result property="customer"    column="customer"    />
+        <result property="customerId"    column="customer_id"    />
+        <result property="customerFp"    column="customer_fp"    />
+        <result property="vatNo"    column="vat_no"    />
+        <result property="bank"    column="bank"    />
+        <result property="account"    column="account"    />
+        <result property="tax"    column="tax"    />
+        <result property="addr"    column="addr"    />
+        <result property="vatType"    column="vat_type"    />
+        <result property="bredVouch"    column="bred_vouch"    />
+        <result property="bredNo"    column="bred_no"    />
+        <result property="vatRate"    column="vat_rate"    />
+        <result property="vatAmount"    column="vat_amount"    />
+        <result property="vatTax"    column="vat_tax"    />
+        <result property="vatTotal"    column="vat_total"    />
+        <result property="vatStatus"    column="vat_status"    />
+        <result property="fdPeriod"    column="fd_period"    />
+        <result property="checkDate"    column="check_date"    />
+        <result property="userOper"    column="user_oper"    />
+        <result property="userCheck"    column="user_check"    />
+        <result property="remarks"    column="remarks"    />
+        <result property="delFlag"    column="del_flag"    />
+        <result property="createDate"    column="create_date"    />
+        <result property="createBy"    column="create_by"    />
+        <result property="updateDate"    column="update_date"    />
+        <result property="updateBy"    column="update_by"    />
+        <result property="version"    column="version"    />
+        <result property="tel"    column="tel"    />
+        <result property="bank"    column="bank"    />
+        <result property="account"    column="account"    />
+        <result property="tax"    column="tax"    />
+        <result property="addr2"    column="addr2"    />
+        <result property="remark"    column="remark"    />
+        <result property="status"    column="status"    />
+        <result property="createBy"    column="create_by"    />
+        <result property="updateDate"    column="update_date"    />
+        <result property="updateBy"    column="update_by"    />
+        <result property="version"    column="version"    />
+        <result property="delFlag"    column="del_flag"    />
+        <result property="alias" column="alias"/>
+        <result property="city" column="city"/>
+        <result property="cityId" column="city_id"/>
+        <result property="credit" column="credit"/>
+        <result property="creditLimit" column="credit_limit"/>
+        <result property="type" column="type"/>
+        <result property="wMobile" column="w_mobile"/>
+        <result property="wContacts" column="w_contacts"/>
+        <result property="fMobile" column="f_mobile"/>
+    </resultMap>
+
+    <resultMap id="OmFapiaoMasterOmFapiaoSalveResult" type="OmFapiaoMaster" extends="OmFapiaoMasterResult">
+        <collection property="omFapiaoSalveList" notNullColumn="unique_id" javaType="java.util.List" resultMap="OmFapiaoSalveResult" />
+    </resultMap>
+
+    <resultMap type="OmFapiaoSalve" id="OmFapiaoSalveResult">
+        <result property="uniqueId"    column="id"    />
+        <result property="omCode"    column="om_code"    />
+        <result property="ppNumber"    column="pp_number"    />
+        <result property="invSortRoot"    column="inv_sort_root"    />
+        <result property="invSortId"    column="inv_sort_id"    />
+        <result property="invCode"    column="inv_code"    />
+        <result property="invName"    column="inv_name"    />
+        <result property="invAttribute"    column="inv_attribute"    />
+        <result property="unitCode"    column="unit_code"    />
+        <result property="unitName"    column="unit_name"    />
+        <result property="vatQuantity"    column="vatQuantity"    />
+        <result property="vatName"    column="vatName"    />
+        <result property="vatPrice"    column="vatPrice"    />
+        <result property="vatAmount"    column="vatAmount"    />
+        <result property="woConfig"    column="wo_config"    />
+        <result property="woInvoice"    column="wo_invoice"    />
+        <result property="woInvoiceId"    column="wo_invoice_id"    />
+        <result property="woType"    column="wo_type"    />
+        <result property="woTypeId"    column="wo_type_id"    />
+        <result property="woDate"    column="wo_date"    />
+        <result property="woCode"    column="wo_code"    />
+        <result property="woUniqueId"    column="wo_unique_id"    />
+        <result property="woQuantity"    column="wo_quantity"    />
+        <result property="wiQuantity"    column="wi_quantity"    />
+        <result property="wiQuantityR"    column="wi_quantity_r"    />
+        <result property="remarks"    column="remarks"    />
+        <result property="createTime"    column="create_time"    />
+        <result property="createBy"    column="create_by"    />
+        <result property="updateTime"    column="update_time"    />
+        <result property="updateBy"    column="update_by"    />
+        <result property="delFlag"    column="del_flag"    />
+    </resultMap>
+
+    <sql id="selectOmFapiaoMasterVo">
+        select unique_id, om_code, invoice_date, invoice_status, invoice_type, work_status, work_type, work_dept, work_staff, form_config,
+               customer, customer_id, customer_fp, vat_no, bank, account, tax, addr, vat_type, bred_vouch, bred_no, vat_rate, vat_amount, vat_tax, vat_total,
+               vat_status, fd_period, check_date, user_oper, user_check,
+               remarks, del_flag, create_date, create_by, update_date, update_by, version
+        from om_fapiao_master
+    </sql>
+
+    <select id="selectOmFapiaoMasterList" parameterType="OmFapiaoMaster" resultMap="OmFapiaoMasterResult">
+        <include refid="selectOmFapiaoMasterVo"/>
+        <where>  
+            <if test="omCode != null  and omCode != ''"> and om_code = #{omCode}</if>
+            <if test="invoiceDate != null "> and invoice_date = #{invoiceDate}</if>
+            <if test="invoiceStatus != null  and invoiceStatus != ''"> and invoice_status = #{invoiceStatus}</if>
+            <if test="invoiceType != null  and invoiceType != ''"> and invoice_type = #{invoiceType}</if>
+            <if test="workStatus != null  and workStatus != ''"> and work_status = #{workStatus}</if>
+            <if test="workType != null  and workType != ''"> and work_type = #{workType}</if>
+            <if test="workDept != null  and workDept != ''"> and work_dept = #{workDept}</if>
+            <if test="workStaff != null  and workStaff != ''"> and work_staff = #{workStaff}</if>
+            <if test="formConfig != null  and formConfig != ''"> and form_config = #{formConfig}</if>
+            <if test="customer != null  and customer != ''"> and customer = #{customer}</if>
+            <if test="customerId != null  and customerId != ''"> and customer_id = #{customerId}</if>
+            <if test="customerFp != null  and customerFp != ''"> and customer_fp = #{customerFp}</if>
+            <if test="vatNo != null  and vatNo != ''"> and vat_no = #{vatNo}</if>
+            <if test="bank != null  and bank != ''"> and bank = #{bank}</if>
+            <if test="account != null  and account != ''"> and account = #{account}</if>
+            <if test="tax != null  and tax != ''"> and tax = #{tax}</if>
+            <if test="addr != null  and addr != ''"> and addr = #{addr}</if>
+            <if test="vatRate != null  and vatRate != ''"> and vat_rate = #{vatRate}</if>
+            <if test="vatStatus != null  and vatStatus != ''"> and vat_status = #{vatStatus}</if>
+            <if test="fdPeriod != null  and fdPeriod != ''"> and fd_period = #{fdPeriod}</if>
+            <if test="checkDate != null "> and check_date = #{checkDate}</if>
+            <if test="startDate != null">
+                and invoice_date >= #{startDate}
+            </if>
+            <if test="endDate != null">
+                and invoice_date <![CDATA[ <= ]]> #{endDate}
+            </if>
+            <if test="ppNumber != null  and ppNumber != ''">and om_code in (select om_code from om_fapiao_salve where pp_number = #{ppNumber})</if>
+            and del_flag= 0
+        </where>
+        order by unique_id desc
+    </select>
+
+    <select id="getDetail" resultType="java.util.Map">
+        SELECT
+        a.om_code,
+        DATE_FORMAT(a.invoice_date,'%Y-%m-%d') as invoice_date,
+        a.invoice_status,
+        a.invoice_type,
+        a.work_status,
+        a.work_type,
+        a.work_dept,
+        a.work_staff,
+        a.form_config,
+        a.customer,
+        a.customer_id,
+        a.customer_fp,
+        a.vat_no,
+        a.bank,
+        a.account,
+        a.tax,
+        a.addr,
+        a.vat_rate,
+        a.vat_status,
+        DATE_FORMAT(a.check_date,'%Y-%m-%d') as check_date,
+        a.user_oper,
+        a.user_check,
+        a.remarks,
+        sum(b.vat_quantity) AS sumQuantity,
+        sum(b.vat_price*b.vat_quantity) AS sumAmount
+        FROM
+        om_fapiao_master AS a
+        LEFT JOIN
+        om_fapiao_salve AS b
+        ON
+        a.om_code = b.om_code
+        <where>
+            <if test="customer != null and customer !=''">and customer like concat('%',#{customer},'%')</if>
+            <if test="startDate != null">and invoice_date >= #{startDate}</if>
+            <if test="endDate != null">and #{endDate} >= invoice_date</if>
+            <if test="customerFp != null and customerFp !=''">and customer_fp like concat('%',#{customerFp},'%')</if>
+            <if test="workStaff != null and workStaff !=''">and work_staff = #{workStaff}</if>
+            <if test="omCode != null and omCode !=''">and oom.om_code = #{omCode}</if>
+            <if test="invoiceStatus != null and invoiceStatus !=''">and invoice_status = #{invoiceStatus}</if>
+            <if test="searchValue != null and searchValue !=''">and inv_name like concat('%',#{searchValue},'%')</if>
+            <if test="fdPeriod != null  and fdPeriod != ''"> and fd_period = #{fdPeriod}</if>
+            <if test="workType != null and workType !=''">and work_type = #{workType}</if>
+            <if test="startDate != null">
+                and invoice_date >= #{startDate}
+            </if>
+            <if test="endDate != null">
+                and invoice_date <![CDATA[ <= ]]> #{endDate}
+            </if>
+            <if test="ppNumber != null  and ppNumber != ''">and b.pp_number = #{ppNumber}</if>
+            and a.del_flag = 0
+        </where>
+        GROUP BY
+        a.om_code,
+        a.invoice_date,
+        a.invoice_status,
+        a.invoice_type,
+        a.work_status,
+        a.work_type,
+        a.work_dept,
+        a.work_staff,
+        a.form_config,
+        a.customer,
+        a.customer_id,
+        a.customer_fp,
+        a.vat_no,
+        a.bank,
+        a.account,
+        a.tax,
+        a.addr,
+        a.vat_rate,
+        a.vat_status,
+        a.check_date,
+        a.user_oper,
+        a.user_check,
+        a.remarks
+        order by a.om_code desc
+    </select>
+
+    <select id="selectOmFapiaoMasterById" parameterType="String" resultMap="OmFapiaoMasterOmFapiaoSalveResult">
+        select a.unique_id, a.om_code, a.invoice_date, a.invoice_status, a.invoice_type, a.fd_period, a.work_status, a.work_type, a.work_dept, a.work_staff,
+               a.form_config, a.customer, a.customer_id, a.customer_fp, a.vat_no, a.bank, a.account, a.tax, a.addr, a.vat_type, a.bred_vouch, a.bred_no, a.vat_rate,
+               a.vat_amount, a.vat_tax, a.vat_total,  a.vat_status, a.check_date, a.user_oper,
+               a.user_check, a.remarks, a.del_flag, a.create_date, a.create_by, a.update_date, a.update_by, a.version,
+            b.unique_id id, b.om_code, b.pp_number, b.inv_sort_root, b.inv_sort_id, b.inv_code, b.inv_name, b.inv_attribute, b.unit_code, b.unit_name,
+               b.vat_quantity vatQuantity, b.vat_name vatName, b.vat_price vatPrice, b.vat_amount vatAmount, b.wo_config, b.wo_invoice, b.wo_invoice_id,
+               b.wo_type, b.wo_type_id, b.wo_date, b.wo_code, b.wo_unique_id, b.wo_quantity, b.wi_quantity, b.wi_quantity_r, b.remarks, b.create_time,
+               b.create_by, b.update_time, b.update_by, b.del_flag
+        from om_fapiao_master a
+        left join om_fapiao_salve b on b.om_code = a.om_code and b.del_flag = 0
+        where a.om_code = #{omCode}
+    </select>
+
+    <select id="selectOmFapiaoMasterForUpdate" resultType="com.njrsun.modules.om.domain.OmFapiaoMaster">
+        select unique_id, om_code, invoice_date, invoice_status, invoice_type, work_status, work_type, work_dept, work_staff, form_config,
+               customer, customer_id, customer_fp, vat_no, bank, account, tax, addr, vat_rate, vat_status, fd_period, check_date, user_oper, user_check,
+               remarks, del_flag, create_date, create_by, update_date, update_by, version
+        from om_fapiao_master
+        where om_code = #{omCode} limit 1
+            for update
+    </select>
+
+    <insert id="insertOmFapiaoMaster" parameterType="OmFapiaoMaster" useGeneratedKeys="true" keyProperty="uniqueId">
+        insert into om_fapiao_master
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="omCode != null and omCode != ''">om_code,</if>
+            <if test="invoiceDate != null">invoice_date,</if>
+            <if test="invoiceStatus != null">invoice_status,</if>
+            <if test="invoiceType != null">invoice_type,</if>
+            <if test="workStatus != null">work_status,</if>
+            <if test="workType != null">work_type,</if>
+            <if test="workDept != null">work_dept,</if>
+            <if test="workStaff != null">work_staff,</if>
+            <if test="formConfig != null">form_config,</if>
+            <if test="customer != null">customer,</if>
+            <if test="customerId != null">customer_id,</if>
+            <if test="customerFp != null">customer_fp,</if>
+            <if test="vatNo != null">vat_no,</if>
+            <if test="bank != null">bank,</if>
+            <if test="account != null">account,</if>
+            <if test="tax != null">tax,</if>
+            <if test="addr != null">addr,</if>
+            <if test="vatType != null">vat_type,</if>
+            <if test="bredVouch != null">bred_vouch,</if>
+            <if test="bredNo != null">bred_no,</if>
+            <if test="vatRate != null">vat_rate,</if>
+            <if test="vatAmount != null">vat_amount,</if>
+            <if test="vatTax != null">vat_tax,</if>
+            <if test="vatTotal != null">vat_total,</if>
+            <if test="vatStatus != null">vat_status,</if>
+            <if test="checkDate != null">check_date,</if>
+            <if test="userOper != null">user_oper,</if>
+            <if test="userCheck != null">user_check,</if>
+            <if test="remarks != null">remarks,</if>
+            <if test="delFlag != null">del_flag,</if>
+            create_date,
+            <if test="createBy != null">create_by,</if>
+         </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="omCode != null and omCode != ''">#{omCode},</if>
+            <if test="invoiceDate != null">#{invoiceDate},</if>
+            <if test="invoiceStatus != null">#{invoiceStatus},</if>
+            <if test="invoiceType != null">#{invoiceType},</if>
+            <if test="workStatus != null">#{workStatus},</if>
+            <if test="workType != null">#{workType},</if>
+            <if test="workDept != null">#{workDept},</if>
+            <if test="workStaff != null">#{workStaff},</if>
+            <if test="formConfig != null">#{formConfig},</if>
+            <if test="customer != null">#{customer},</if>
+            <if test="customerId != null">#{customerId},</if>
+            <if test="customerFp != null">#{customerFp},</if>
+            <if test="vatNo != null">#{vatNo},</if>
+            <if test="bank != null">#{bank},</if>
+            <if test="account != null">#{account},</if>
+            <if test="tax != null">#{tax},</if>
+            <if test="addr != null">#{addr},</if>
+            <if test="vatType != null">#{vatType},</if>
+            <if test="bredVouch != null">#{bredVouch},</if>
+            <if test="bredNo != null">#{bredNo},</if>
+            <if test="vatRate != null">#{vatRate},</if>
+            <if test="vatAmount != null">#{vatAmount},</if>
+            <if test="vatTax != null">#{vatTax},</if>
+            <if test="vatTotal != null">#{vatTotal},</if>
+            <if test="vatStatus != null">#{vatStatus},</if>
+            <if test="checkDate != null">#{checkDate},</if>
+            <if test="userOper != null">#{userOper},</if>
+            <if test="userCheck != null">#{userCheck},</if>
+            <if test="remarks != null">#{remarks},</if>
+            <if test="delFlag != null">#{delFlag},</if>
+            SysDate(),
+            <if test="createBy != null">#{createBy},</if>
+         </trim>
+    </insert>
+
+    <update id="updateOmFapiaoMaster" parameterType="OmFapiaoMaster">
+        update om_fapiao_master
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="invoiceDate != null">invoice_date = #{invoiceDate},</if>
+            <if test="invoiceStatus != null">invoice_status = #{invoiceStatus},</if>
+            <if test="invoiceType != null">invoice_type = #{invoiceType},</if>
+            <if test="workStatus != null">work_status = #{workStatus},</if>
+            <if test="workType != null">work_type = #{workType},</if>
+            <if test="workDept != null">work_dept = #{workDept},</if>
+            <if test="workStaff != null">work_staff = #{workStaff},</if>
+            <if test="formConfig != null">form_config = #{formConfig},</if>
+            <if test="customer != null">customer = #{customer},</if>
+            <if test="customerId != null">customer_id = #{customerId},</if>
+            <if test="customerFp != null">customer_fp = #{customerFp},</if>
+            <if test="vatNo != null">vat_no = #{vatNo},</if>
+            <if test="bank != null">bank = #{bank},</if>
+            <if test="account != null">account = #{account},</if>
+            <if test="tax != null">tax = #{tax},</if>
+            <if test="addr != null">addr = #{addr},</if>
+            <if test="vatType != null">vat_type = #{vatType},</if>
+            <if test="bredVouch != null">bred_vouch = #{bredVouch},</if>
+            <if test="bredNo != null">bred_no = #{bredNo},</if>
+            <if test="vatRate != null">vat_rate = #{vatRate},</if>
+            <if test="vatAmount != null">vat_amount = #{vatAmount},</if>
+            <if test="vatTax != null">vat_tax = #{vatTax},</if>
+            <if test="vatTotal != null">vat_total = #{vatTotal},</if>
+            <if test="vatStatus != null">vat_status = #{vatStatus},</if>
+            check_date = #{checkDate},
+            <if test="userOper != null">user_oper = #{userOper},</if>
+            user_check = #{userCheck},
+            <if test="remarks != null">remarks = #{remarks},</if>
+            <if test="updateDate != null">SysDate(),</if>
+            <if test="updateBy != null">update_by = #{updateBy},</if>
+            version = #{version} + 1,
+        </trim>
+        where om_code = #{omCode}  and version  = #{version}
+    </update>
+
+    <delete id="deleteOmFapiaoMasterById" parameterType="Long">
+        delete from om_fapiao_master where unique_id = #{uniqueId}
+    </delete>
+
+    <update id="cancelAllEntries">
+        update om_fapiao_master set invoice_status='0', vat_status= '0', del_flag= '1';
+        update om_fapiao_salve set del_flag= '1';
+    </update>
+
+    <update id="deleteOmFapiaoMasterByIds" parameterType="String">
+        update   om_fapiao_master set del_flag = 1  where om_code in
+        <foreach item="uniqueId" collection="list" open="(" separator="," close=")">
+            #{uniqueId}
+        </foreach>
+    </update>
+    
+    <update id="deleteOmFapiaoSalveByOmCodes" parameterType="String">
+        update   om_fapiao_salve set del_flag = 1 where om_code in
+        <foreach item="omCode" collection="list" open="(" separator="," close=")">
+            #{omCode}
+        </foreach>
+    </update>
+
+    <update id="deleteOmFapiaoSalveByOmCode" parameterType="String">
+        update  om_fapiao_salve set del_flag = 1  where om_code = #{omCode}
+    </update>
+    <update id="updateStatus">
+        update om_fapiao_master set vat_status = #{status} where om_code = #{omCode}
+    </update>
+
+    <insert id="batchOmFapiaoSalve">
+        insert into om_fapiao_salve( om_code, pp_number, inv_sort_root, inv_sort_id, inv_code, inv_name, inv_attribute, unit_code, unit_name, vat_quantity, vat_name, vat_price, vat_amount, wo_config, wo_invoice, wo_invoice_id, wo_type, wo_type_id, wo_date, wo_code, wo_unique_id, wo_quantity, wi_quantity, wi_quantity_r, remarks, create_time, create_by) values
+		<foreach item="item" index="index" collection="list" separator=",">
+            ( #{item.omCode}, #{item.ppNumber}, #{item.invSortRoot}, #{item.invSortId}, #{item.invCode}, #{item.invName}, #{item.invAttribute}, #{item.unitCode}, #{item.unitName}, #{item.vatQuantity}, #{item.vatName}, #{item.vatPrice}, #{item.vatAmount}, #{item.woConfig}, #{item.woInvoice}, #{item.woInvoiceId}, #{item.woType}, #{item.woTypeId}, #{item.woDate}, #{item.woCode}, #{item.woUniqueId}, #{item.woQuantity}, #{item.wiQuantity}, #{item.wiQuantityR}, #{item.remarks}, SysDate(),#{item.createBy})
+        </foreach>
+    </insert>
+
+    <update id="updateCheckStatus">
+        update om_fapiao_master set invoice_status = #{status},user_check = #{username},check_date = #{date} where om_code = #{omCode}
+    </update>
+
+    <select id="selectOmFapiaoMasterByCodeForUpdate"
+            resultMap="OmFapiaoMasterResult">
+        select a.unique_id, a.om_code, a.invoice_date, a.invoice_status, a.invoice_type, a.work_status, a.work_type, a.work_dept, a.work_staff, a.form_config, a.customer, a.customer_id, a.customer_fp, a.bank, a.account, a.tax, a.addr, a.vat_rate, a.vat_status, a.check_date, a.user_oper, a.user_check, a.remarks, a.del_flag, a.create_date, a.create_by, a.update_date, a.update_by, a.version
+        from om_fapiao_master a
+        where a.om_code = #{omCode}  for update
+    </select>
+
+    <update id="updateWorkStatus">
+        update om_fapiao_master set work_status = #{value} where om_code = #{item.omCode}
+        <include refid="com.njrsun.modules.om.mapper.OmOrderMasterMapper.batchDataScope"/>
+
+    </update>
+
+    <update id="updateEntryStatus">
+        update om_fapiao_master set vat_status = #{status},fd_period = #{period}, vat_no= #{vatNo} where om_code = #{omCode}
+    </update>
+
+    <update id="updateVatStatus">
+        update om_fapiao_master set vat_status = #{status} where om_code = #{omCode}
+    </update>
+
+    <select id="selectOmFapiaoMasterByMaster" parameterType="com.njrsun.modules.om.domain.OmFapiaoMaster" resultMap="OmFapiaoMasterOmFapiaoSalveResult">
+        select a.unique_id, a.om_code, a.invoice_date, a.invoice_status, a.invoice_type, a.work_status, a.work_type, a.work_dept, a.work_staff, a.form_config, a.customer, a.customer_id, a.customer_fp, a.vat_no, a.bank, a.account, a.tax, a.addr, a.vat_rate, a.vat_status, a.check_date, a.user_oper, a.user_check, a.remarks, a.del_flag, a.create_date, a.create_by, a.update_date, a.update_by, a.version,
+        b.unique_id id, b.om_code, b.pp_number, b.inv_sort_root, b.inv_sort_id, b.inv_code, b.inv_name, b.inv_attribute, b.unit_code, b.unit_name, b.vat_quantity vatQuantity, b.vat_name vatName, b.vat_price vatPrice, b.vat_amount vatAmount, b.wo_config, b.wo_invoice, b.wo_invoice_id, b.wo_type, b.wo_type_id, b.wo_date, b.wo_code, b.wo_unique_id, b.wo_quantity, b.wi_quantity, b.wi_quantity_r, b.remarks, b.create_time, b.create_by, b.update_time, b.update_by, b.del_flag
+        from om_fapiao_master a
+        left join om_fapiao_salve b on b.om_code = a.om_code and b.del_flag = 0
+        where a.om_code = #{omCode}
+        <include refid="com.njrsun.modules.om.mapper.OmOrderMasterMapper.baseDataScope"/>
+    </select>
+
+    <select id="selectFapiaoReport" parameterType="com.njrsun.modules.om.domain.OmFapiaoReport"
+            resultType="com.njrsun.modules.om.domain.OmFapiaoReport">
+        SELECT
+        a.om_code,
+        a.invoice_date,
+        a.invoice_status,
+        a.invoice_type,
+        a.work_type,
+        a.work_status,
+        a.customer,
+        a.customer_id,
+        a.customer_fp,
+        a.vat_no,
+        a.bank,
+        a.account,
+        a.tax,
+        a.addr,
+        a.vat_rate,
+        a.vat_status,
+        sum( b.vat_quantity) as sumQuantity,
+        sum( b.vat_price * b.vat_quantity ) AS sumAmount
+        FROM
+        om_fapiao_master AS a
+        INNER JOIN om_fapiao_salve AS b ON a.om_code = b.om_code
+        <where>
+            <if test="omCode != null and omCode !=''">and a.om_code = #{omCode}</if>
+            <if test="omOrderCode != null and omOrderCode !=''">and b.pp_number = #{omOrderCode}</if>
+            <if test="customer != null and customer !=''">and a.customer like
+                concat('%',#{customer},'%')
+            </if>
+            <if test="startDate != null">and a.invoice_date >= #{startDate}</if>
+            <if test="endDate != null">and #{endDate} >= a.invoice_date</if>
+            and a.invoice_status= 1 and a.del_flag = 0
+        </where>
+        <include refid="com.njrsun.modules.om.mapper.OmOrderMasterMapper.baseDataScope"/>
+        GROUP BY
+        a.om_code,
+        a.invoice_date,
+        a.invoice_status,
+        a.invoice_type,
+        a.work_type,
+        a.work_status,
+        a.customer,
+        a.customer_id,
+        a.customer_fp,
+        a.vat_no,
+        a.bank,
+        a.account,
+        a.tax,
+        a.addr,
+        a.vat_rate,
+        a.vat_status
+        ORDER BY
+        a.om_code DESC
+    </select>
+
+    <select id="export" resultType="com.njrsun.modules.om.domain.ExportFapiao" parameterType="com.njrsun.modules.om.domain.OmFapiaoMaster">
+        SELECT
+        a.om_code,
+        DATE_FORMAT(a.invoice_date,'%Y-%m-%d') as invoice_date,
+        a.invoice_status,
+        a.invoice_type,
+        a.work_status,
+        a.work_type,
+        a.work_dept,
+        a.work_staff,
+        a.form_config,
+        a.customer,
+        a.customer_id,
+        a.customer_fp,
+        a.vat_no,
+        a.bank,
+        a.account,
+        a.tax,
+        a.addr,
+        a.vat_rate,
+        a.vat_status,
+        DATE_FORMAT(a.check_date,'%Y-%m-%d') as check_date,
+        a.user_oper,
+        a.user_check,
+        a.remarks,
+        sum(b.vat_quantity) AS sumQuantity,
+        sum(b.vat_price*b.vat_quantity) AS sumAmount
+        FROM
+        om_fapiao_master AS a
+        LEFT JOIN
+        om_fapiao_salve AS b
+        ON
+        a.om_code = b.om_code
+        <where>
+            <if test="customer != null and customer !=''">and customer like concat('%',#{customer},'%')</if>
+            <if test="startDate != null">and invoice_date >= #{startDate}</if>
+            <if test="endDate != null">and #{endDate} >= invoice_date</if>
+            <if test="customerFp != null and customerFp !=''">and customer_fp like concat('%',#{customerFp},'%')</if>
+            <if test="workStaff != null and workStaff !=''">and work_staff = #{workStaff}</if>
+            <if test="omCode != null and omCode !=''">and oom.om_code = #{omCode}</if>
+            <if test="invoiceStatus != null and invoiceStatus !=''">and invoice_status = #{invoiceStatus}</if>
+            <if test="searchValue != null and searchValue !=''">and inv_name like concat('%',#{searchValue},'%')</if>
+            <if test="workType != null and workType !=''">and work_type = #{workType}</if>
+            <if test="startDate != null">
+                and invoice_date >= #{startDate}
+            </if>
+            <if test="endDate != null">
+                and invoice_date <![CDATA[ <= ]]> #{endDate}
+            </if>
+            <if test="ppNumber != null  and ppNumber != ''">and b.pp_number = #{ppNumber}</if>
+            and a.del_flag = 0
+        </where>
+        GROUP BY
+        a.om_code,
+        a.invoice_date,
+        a.invoice_status,
+        a.invoice_type,
+        a.work_status,
+        a.work_type,
+        a.work_dept,
+        a.work_staff,
+        a.form_config,
+        a.customer,
+        a.customer_id,
+        a.customer_fp,
+        a.vat_no,
+        a.bank,
+        a.account,
+        a.tax,
+        a.addr,
+        a.vat_rate,
+        a.vat_status,
+        a.check_date,
+        a.user_oper,
+        a.user_check,
+        a.remarks
+        order by a.om_code desc
+    </select>
+</mapper>

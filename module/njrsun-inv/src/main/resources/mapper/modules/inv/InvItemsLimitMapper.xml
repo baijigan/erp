@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.njrsun.modules.inv.mapper.IIvItemsLimitMapper">
+    <update id="updateLimit" parameterType="com.njrsun.modules.inv.domain.InvItemsLimit">
+        update inv_items  set  lower_limit = #{lowerLimit},upper_limit = #{upperLimit},version = #{version}+1
+        where code = #{code} and version = #{version}
+    </update>
+
+
+    <select id="selectLimitList" resultType="com.njrsun.modules.inv.domain.InvItemsLimit" parameterType="java.util.Map">
+       select  ii.unique_id,ii.sort_id,ii.code, ii.name, ii.attribute, ii.property, ii.unit_name, ii.quantity,ii.lower_limit,ii.upper_limit,ii.version from inv_items ii
+        left join inv_sort invs on invs.sort_id =  ii.sort_id
+        <where>
+            <if test="invCode != null and invCode !=''"> and ii.code = #{invCode}</if>
+            <if test="invName != null and invName !=''"> and ii.name like concat('%',#{invName},'%')</if>
+            <if test="sortId != null and sortId != ''"> and (ii.sort_id= #{sortId} or  find_in_set(#{sortId},invs.ancestors))</if>
+            <if test="lowerLimit == 1">and ii.quantity <![CDATA[ < ]]> ii.lower_limit</if>
+            <if test="upperLimit == 1"> and ii.quantity > ii.upper_limit</if>
+            and ii.del_flag = 0
+        </where>
+
+
+    </select>
+</mapper>

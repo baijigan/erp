@@ -1,0 +1,172 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.w3.org/1999/xhtml">
+<meta name="viewport"
+      content="width=device-width, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0, user-scalable=no">
+
+<head lang="en">
+    <meta charset="UTF-8">
+    <title>昌荣料品查询</title>
+    <script src="https://cdn.staticfile.org/vue/2.2.2/vue.min.js"></script>
+    <script src="https://unpkg.com/axios/dist/axios.min.js"></script>
+
+    <script src="https://unpkg.com/vue/dist/vue.js"></script>
+    <script src="https://unpkg.com/element-ui@2.13.2/lib/index.js"></script>
+    <link rel="stylesheet" href="https://unpkg.com/element-ui@2.13.2/lib/theme-chalk/index.css">
+</head>
+
+<style>
+    .el-table  .ManuOut {
+        background-color: #9ad9ff;
+    }
+
+    .el-table  .DeductOut {
+        background-color: #ffec8f;
+    }
+
+    .el-table .TackOut {
+        background-color: #83b2ae;
+    }
+</style>
+
+<body>
+<div id="app">
+    <el-form :inline="true"  class="demo-form-inline">
+        <el-form-item label="料品编码">
+            <el-input v-model="itemCode" placeholder=""></el-input>
+        </el-form-item>
+        <el-form-item>
+            <el-button type="primary" @click="send" :loading="loading">查询</el-button>
+            <el-button type="primary" @click="show1()">对账</el-button>
+            <el-button type="primary" @click="show2()">过账</el-button>
+        </el-form-item>
+    </el-form>
+
+    <div v-show="showDesc" style="display: none">
+    <br><span><span style="color: dimgrey ">物料编码：</span>{{jdesc.物料编码}} &nbsp;&nbsp; <span style="color: dimgrey ">截止日期：</span>{{jdesc.截止时间}}</span>
+    <br>
+    <span><span style="color: dimgrey ">期初额：</span>{{jdesc.期初}} &nbsp;&nbsp; <span style="color: dimgrey ">入库总数：</span>{{jdesc.借方}}  &nbsp;&nbsp; <span style="color: dimgrey ">出库总数：</span>{{jdesc.贷方}} </span>
+    <br>
+    <span><span style="color: dimgrey ">账面量：</span>{{jdesc.账面量}} &nbsp;&nbsp; <span style="color: dimgrey ">现存量：</span>{{jdesc.现存量}} </span>
+    <br>
+        <span><span style="color: dimgrey ">对账结果：</span>{{jdesc.对账结果}} &nbsp;<el-tag type="success" v-if="jdesc.对账结果==0">成功</el-tag><el-tag type="danger" v-else>失败</el-tag> </span>
+    <br><br>
+    <span><span style="color: dimgrey ">生产出库：</span>{{jdesc.生产出库}} &nbsp;&nbsp; <span style="color: dimgrey ">按单领用：</span>{{jdesc.按单领用}} &nbsp;&nbsp; <span style="color: dimgrey ">入库倒冲：</span>{{jdesc.入库倒冲}} </span>
+    <br>
+    <span><span style="color: dimgrey ">手工出库：</span>{{jdesc.手工出库}} &nbsp;&nbsp;</span>
+     <br>
+    <span><span style="color: dimgrey ">冲账结果：</span>{{jdesc.冲账结果}} &nbsp;<el-tag type="success" v-if="jdesc.冲账结果==0">成功</el-tag><el-tag type="danger" v-else>失败</el-tag></span>
+    <br><br>
+    </div>
+    <div v-show="showList">
+    <el-table
+            :data="jlist"
+            :row-class-name="tableRowClassName"
+            border
+            >
+        <el-table-column
+                prop="autoId"
+                label="序号"
+                style="width: 5%">
+        </el-table-column>
+        <el-table-column
+            prop="RecCode"
+            label="单据编号"
+            style="width: 10%">
+        </el-table-column>
+        <el-table-column
+                prop="RecType"
+                label="单据类型"
+                style="width: 10%">
+        </el-table-column>
+        <el-table-column
+                prop="EffectDateTime"
+                label="审核日期"
+                style="width: 10%">
+        </el-table-column>
+        <el-table-column
+                prop="SMainQuantity"
+                label="入库数量"
+                style="width: 10%">
+        </el-table-column>
+        <el-table-column
+                prop="FMainQuantity"
+                label="出库数量"
+                style="width: 10%">
+        </el-table-column>
+        <el-table-column
+                prop="Balance"
+                label="余额"
+                style="width: 10%">
+        </el-table-column>
+        <el-table-column
+                prop="RefCode"
+                label="关联单据"
+                style="width: 10%">
+        </el-table-column>
+    </el-table>
+    </div>
+</div>
+
+
+<script>
+    new Vue({
+        el:"#app",
+        data:{
+            loading: false,
+            itemCode: '',
+            result: {},
+
+            jdesc: {},
+            showDesc: false,
+
+            jlist: [],
+            showList: false
+        },
+        methods:{
+            send(){
+                this.loading= true;
+                this.showList= false;
+                var _this= this;
+                axios({
+                    method:'get',
+                    url:'list2?code='+ _this.itemCode
+                }).then(function(res){
+                    _this.jdesc=  res.data.jdesc;
+                    _this.showDesc= true;
+                    _this.loading= false;
+                });
+            },
+            show1(){
+                this.showList= false;
+                var _this= this;
+                axios({
+                    method:'get',
+                    url:'list3'
+                }).then(function(res){
+                    // console.log(res.data.ref);
+                    _this.jlist= res.data.ref;
+                    _this.showList= true;
+                });
+            },
+            show2(){
+                this.showList= false;
+                var _this= this;
+                axios({
+                    method:'get',
+                    url:'list4'
+                }).then(function(res){
+                    _this.jlist= res.data.data;
+                    _this.showList= true;
+                });
+            },
+            tableRowClassName({row}) {
+                if(row.RecType=='生产出库')return "ManuOut";
+                else if(row.RecType=='入库倒冲')return "DeductOut";
+                else if(row.RecType=='按单领用')return "TackOut";
+                return '';
+            }
+        }
+    });
+</script>
+</body>
+</html>

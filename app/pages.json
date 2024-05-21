@@ -1,0 +1,58 @@
+{
+	"easycom": {
+		"^u-(.*)": "@/uview-ui/components/u-$1/u-$1.vue"
+	},
+	"pages": [	
+	{
+            "path" : "pages/sys/login/config/config",
+            "style" :                                                                                    
+            {
+                "navigationBarTitleText": "",
+                "enablePullDownRefresh": false
+            }
+            
+        }
+    ],
+	"subPackages": [	
+	],
+	"preloadRule": {
+		
+	},
+	"globalStyle": {
+		"navigationBarTextStyle": "black",
+		"navigationBarTitleText": "Aidex",
+		"navigationBarBackgroundColor": "#ffffff"
+	},
+	"tabBar": {
+		"color": "#333333",
+		"selectedColor": "#4094ff",
+		"backgroundColor": "#ffffff",
+		"borderStyle": "white",
+		"list": [
+			 {
+				"pagePath": "pages/sys/todo/list-item",
+				"iconPath": "static/aidex/tabbar/todo_1.png",
+				"selectedIconPath": "static/aidex/tabbar/todo_2.png",
+				"text": "通知"
+			},
+			{
+				"pagePath": "pages/sys/workbench/index",
+				"iconPath": "static/aidex/tabbar/apply_1.png",
+				"selectedIconPath": "static/aidex/tabbar/apply_2.png",
+				"text": "工作台"
+			},
+			{
+				"pagePath": "pages/sys/book/index",
+				"iconPath": "static/aidex/tabbar/book_1.png",
+				"selectedIconPath": "static/aidex/tabbar/book_2.png",
+				"text": "通讯录"
+			},
+			{
+				"pagePath": "pages/sys/user/index",
+				"iconPath": "static/aidex/tabbar/my_1.png",
+				"selectedIconPath": "static/aidex/tabbar/my_2.png",
+				"text": "我的"
+			}
+		]
+	}
+}

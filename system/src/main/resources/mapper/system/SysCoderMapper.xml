@@ -1,0 +1,111 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.njrsun.system.mapper.SysCoderMapper">
+    
+    <resultMap type="com.njrsun.system.domain.SysCoder" id="SysCodeResult">
+        <result property="coderId"   column="coder_id"/>
+        <result property="workType"    column="work_type"    />
+        <result property="prefix"    column="prefix"    />
+        <result property="incNumber"    column="inc_number"    />
+        <result property="incLen"    column="inc_len"    />
+        <result property="createBy"    column="create_by"    />
+        <result property="createTime"    column="create_time"    />
+        <result property="updateBy"    column="update_by"    />
+        <result property="updateTime"    column="update_time"    />
+        <result property="remark"    column="remark"    />
+        <result property="workTypeId" column="work_type_id"/>
+        <result property="orderNum" column="order_num"/>
+        <result property="exactDate" column="exact_date"/>
+        <result property="typeShare" column="type_share"/>
+    </resultMap>
+
+    <sql id="selectSysCodeVo">
+        select work_type, prefix, inc_number, inc_len, exact_date, create_by, create_time, update_by, update_time, remark,coder_id,work_type_id,order_num,type_share from sys_coder
+    </sql>
+
+    <select id="selectSysCodeList" parameterType="SysCoder" resultMap="SysCodeResult">
+        <include refid="selectSysCodeVo"/>
+        <where>
+             <if test="workType != null and workType !=''"> and work_type = #{workType}</if>
+              <if test="workTypeId != null and workTypeId !=''"> and work_Type_id = #{workTypeId}</if>
+        </where>
+        order by order_num
+    </select>
+    
+    <select id="selectSysCodeById" parameterType="Long" resultMap="SysCodeResult">
+        <include refid="selectSysCodeVo"/>
+        where coder_id = #{workType}
+    </select>
+    <select id="selectSysCodeByWorkType" resultType="com.njrsun.system.domain.SysCoder">
+        <include refid="selectSysCodeVo"/>
+        <where>
+            <if test="workType != null"> and work_type = #{workType}</if>
+            <if test="typeShare != null"> and type_share = #{typeShare}</if>
+            <if test="workTypeId != null"> and work_type_id = #{workTypeId}</if>
+        </where>
+      limit 1
+    </select>
+
+    <insert id="insertSysCode" parameterType="SysCoder">
+        insert into sys_coder
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="workType != null">work_type,</if>
+            <if test="prefix != null">prefix,</if>
+            <if test="incNumber != null">inc_number,</if>
+            <if test="incLen != null">inc_len,</if>
+            <if test="exactDate != null">exact_date,</if>
+            <if test="createBy != null">create_by,</if>
+            <if test="createTime != null">create_time,</if>
+            <if test="remark != null">remark,</if>
+            <if test="workTypeId != null">work_type_id,</if>
+            <if test="orderNum != null">order_num,</if>
+            <if test="typeShare != null">type_share,</if>
+         </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="workType != null">#{workType},</if>
+            <if test="prefix != null">#{prefix},</if>
+            <if test="incNumber != null">#{incNumber},</if>
+            <if test="incLen != null">#{incLen},</if>
+            <if test="exactDate != null">#{exactDate},</if>
+            <if test="createBy != null">#{createBy},</if>
+            <if test="createTime != null">#{createTime},</if>
+            <if test="remark != null">#{remark},</if>
+            <if test="workTypeId != null">#{workTypeId},</if>
+            <if test="orderNum != null">#{orderNum},</if>
+            <if test="typeShare != null">#{typeShare},</if>
+         </trim>
+    </insert>
+    <insert id="addIncNumber">
+        update sys_coder set inc_number = inc_number + 1 where coder_id = #{id}
+    </insert>
+
+    <update id="updateSysCode" parameterType="SysCoder">
+        update sys_coder
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="prefix != null">prefix = #{prefix},</if>
+            <if test="incNumber != null">inc_number = #{incNumber},</if>
+            <if test="incLen != null">inc_len = #{incLen},</if>
+            <if test="exactDate != null">exact_date = #{exactDate},</if>
+            <if test="updateBy != null">update_by = #{updateBy},</if>
+            <if test="updateTime != null">update_time = #{updateTime},</if>
+            <if test="remark != null">remark = #{remark},</if>
+            <if test="workTypeId != null">work_type_id = #{workTypeId},</if>
+            <if test="orderNum != null">order_num = #{orderNum},</if>
+            <if test="typeShare != null">type_share = #{typeShare},</if>
+        </trim>
+        where coder_id  = #{coderId}
+    </update>
+
+    <delete id="deleteSysCodeById" parameterType="Long">
+        delete from sys_coder where coder_id = #{codeId}
+    </delete>
+
+    <delete id="deleteSysCodeByIds" parameterType="Long">
+        delete from sys_coder where sys_coder.coder_id in
+        <foreach item="codeId" collection="array" open="(" separator="," close=")">
+            #{codeId}
+        </foreach>
+    </delete>
+</mapper>

@@ -1,0 +1,287 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.cingsoft.cloud.helper.mapper.DemoMapper">
+
+	<select id="getItemId" parameterType="java.lang.String" resultType="map">
+		SELECT InvItemId
+		  FROM INV_Items
+		  WHERE InvItemCode=#{itemCode}
+    </select>
+
+	<select id="getInitial" parameterType="java.lang.String" resultType="map">
+		SELECT WM_InvPerBeginSheets.InvItemId, CASE WHEN ISNULL(INV_Items.IsAssisUnit,0) = 1 THEN WM_InvPerBeginSheets.InvUnitCode ELSE '' END AS InvUnitCode, WM_InvPerBeginSheets.MainUnitCode, WM_InvPerBeginSheets.OrgId,
+		  CASE WHEN ISNULL(INV_Items.IsIncluCharacValue,0) = 1 THEN WM_InvPerBeginSheets.CluCharacNum ELSE '' END AS CluCharacNum, WM_InvPerBeginSheets.StoreTypeId,
+		  WM_InvPerBeginSheets.StockHouseId, 0 AS BusiOrgId,
+		  CASE WHEN ISNULL(INV_Items.IsGradeSet,0) = 1 THEN WM_InvPerBeginSheets.GradeSetId ELSE 0 END AS GradeSetId,
+		  CASE WHEN ISNULL(INV_Items.ISCanBrand,0) = 1 THEN WM_InvPerBeginSheets.BrandValueSetsId ELSE 0 END AS BrandValueSetsId,
+		  CASE WHEN ISNULL(INV_Items.IsLotNumControl,0) = 1 THEN WM_InvPerBeginSheets.LotNumId ELSE 0 END AS LotNumId,
+		  CASE WHEN ISNULL(INV_Items.IsUseProject,0) = 1 THEN WM_InvPerBeginSheets.ProjectApprovalId ELSE 0 END AS ProjectApprovalId,
+		  CASE WHEN ISNULL(INV_Items.IsUseProject,0) = 1 THEN WM_InvPerBeginSheets.ProjectPlanningLinseId ELSE 0 END AS ProjectPlanningLinseId,
+		  WM_InvPerBeginSheets.IdentificationID,
+		  CASE WHEN ISNULL(INV_Items.IsLocationControl,0) = 1 THEN WM_InvPerBeginSheets.LocationId ELSE 0 END AS LocationId,
+		  WM_InvPerBeginSheets.MainQuantity AS BeginMainQuantity,
+		  CASE WHEN ISNULL(INV_Items.IsAssisUnit,0) = 1 THEN WM_InvPerBeginSheets.InvQuantity ELSE 0 END AS BeginInvQuantity,
+		  NULL AS SMainQuantity, NULL AS  SAssistantQty,
+		  NULL AS  FMainQuantity, NULL AS FAssistantQty
+		  FROM WM_InvPerBeginSheets
+		  LEFT JOIN INV_Items ON INV_Items.InvItemId = WM_InvPerBeginSheets.InvItemId and INV_Items.orgid=WM_InvPerBeginSheets.orgid
+		  WHERE  InvPerBeginId IN
+		  (
+		   SELECT InvPerBeginId FROM WM_InvPerBegin
+		   WHERE Status = 3
+		  ) AND INV_Items.InvItemCode=#{itemCode}
+    </select>
+
+    <select id="getBalance" parameterType="java.lang.String" resultType="map">
+        select * from wm_onhandquantity inner join INV_Items
+        on wm_onhandquantity.InvItemId=INV_Items.InvItemId
+        where INV_Items.InvItemCode=#{itemCode}
+    </select>
+
+    <select id="getPurchaseIn" parameterType="java.lang.String" resultType="map">
+		SELECT 			*
+				FROM
+				(
+					SELECT A1.OrgId, A2.RecDate,'采购入库单' as RecName, a2.ApprovedDateTime as effectDateTime, A2.RecCode,A2.DepartmentId,A2.BuyerId AS OperatorId,A2.StockHouseId,
+						A1.InvItemId,
+						CASE WHEN ISNULL(INV_Items.IsIncluCharacValue,0) = 1 THEN A1.CluCharacNum ELSE '' END AS CluCharacNum,
+						A1.StoreTypeId,
+						CASE WHEN ISNULL(INV_Items.IsGradeSet,0) = 1 THEN A1.GradeSetId ELSE 0 END AS GradeSetId,
+						CASE WHEN ISNULL(INV_Items.ISCanBrand,0) = 1 THEN A1.BrandValueSetsId ELSE 0 END AS BrandValueSetsId,
+						CASE WHEN ISNULL(INV_Items.IsLotNumControl,0) = 1 THEN A1.LotNumId ELSE 0 END AS LotNumId,
+						CASE WHEN ISNULL(INV_Items.IsUseProject,0) = 1 THEN A1.ProjectApprovalId ELSE 0 END AS ProjectApprovalId,
+						CASE WHEN ISNULL(INV_Items.IsUseProject,0) = 1 THEN A1.ProjectPlanningLinseId ELSE 0 END AS ProjectPlanningLinseId,
+						A1.IdentificationID,
+						CASE WHEN ISNULL(INV_Items.IsLocationControl,0) = 1 THEN A1.LocationId ELSE 0 END AS LocationId,
+						A1.CustomerId, NULL AS CusLocationId ,
+						A1.SupplierId, A2.SupLocationId, A1.BusiOrgId, A1.MainUnitCode,
+						CASE WHEN ISNULL(INV_Items.IsAssisUnit,0) = 1 THEN A1.InvUnitCode ELSE '' END AS AssistantUnitCode,
+						CASE WHEN ISNULL(INV_Items.IsAssisUnit,0) = 1 THEN A1.InvConversionRate ELSE 0 END AS ConversionRate,
+						NULL AS BeginQuantity, NULL AS BeginAssistantQuantity,
+						CASE WHEN ISNULL(A2.BredVouch, 0) = 0 THEN -1 ELSE 1 END * A1.MainQuantity AS SMainQuantity,
+						CASE WHEN ISNULL(A2.BredVouch, 0) = 0 THEN -1 ELSE 1 END * CASE WHEN ISNULL(INV_Items.IsAssisUnit,0) = 1 THEN A1.InvQuantity ELSE 0 END AS SAssistantQty,
+						NULL AS FMainQuantity, NULL AS FAssistantQty,NULL AS EndQuantity, NULL AS EndAssistantQuantity, A2.BredVouch, A2.Status, A2.OrderStatus
+					FROM WM_PurcEntryLines A1
+					LEFT JOIN WM_PurchaseEntryRec A2 ON A2.PurchaseEntryId = A1.PurchaseEntryId AND A2.OrgId = A1.OrgId
+					LEFT JOIN INV_Items ON INV_Items.InvItemId = A1.InvItemId  and INV_Items.orgid=a1.orgid
+					WHERE ISNULL(A2.BpuFirst, 0) = 0
+				) A1
+				LEFT JOIN INV_Items ON INV_Items.InvItemId = A1.InvItemId  and INV_Items.orgid=a1.orgid
+				WHERE A1.OrgId = 1 AND A1.Status = 3
+					AND INV_Items.InvItemCode = #{itemCode}
+    </select>
+
+	<select id="getMachIn" parameterType="java.lang.String" resultType="map">
+		SELECT 			*
+				FROM
+				(
+					SELECT A1.OrgId, A2.RecDate,'生产入库单' as RecName, a2.ApprovedDateTime as effectDateTime, A2.RecCode,A2.DepartmentId,A2.HRStaffId AS OperatorId,A2.StockHouseId,
+						A1.InvItemId, CASE WHEN ISNULL(INV_Items.IsIncluCharacValue,0) = 1 THEN A1.CluCharacNum ELSE '' END AS CluCharacNum,
+						A1.StoreTypeId,
+						CASE WHEN ISNULL(INV_Items.IsGradeSet,0) = 1 THEN A1.GradeSetId ELSE 0 END AS GradeSetId,
+						CASE WHEN ISNULL(INV_Items.ISCanBrand,0) = 1 THEN A1.BrandValueSetsId ELSE 0 END AS BrandValueSetsId,
+						CASE WHEN ISNULL(INV_Items.IsLotNumControl,0) = 1 THEN A1.LotNumId ELSE 0 END AS LotNumId,
+						CASE WHEN ISNULL(INV_Items.IsUseProject,0) = 1 THEN A1.ProjectApprovalId ELSE 0 END AS ProjectApprovalId,
+						CASE WHEN ISNULL(INV_Items.IsUseProject,0) = 1 THEN A1.ProjectPlanningLinseId ELSE 0 END AS ProjectPlanningLinseId,
+						A1.IdentificationID,
+						CASE WHEN ISNULL(INV_Items.IsLocationControl,0) = 1 THEN A1.LocationId ELSE 0 END AS LocationId,
+						NULL AS CustomerId, NULL AS CusLocationId ,
+						NULL AS SupplierId, NULL AS SupLocationId, A1.BusiOrgId, A1.MainUnitCode,
+						CASE WHEN ISNULL(INV_Items.IsAssisUnit,0) = 1 THEN A1.InvUnitCode ELSE '' END  AS AssistantUnitCode,
+						CASE WHEN ISNULL(INV_Items.IsAssisUnit,0) = 1 THEN A1.InvConversionRate ELSE 0 END AS ConversionRate,
+						NULL AS BeginQuantity, NULL AS BeginAssistantQuantity,
+						CASE WHEN ISNULL(A2.BredVouch, 0) = 0 THEN -1 ELSE 1 END * A1.MainQuantity AS SMainQuantity,
+						CASE WHEN ISNULL(A2.BredVouch, 0) = 0 THEN -1 ELSE 1 END * CASE WHEN ISNULL(A2.BredVouch, 0) = 0 THEN -1 ELSE 1 END * CASE WHEN ISNULL(INV_Items.IsAssisUnit,0) = 1 THEN A1.InvQuantity ELSE 0 END AS SAssistantQty,
+						NULL AS FMainQuantity, NULL AS FAssistantQty,
+						NULL AS EndQuantity, NULL AS EndAssistantQuantity, A2.BredVouch, A2.Status, A2.OrderStatus
+					FROM WM_MachEntryLines A1
+					LEFT JOIN WM_MachEntryRec A2 ON A2.MachEntryId = A1.MachEntryId AND A2.OrgId = A1.OrgId
+					LEFT JOIN INV_Items ON INV_Items.InvItemId = A1.InvItemId and INV_Items.orgid=a1.orgid
+				) A1
+				LEFT JOIN INV_Items ON INV_Items.InvItemId = A1.InvItemId  and INV_Items.orgid=a1.orgid
+				WHERE A1.OrgId = 1 AND A1.Status = 3
+					AND INV_Items.InvItemCode = #{itemCode}
+    </select>
+
+	<select id="getCoopIn" parameterType="java.lang.String" resultType="map">
+		SELECT 			*
+				FROM
+				(
+				) A1
+				LEFT JOIN INV_Items ON INV_Items.InvItemId = A1.InvItemId  and INV_Items.orgid=a1.orgid
+				WHERE A1.OrgId = 1 AND A1.Status = 3
+					AND INV_Items.InvItemCode = #{itemCode}
+	</select>
+
+	<select id="getSaleOut" parameterType="java.lang.String" resultType="map">
+		SELECT 			*
+				FROM
+				(
+				) A1
+				LEFT JOIN INV_Items ON INV_Items.InvItemId = A1.InvItemId  and INV_Items.orgid=a1.orgid
+				WHERE A1.OrgId = 1 AND A1.Status = 3
+					AND INV_Items.InvItemCode = #{itemCode}
+	</select>
+
+	<select id="getManuOut" parameterType="java.lang.String" resultType="map">
+		SELECT 			*
+				FROM
+				(
+					SELECT A1.OrgId, A1.WorkRecCode as WorkRecCode, A2.RecDate,'生产出库单' as RecName, a2.ApprovedDateTime as effectDateTime, A2.RecCode,A2.DepartmentId,A2.OperatorId AS OperatorId,A2.StockHouseId,
+						A1.InvItemId, CASE WHEN ISNULL(INV_Items.IsIncluCharacValue,0) = 1 THEN A1.CluCharacNum ELSE '' END AS CluCharacNum,
+						A1.StoreTypeId,
+						CASE WHEN ISNULL(INV_Items.IsGradeSet,0) = 1 THEN A1.GradeSetId ELSE 0 END AS GradeSetId,
+						CASE WHEN ISNULL(INV_Items.ISCanBrand,0) = 1 THEN A1.BrandValueSetsId ELSE 0 END AS BrandValueSetsId,
+						CASE WHEN ISNULL(INV_Items.IsLotNumControl,0) = 1 THEN A1.LotNumId ELSE 0 END AS LotNumId,
+						CASE WHEN ISNULL(INV_Items.IsUseProject,0) = 1 THEN A1.ProjectApprovalId ELSE 0 END AS ProjectApprovalId,
+						CASE WHEN ISNULL(INV_Items.IsUseProject,0) = 1 THEN A1.ProjectPlanningLinseId ELSE 0 END AS ProjectPlanningLinseId,
+						A1.IdentificationID,
+						CASE WHEN ISNULL(INV_Items.IsLocationControl,0) = 1 THEN A1.LocationId ELSE 0 END AS LocationId,
+						null AS CustomerId, null AS CusLocationId ,
+						NULL AS SupplierId, NULL AS SupLocationId, A1.BusiOrgId, A1.MainUnitCode,
+						CASE WHEN ISNULL(INV_Items.IsAssisUnit,0) = 1 THEN A1.InvUnitCode ELSE '' END AS AssistantUnitCode,
+						CASE WHEN ISNULL(INV_Items.IsAssisUnit,0) = 1 THEN A1.InvConversionRate ELSE 0 END  AS ConversionRate,
+						NULL AS BeginQuantity, NULL AS BeginAssistantQuantity, NULL AS SMainQuantity, NULL AS SAssistantQty,
+						CASE WHEN ISNULL(A2.BredVouch, 0) = 0 THEN -1 ELSE 1 END * A1.MainQuantity AS FMainQuantity,
+						CASE WHEN ISNULL(A2.BredVouch, 0) = 0 THEN -1 ELSE 1 END * CASE WHEN ISNULL(INV_Items.IsAssisUnit,0) = 1 THEN A1.InvQuantity ELSE 0 END AS FAssistantQty,
+						NULL AS EndQuantity, NULL AS EndAssistantQuantity, A2.BredVouch, A2.Status, A2.OrderStatus
+					FROM WM_ManuExWareRecBases A1
+					LEFT JOIN WM_ManuExWareRecs A2 ON A2.WMManuExWareRecId = A1.WMManuExWareRecId AND A2.OrgId = A1.OrgId
+					LEFT JOIN INV_Items ON INV_Items.InvItemId = A1.InvItemId    and INV_Items.orgid=a1.orgid
+				) A1
+				LEFT JOIN INV_Items ON INV_Items.InvItemId = A1.InvItemId  and INV_Items.orgid=a1.orgid
+				WHERE A1.OrgId = 1 AND A1.Status = 3
+					AND INV_Items.InvItemCode = #{itemCode}
+	</select>
+
+	<select id="getCoopOut" parameterType="java.lang.String" resultType="map">
+		SELECT 			*
+				FROM
+				(
+					SELECT A1.OrgId, A2.RecDate,'委外出库单' as RecName, a2.ApprovedDateTime as effectDateTime, A2.RecCode,A2.DepartmentId,A2.OperatorId AS OperatorId,A2.StockHouseId,
+						A1.InvItemId, CASE WHEN ISNULL(INV_Items.IsIncluCharacValue,0) = 1 THEN A1.CluCharacNum ELSE '' END AS CluCharacNum, A1.StoreTypeId,
+						CASE WHEN ISNULL(INV_Items.IsGradeSet,0) = 1 THEN A1.GradeSetId ELSE 0 END AS GradeSetId,
+						CASE WHEN ISNULL(INV_Items.ISCanBrand,0) = 1 THEN A1.BrandValueSetsId ELSE 0 END AS BrandValueSetsId,
+						CASE WHEN ISNULL(INV_Items.IsLotNumControl,0) = 1 THEN A1.LotNumId ELSE 0 END AS LotNumId,
+						CASE WHEN ISNULL(INV_Items.IsUseProject,0) = 1 THEN A1.ProjectApprovalId ELSE 0 END AS ProjectApprovalId,
+						CASE WHEN ISNULL(INV_Items.IsUseProject,0) = 1 THEN A1.ProjectPlanningLinseId ELSE 0 END AS ProjectPlanningLinseId,
+						A1.IdentificationID,
+						CASE WHEN ISNULL(INV_Items.IsLocationControl,0) = 1 THEN A1.LocationId ELSE 0 END AS LocationId,
+						null AS CustomerId, null AS CusLocationId ,
+						A2.SupplierId, A2.SupShipmentLocationId AS SupLocationId, A1.BusiOrgId, A1.MainUnitCode,
+						CASE WHEN ISNULL(INV_Items.IsAssisUnit,0) = 1 THEN A1.InvUnitCode ELSE '' END AS AssistantUnitCode,
+						CASE WHEN ISNULL(INV_Items.IsAssisUnit,0) = 1 THEN A1.InvConverRate ELSE 0 END  AS ConversionRate,
+						NULL AS BeginQuantity, NULL AS BeginAssistantQuantity, NULL AS SMainQuantity, NULL AS SAssistantQty,
+						CASE WHEN ISNULL(A2.BredVouch, 0) = 0 THEN -1 ELSE 1 END * A1.MainQuantity AS FMainQuantity,
+						CASE WHEN ISNULL(A2.BredVouch, 0) = 0 THEN -1 ELSE 1 END * CASE WHEN ISNULL(INV_Items.IsAssisUnit,0) = 1 THEN A1.InvQuantity ELSE 0 END AS FAssistantQty,
+						NULL AS EndQuantity, NULL AS EndAssistantQuantity, A2.BredVouch, A2.Status, A2.OrderStatus
+					FROM WM_CoopOutRecLines A1
+					LEFT JOIN WM_CoopOutRec A2 ON A2.CoopOutRecId = A1.CoopOutRecId AND A2.OrgId = A1.OrgId
+					LEFT JOIN INV_Items ON INV_Items.InvItemId = A1.InvItemId  and INV_Items.orgid=a1.orgid
+					WHERE ISNULL(A2.BpuFirst, 0) = 0
+				) A1
+				LEFT JOIN INV_Items ON INV_Items.InvItemId = A1.InvItemId  and INV_Items.orgid=a1.orgid
+				WHERE A1.OrgId = 1 AND A1.Status = 3
+					AND INV_Items.InvItemCode = #{itemCode}
+	</select>
+
+	<select id="getOtherIn" parameterType="java.lang.String" resultType="map">
+		SELECT 			*
+				FROM
+				(
+					SELECT A1.OrgId, A2.RecDate, '其他入库单' as RecName, a2.ApprovedDateTime as effectDateTime, A2.RecCode,A2.DepartmentId,A2.ApplyPersonId AS OperatorId,A1.StockHouseId,
+						A1.InvItemId, CASE WHEN ISNULL(INV_Items.IsIncluCharacValue,0) = 1 THEN A1.CluCharacNum ELSE '' END AS CluCharacNum, A1.StoreTypeId,
+						CASE WHEN ISNULL(INV_Items.IsGradeSet,0) = 1 THEN A1.GradeSetId ELSE 0 END AS GradeSetId,
+						CASE WHEN ISNULL(INV_Items.ISCanBrand,0) = 1 THEN A1.BrandValueSetsId ELSE 0 END AS BrandValueSetsId,
+						CASE WHEN ISNULL(INV_Items.IsLotNumControl,0) = 1 THEN A1.LotNumId ELSE 0 END AS LotNumId,
+						CASE WHEN ISNULL(INV_Items.IsUseProject,0) = 1 THEN A1.ProjectApprovalId ELSE 0 END AS ProjectApprovalId,
+						CASE WHEN ISNULL(INV_Items.IsUseProject,0) = 1 THEN A1.ProjectPlanningLinseId ELSE 0 END AS ProjectPlanningLinseId,
+						A1.IdentificationID,
+						CASE WHEN ISNULL(INV_Items.IsLocationControl,0) = 1 THEN A1.LocationId ELSE 0 END AS LocationId,
+						null AS CustomerId, null AS CusLocationId ,
+						NULL AS SupplierId, NULL AS SupLocationId, A1.BusiOrgId, A1.MainUnitCode,
+						CASE WHEN ISNULL(INV_Items.IsAssisUnit,0) = 1 THEN A1.InvUnitCode ELSE '' END AS AssistantUnitCode,
+						CASE WHEN ISNULL(INV_Items.IsAssisUnit,0) = 1 THEN A1.ConversionRate ELSE 0 END AS ConversionRate,
+						NULL AS BeginQuantity, NULL AS BeginAssistantQuantity,
+						CASE WHEN ISNULL(A2.BredVouch, 0) = 0 THEN -1 ELSE 1 END * A1.MainQuantity AS SMainQuantity,
+						CASE WHEN ISNULL(A2.BredVouch, 0) = 0 THEN -1 ELSE 1 END * CASE WHEN ISNULL(INV_Items.IsAssisUnit,0) = 1 THEN A1.InvQuantity ELSE 0 END AS SAssistantQty,
+						NULL AS FMainQuantity, NULL AS FAssistantQty, NULL AS EndQuantity, NULL AS EndAssistantQuantity, A2.BredVouch, A2.Status, A2.OrderStatus
+					FROM WM_OtherExWareRecLines A1
+					LEFT JOIN WM_OtherExWareRecs A2 ON A2.WMOtherExWareRecId = A1.WMOtherExWareRecId AND A2.OrgId = A1.OrgId
+					LEFT JOIN INV_Items ON INV_Items.InvItemId = A1.InvItemId  and INV_Items.orgid=a1.orgid
+					WHERE A2.EnterOutType = 1
+				) A1
+				LEFT JOIN INV_Items ON INV_Items.InvItemId = A1.InvItemId  and INV_Items.orgid=a1.orgid
+				WHERE A1.OrgId = 1 AND A1.Status = 3
+					AND INV_Items.InvItemCode = #{itemCode}
+	</select>
+
+	<select id="getOtherOut" parameterType="java.lang.String" resultType="map">
+		SELECT 			*
+				FROM
+				(
+					SELECT A1.OrgId, A2.RecDate,'其它出库单' as RecName, a2.ApprovedDateTime as effectDateTime, A2.RecCode,A2.DepartmentId,A2.ApplyPersonId AS OperatorId,A1.StockHouseId,
+						A1.InvItemId, CASE WHEN ISNULL(INV_Items.IsIncluCharacValue,0) = 1 THEN A1.CluCharacNum ELSE '' END AS CluCharacNum, A1.StoreTypeId,
+						CASE WHEN ISNULL(INV_Items.IsGradeSet,0) = 1 THEN A1.GradeSetId ELSE 0 END AS GradeSetId,
+						CASE WHEN ISNULL(INV_Items.ISCanBrand,0) = 1 THEN A1.BrandValueSetsId ELSE 0 END AS BrandValueSetsId,
+						CASE WHEN ISNULL(INV_Items.IsLotNumControl,0) = 1 THEN A1.LotNumId ELSE 0 END AS LotNumId,
+						CASE WHEN ISNULL(INV_Items.IsUseProject,0) = 1 THEN A1.ProjectApprovalId ELSE 0 END AS ProjectApprovalId,
+						CASE WHEN ISNULL(INV_Items.IsUseProject,0) = 1 THEN A1.ProjectPlanningLinseId ELSE 0 END AS ProjectPlanningLinseId,
+						A1.IdentificationID,
+						CASE WHEN ISNULL(INV_Items.IsLocationControl,0) = 1 THEN A1.LocationId ELSE 0 END AS LocationId,
+						null AS CustomerId, null AS CusLocationId ,
+						NULL AS SupplierId, NULL AS SupLocationId, A1.BusiOrgId, A1.MainUnitCode,
+						CASE WHEN ISNULL(INV_Items.IsAssisUnit,0) = 1 THEN A1.InvUnitCode ELSE '' END AS AssistantUnitCode,
+						CASE WHEN ISNULL(INV_Items.IsAssisUnit,0) = 1 THEN A1.ConversionRate ELSE 0 END AS ConversionRate,
+						NULL AS BeginQuantity, NULL AS BeginAssistantQuantity, NULL AS SMainQuantity,
+						NULL AS SAssistantQty, CASE WHEN ISNULL(A2.BredVouch, 0) = 0 THEN -1 ELSE 1 END * A1.MainQuantity AS FMainQuantity,
+						CASE WHEN ISNULL(A2.BredVouch, 0) = 0 THEN -1 ELSE 1 END * CASE WHEN ISNULL(INV_Items.IsAssisUnit,0) = 1 THEN A1.InvQuantity ELSE 0 END AS FAssistantQty,
+						NULL AS EndQuantity, NULL AS EndAssistantQuantity, A2.BredVouch, A2.Status, A2.OrderStatus
+					FROM WM_OtherExWareRecLines A1
+					LEFT JOIN WM_OtherExWareRecs A2 ON A2.WMOtherExWareRecId = A1.WMOtherExWareRecId AND A2.OrgId = A1.OrgId
+					LEFT JOIN INV_Items ON INV_Items.InvItemId = A1.InvItemId  and INV_Items.orgid=a1.orgid
+					WHERE A2.EnterOutType = 2
+				) A1
+				LEFT JOIN INV_Items ON INV_Items.InvItemId = A1.InvItemId  and INV_Items.orgid=a1.orgid
+				WHERE A1.OrgId = 1 AND A1.Status = 3
+					AND INV_Items.InvItemCode = #{itemCode}
+	</select>
+
+	<select id="getDeductOut" parameterType="java.lang.String" resultType="map">
+		SELECT PRS_WorkRec.RecCode, PRS_WorkRec.ApprovedDateTime as effectDateTime,
+		INV_Items.InvItemCode, PRS_WorkRec.RecCode as WorkRecCode,
+		INV_Items.InvItemName AS '料品名称',
+		PRS_WorkRecLine.ShouldGetQuan AS FALLQuantity, 0 AS SMainQuantity, ISNULL(PRS_WorkRecLine.ShouldGetQuan,0)-ISNULL(PRS_WorkRecLine.HaveGotQuan,0)+ISNULL(PRS_WorkRecLine.CancelStockQuan,0) as UMainQuantity,
+		ISNULL(PRS_WorkRecLine.HaveGotQuan,0)-ISNULL(PRS_WorkRecLine.CancelStockQuan,0) AS FMainQuantity
+		FROM PRS_WorkRecLine
+		left join PRS_WorkRec ON PRS_WorkRecLine.WorkRecId=PRS_WorkRec.WorkRecId
+		LEFT JOIN INV_Items ON INV_Items.InvItemId = PRS_WorkRecLine.InvItemId
+		WHERE  ISNULL(PRS_WorkRecLine.RequisitionWay,0)=2 AND INV_Items.InvItemCode= #{itemCode} AND PRS_WorkRecLine.OrgId = 1 AND PRS_WorkRec.Status = 3
+	</select>
+
+	<select id="getTackOut" parameterType="java.lang.String" resultType="map">
+		SELECT PRS_IssueRec.RecCode, PRS_IssueRec.ApprovedDateTime as effectDateTime,
+		INV_Items.InvItemCode, PRS_WorkRec.RecCode as WorkRecCode,
+		INV_Items.InvItemName AS '料品名称',
+		PRS_IssueRecLine.IssueQuan AS FALLQuantity, 0 AS SMainQuantity, ISNULL(PRS_IssueRecLine.IssueQuan,0)-ISNULL(PRS_IssueRecLine.HaveGotQuan,0)+ISNULL(PRS_IssueRecLine.CancelStockQuan,0) as UMainQuantity,
+		ISNULL(PRS_IssueRecLine.HaveGotQuan,0)-ISNULL(PRS_IssueRecLine.CancelStockQuan,0) as FMainQuantity
+		FROM PRS_IssueRecLine
+		left join PRS_IssueRec ON PRS_IssueRecLine.IssueRecId=PRS_IssueRec.IssueRecId
+		left join PRS_WorkRec ON PRS_WorkRec.WorkRecId=PRS_IssueRecLine.WorkRecId
+		LEFT JOIN INV_Items ON INV_Items.InvItemId = PRS_IssueRecLine.InvItemId
+		WHERE  INV_Items.InvItemCode= #{itemCode}
+	</select>
+
+	<select id="getArtificialOut" parameterType="java.lang.String" resultType="map">
+		SELECT WM_ManuExWareRecs.RecCode, WM_ManuExWareRecs.ApprovedDateTime as effectDateTime,
+		INV_Items.InvItemCode, WM_ManuExWareRecBases.WorkRecCode as WorkRecCode,
+		INV_Items.InvItemName AS '料品名称',
+		CASE WHEN ISNULL(WM_ManuExWareRecs.BredVouch, 0) = 0 THEN -1 ELSE 1 END * WM_ManuExWareRecBases.MainQuantity AS FMainQuantity, 0 AS SMainQuantity
+		FROM WM_ManuExWareRecBases
+		LEFT JOIN  WM_ManuExWareRecs ON WM_ManuExWareRecBases.WMManuExWareRecId = WM_ManuExWareRecs.WMManuExWareRecId
+		left join PRS_WorkRecLine ON PRS_WorkRecLine.WorkRecLineId=WM_ManuExWareRecBases.WorkRecLineId
+		LEFT JOIN INV_Items ON INV_Items.InvItemId = WM_ManuExWareRecBases.InvItemId
+		WHERE  ((ISNULL(WM_ManuExWareRecBases.WorkRecLineId,0)=0 and ISNULL(WM_ManuExWareRecBases.IssueRecLineId,0) =0))
+		AND INV_Items.InvItemCode= #{itemCode} AND WM_ManuExWareRecBases.OrgId = 1 AND WM_ManuExWareRecs.Status = 3
+	</select>
+</mapper>

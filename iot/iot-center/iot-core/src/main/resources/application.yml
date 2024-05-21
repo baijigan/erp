@@ -1,0 +1,43 @@
+data:
+  point:
+    batch:
+      speed: ${POINT_BATCH_SPEED:100}
+      interval: ${POINT_BATCH_INTERVAL:5}
+
+server:
+  port: 8500
+
+spring:
+  application:
+    name: @project.artifactId@
+  profiles:
+    active:
+      - register
+      - monitor
+      - server
+      - rabbitmq
+      - mysql
+      - mongo
+      - redis
+      - feign
+      - ${PROFILE_ACTIVE:dev}
+  main:
+    allow-bean-definition-overriding: true
+  mvc:
+    throw-exception-if-no-handler-found: true
+  web:
+    resources:
+      add-mappings: false
+  redis:
+    database: 3
+  cache:
+    redis:
+      time-to-live: ${CACHE_REDIS_TIME_TO_LIVE:12H}
+
+logging:
+  level:
+    com.dc3: DEBUG
+    com.iot.center.data.service.job: INFO
+    com.iot.center.data.service.rabbit: INFO
+  file:
+    name: dc3/logs/center/data/${spring.application.name}.log

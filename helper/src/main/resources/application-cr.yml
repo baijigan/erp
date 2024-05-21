@@ -1,0 +1,6 @@
+spring:
+  datasource:
+    url: jdbc:jtds:sqlserver://:/
+    driver-class-name: net.sourceforge.jtds.jdbc.Driver
+    hikari:
+      connection-test-query:  SELECT 1

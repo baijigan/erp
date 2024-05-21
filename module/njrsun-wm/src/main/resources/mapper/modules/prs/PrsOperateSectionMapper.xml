@@ -1,0 +1,98 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.njrsun.modules.prs.mapper.PrsOperateSectionMapper">
+    
+    <resultMap type="PrsOperateSection" id="PrsOperateSectionResult">
+        <result property="uniqueId"    column="unique_id"    />
+        <result property="code"    column="code"    />
+        <result property="name"    column="name"    />
+        <result property="duration"    column="duration"    />
+        <result property="isQuality"    column="is_quality"    />
+        <result property="orderId"    column="order_id"    />
+        <result property="status"    column="status"    />
+        <result property="createBy"    column="create_by"    />
+        <result property="updateDate"    column="update_date"    />
+        <result property="updateBy"    column="update_by"    />
+    </resultMap>
+
+    <sql id="selectPrsOperateSectionVo">
+        select unique_id, code, name, duration, is_quality, count_type, order_id, status, create_by, update_date, update_by from prs_operate_section
+    </sql>
+
+    <select id="selectPrsOperateSectionList" parameterType="PrsOperateSection" resultMap="PrsOperateSectionResult">
+        <include refid="selectPrsOperateSectionVo"/>
+        <where>  
+            <if test="code != null  and code != ''"> and code = #{code}</if>
+            <if test="name != null  and name != ''"> and name like concat('%', #{name}, '%')</if>
+            <if test="duration != null "> and duration = #{duration}</if>
+            <if test="isQuality != null  and isQuality != ''"> and is_quality = #{isQuality}</if>
+            <if test="countType != null  and countType != ''"> and count_type = #{countType}</if>
+            <if test="orderId != null "> and order_id = #{orderId}</if>
+            <if test="status != null  and status != ''"> and status = #{status}</if>
+            <if test="updateDate != null "> and update_date = #{updateDate}</if>
+
+        </where>
+            order by order_id
+    </select>
+    
+    <select id="selectPrsOperateSectionById" parameterType="Long" resultMap="PrsOperateSectionResult">
+        <include refid="selectPrsOperateSectionVo"/>
+        where unique_id = #{uniqueId}
+    </select>
+        
+    <insert id="insertPrsOperateSection" parameterType="PrsOperateSection" useGeneratedKeys="true" keyProperty="uniqueId">
+        insert into prs_operate_section
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="code != null and code != ''">code,</if>
+            <if test="name != null and name != ''">name,</if>
+            <if test="duration != null">duration,</if>
+            <if test="isQuality != null">is_quality,</if>
+            <if test="countType != null">count_type,</if>
+            <if test="orderId != null">order_id,</if>
+            <if test="status != null">status,</if>
+            <if test="createBy != null">create_by,</if>
+            update_date,
+
+         </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="code != null and code != ''">#{code},</if>
+            <if test="name != null and name != ''">#{name},</if>
+            <if test="duration != null">#{duration},</if>
+            <if test="isQuality != null">#{isQuality},</if>
+            <if test="countType != null">#{countType},</if>
+            <if test="orderId != null">#{orderId},</if>
+            <if test="status != null">#{status},</if>
+            <if test="createBy != null">#{createBy},</if>
+            SysDate(),
+         </trim>
+    </insert>
+
+    <update id="updatePrsOperateSection" parameterType="PrsOperateSection">
+        update prs_operate_section
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="code != null and code != ''">code = #{code},</if>
+            <if test="name != null and name != ''">name = #{name},</if>
+            <if test="duration != null">duration = #{duration},</if>
+            <if test="isQuality != null">is_quality = #{isQuality},</if>
+            <if test="countType != null">count_type = #{countType},</if>
+            <if test="orderId != null">order_id = #{orderId},</if>
+            <if test="status != null">status = #{status},</if>
+            update_date = SysDate(),
+            <if test="updateBy != null">update_by = #{updateBy},</if>
+        </trim>
+        where unique_id = #{uniqueId}
+    </update>
+
+    <delete id="deletePrsOperateSectionById" parameterType="Long">
+        delete from prs_operate_section where unique_id = #{uniqueId}
+    </delete>
+
+    <delete id="deletePrsOperateSectionByIds" parameterType="String">
+        delete from prs_operate_section where unique_id in
+        <foreach item="uniqueId" collection="array" open="(" separator="," close=")">
+            #{uniqueId}
+        </foreach>
+    </delete>
+</mapper>

@@ -1,0 +1,513 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.njrsun.modules.prs.mapper.PrsCheckinMasterMapper">
+
+    <resultMap type="PrsCheckinMaster" id="PrsCheckinMasterResult">
+        <result property="uniqueId" column="unique_id"/>
+        <result property="prsCode" column="prs_code"/>
+        <result property="invoiceDate" column="invoice_date"/>
+        <result property="invoiceStatus" column="invoice_status"/>
+        <result property="invoiceType" column="invoice_type"/>
+        <result property="workStatus" column="work_status"/>
+        <result property="workType" column="work_type"/>
+        <result property="workDept" column="work_dept"/>
+        <result property="checkDate" column="check_date"/>
+        <result property="userOper" column="user_oper"/>
+        <result property="userCheck" column="user_check"/>
+        <result property="remarks" column="remarks"/>
+        <result property="delFlag" column="del_flag"/>
+        <result property="createDate" column="create_date"/>
+        <result property="createBy" column="create_by"/>
+        <result property="updateDate" column="update_date"/>
+        <result property="updateBy" column="update_by"/>
+        <result property="version" column="version"/>
+
+    </resultMap>
+
+    <resultMap id="PrsCheckinMasterPrsCheckinSalveResult" type="PrsCheckinMaster" extends="PrsCheckinMasterResult">
+        <collection property="prsCheckinSalveList" notNullColumn="unique_id" javaType="java.util.List"
+                    resultMap="PrsCheckinSalveResult"/>
+    </resultMap>
+
+    <resultMap type="PrsCheckinSalve" id="PrsCheckinSalveResult">
+        <result property="uniqueId" column="id"/>
+        <result property="prsCode" column="prsCode"/>
+        <result property="mpOrderCode" column="mp_order_code"/>
+        <result property="prsOrderCode" column="prs_order_code"/>
+        <result property="ppNumber" column="pp_number"/>
+        <result property="invCode" column="inv_code"/>
+        <result property="invName" column="inv_name"/>
+        <result property="invAttribute" column="inv_attribute"/>
+        <result property="unitCode" column="unit_code"/>
+        <result property="unitName" column="unit_name"/>
+        <result property="quantity" column="quantity"/>
+        <result property="batchNumber" column="batch_number"/>
+        <result property="woConfig" column="wo_config"/>
+        <result property="woInvoice" column="wo_invoice"/>
+        <result property="woInvoiceId" column="wo_invoice_id"/>
+        <result property="woType" column="wo_type"/>
+        <result property="woTypeId" column="wo_type_id"/>
+        <result property="woDate" column="wo_date"/>
+        <result property="woCode" column="wo_code"/>
+        <result property="woUniqueId" column="wo_unique_id"/>
+        <result property="woQuantity" column="wo_quantity"/>
+        <result property="wiQuantity" column="wi_quantity"/>
+        <result property="wiQuantityR" column="wi_quantity_r"/>
+        <result property="remarks" column="remark"/>
+        <result property="f1" column="f1"/>
+        <result property="f2" column="f2"/>
+        <result property="f3" column="f3"/>
+        <result property="f4" column="f4"/>
+        <result property="f5" column="f5"/>
+        <result property="createTime" column="create_time"/>
+        <result property="createBy" column="create_by"/>
+        <result property="updateTime" column="update_time"/>
+        <result property="updateBy" column="update_by"/>
+        <result property="delFlag" column="del_flag"/>
+        <result property="beltline" column="beltline"/>
+        <result property="beltlineId" column="beltline_id"/>
+        <result property="invSortRoot" column="inv_sort_root"/>
+        <result property="invSortId"  column="inv_sort_id"/>
+    </resultMap>
+
+    <sql id="selectPrsCheckinMasterVo">
+        select unique_id,
+               prs_code,
+               invoice_date,
+               invoice_status,
+               invoice_type,
+               work_status,
+               work_type,
+               work_dept,
+               work_staff,
+               form_config,
+               warehouse,
+               check_date,
+               user_oper,
+               user_check,
+               remarks,
+               del_flag,
+               create_date,
+               create_by,
+               update_date,
+               update_by,
+               version
+        from prs_checkin_master
+    </sql>
+
+    <sql id="selectPrsCheckinSalveVo">
+        SELECT
+            unique_id, prs_code, mp_order_code, prs_order_code, pp_number, beltline, beltline_id, inv_sort_root, inv_sort_id, inv_code, inv_name, inv_attribute,
+               unit_code, unit_name, quantity, batch_number, wo_config, wo_invoice, wo_invoice_id, wo_type, wo_type_id, wo_date, wo_code, wo_unique_id, wo_quantity,
+               wi_quantity, wi_quantity_r, remarks, f1, f2, f3, f4, f5, create_time, create_by, update_time, update_by, del_flag
+        FROM
+            prs_checkin_salve
+    </sql>
+
+    <select id="selectPrsCheckinMasterList" parameterType="PrsCheckinMaster" resultMap="PrsCheckinMasterResult">
+        <include refid="selectPrsCheckinMasterVo"/>
+        <where>
+            <if test="prsCode != null  and prsCode != ''">and prs_code = #{prsCode}</if>
+            <if test="invoiceDate != null ">and invoice_date = #{invoiceDate}</if>
+            <if test="invoiceStatus != null  and invoiceStatus != ''">and invoice_status = #{invoiceStatus}</if>
+            <if test="invoiceType != null  and invoiceType != ''">and invoice_type = #{invoiceType}</if>
+            <if test="workStatus != null  and workStatus != ''">and work_status = #{workStatus}</if>
+            <if test="workType != null  and workType != ''">and work_type = #{workType}</if>
+            <if test="workDept != null  and workDept != ''">and work_dept = #{workDept}</if>
+            <if test="workStaff != null  and workStaff != ''">and work_staff = #{workStaff}</if>
+            <if test="formConfig != null  and formConfig != ''">and form_config = #{formConfig}</if>
+            <if test="warehouse != null  and warehouse != ''">and warehouse = #{warehouse}</if>
+            <if test="checkDate != null ">and check_date = #{checkDate}</if>
+            <if test="userOper != null  and userOper != ''">and user_oper = #{userOper}</if>
+            <if test="userCheck != null  and userCheck != ''">and user_check = #{userCheck}</if>
+            <if test="remarks != null  and remarks != ''">and remarks = #{remarks}</if>
+            and del_flag = 0
+            <include refid="com.njrsun.modules.prs.mapper.PrsOrderMasterMapper.baseDataScope"/>
+        </where>
+        order by prs_code desc
+    </select>
+
+    <select id="selectPrsCheckinMasterById" resultMap="PrsCheckinMasterPrsCheckinSalveResult">
+        select a.unique_id, a.prs_code, a.invoice_date, a.invoice_status, a.invoice_type, a.work_status, a.work_type,
+        a.work_dept, a.work_staff, a.form_config, a.warehouse, a.check_date, a.user_oper, a.user_check, a.remarks,
+        a.del_flag, a.create_date, a.create_by, a.update_date, a.update_by, a.version,
+        b.unique_id id, b.prs_code prsCode, b.mp_order_code, b.prs_order_code, b.pp_number,
+        b.inv_code, b.inv_name, b.inv_attribute, b.unit_code, b.unit_name, b.quantity, b.batch_number, b.wo_config,
+        b.wo_invoice, b.wo_invoice_id, b.wo_type, b.wo_type_id, b.wo_date, b.wo_code, b.wo_unique_id, b.wo_quantity,
+        b.wi_quantity, b.wi_quantity_r, b.remarks remark, b.f1, b.f2, b.f3, b.f4, b.f5,b.beltline_id,b.beltline,inv_sort_id,inv_sort_root
+        from prs_checkin_master a
+        left join prs_checkin_salve b on b.prs_code = a.prs_code and b.del_flag = 0
+        where a.prs_code = #{prsCode}
+        <include refid="com.njrsun.modules.prs.mapper.PrsOrderMasterMapper.baseDataScope"/>
+    </select>
+    <select id="selectPrsCheckinForUpdate" resultType="com.njrsun.modules.prs.domain.PrsCheckinMaster">
+        select unique_id,
+               prs_code,
+               invoice_date,
+               invoice_status,
+               invoice_type,
+               work_status,
+               work_type,
+               work_dept,
+               work_staff,
+               form_config,
+               warehouse,
+               check_date,
+               user_oper,
+               user_check,
+               remarks
+        from prs_checkin_master
+        where prs_code = #{prsCode}
+        limit 1
+        for
+        update
+    </select>
+    <select id="selectPrsSalveByCode" resultType="java.lang.Long">
+        select unique_id
+        from prs_checkin_salve
+        where prs_code = #{prsCode}
+          and del_flag = 0
+    </select>
+    <select id="selectPrsInvoice" resultType="com.njrsun.modules.prs.domain.PrsCheckinMaster">
+        select unique_id, prs_code, invoice_date, invoice_status, invoice_type, work_status, work_type, work_dept,
+        work_staff, form_config, warehouse, check_date, user_oper, user_check, remarks
+        from prs_checkin_master where prs_code in
+        <foreach collection="list" separator="," item="item" index="index" close=")" open="(">
+            #{item.prsCode}
+        </foreach>
+        and del_flag = 0
+
+    </select>
+    <select id="selectPrsCode" resultType="java.lang.String">
+        select prs_code from prs_checkin_master where del_flag = '0'
+        <include
+                refid="com.njrsun.modules.prs.mapper.PrsOrderMasterMapper.baseDataScope"/>
+    </select>
+    <select id="getDetail" resultType="com.njrsun.modules.prs.domain.PrsCheckinExport">
+        select prs_checkin_master.prs_code,
+               prs_checkin_master.invoice_date,
+               prs_checkin_master.invoice_status,
+               prs_checkin_master.invoice_type,
+               prs_checkin_master.work_status,
+               prs_checkin_master.warehouse,
+               pcs.unique_id,
+               pcs.mp_order_code,
+               pcs.prs_order_code,
+               pcs.pp_number,
+               pcs.inv_code,
+               pcs.inv_name,
+               pcs.inv_attribute,
+               pcs.unit_code,
+               pcs.unit_name,
+               pcs.quantity,
+               pcs.batch_number,
+               pcs.wi_quantity,
+               pcs.wi_quantity_r,
+               pcs.remarks
+        from prs_checkin_master
+                 left join prs_checkin_salve pcs on prs_checkin_master.prs_code = pcs.prs_code and pcs.del_flag = 0
+        <where>
+        <if  test="prsCode != null and prsCode !=''">
+            and pcs.prs_code = #{prsCode}
+        </if>
+        <if test="ppNumber != null and ppNumber != ''">
+            and pp_number = #{ppNumber}
+        </if>
+        <if test="startDate != null">and invoice_date >= #{startDate} </if>
+        <if test="endDate != null ">and invoice_date  <![CDATA[ <= ]]> #{endDate}  </if>
+        <if test="invCode != null and invCode != ''">
+            and pcs.inv_code = #{invCode}
+        </if>
+        <if test="invName != null and invName != ''">
+            and pcs.inv_name like concat('%',#{invName},'%')
+        </if>
+        <if test="workType != null and workType != ''">
+            and work_type= #{workType}
+        </if>
+        <if test="prsOrderCode != null and prsOrderCode != ''">
+            and prs_order_code = #{prsOrderCode}
+        </if>
+        and pcs.del_flag = 0
+        </where>
+        order by prs_code desc,unique_id asc
+    </select>
+    <select id="downData" resultType="java.util.Map">
+        select prs_checkin_salve.prs_code,invoice_type as 'invoice_type_id',work_type as 'work_type_id', mp_order_code, prs_order_code, pp_number,  inv_code, inv_name, inv_attribute, unit_name, quantity, batch_number, wi_quantity, wi_quantity_r
+        from prs_checkin_salve left join prs_checkin_master pcm
+            on prs_checkin_salve.prs_code = pcm.prs_code
+        where prs_checkin_salve.wo_unique_id = #{uniqueId} and prs_checkin_salve.del_flag = 0
+    </select>
+    <select id="upData" resultType="java.util.Map">
+        select prs_checkin_salve.wo_code as code,
+               inv_code,
+               inv_name,
+               inv_attribute,
+               unit_name,
+               wo_quantity  as 'quantity',
+               wo_invoice as invoice,
+               wo_invoice_id as invoice_id,
+               wo_type as type,
+               wo_type_id as type_id,
+               date_format(wo_date,'%Y-%m-%d') as date,
+               wo_config as form_config
+        from prs_checkin_salve where unique_id = #{uniqueId}
+
+
+    </select>
+
+    <insert id="insertPrsCheckinMaster" parameterType="PrsCheckinMaster" useGeneratedKeys="true" keyProperty="uniqueId">
+        insert into prs_checkin_master
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="prsCode != null and prsCode != ''">prs_code,</if>
+            <if test="invoiceDate != null">invoice_date,</if>
+            <if test="invoiceStatus != null">invoice_status,</if>
+            <if test="invoiceType != null">invoice_type,</if>
+            <if test="workStatus != null">work_status,</if>
+            <if test="workType != null">work_type,</if>
+            <if test="workDept != null">work_dept,</if>
+            <if test="workStaff != null">work_staff,</if>
+            <if test="formConfig != null">form_config,</if>
+            <if test="warehouse != null">warehouse,</if>
+            <if test="checkDate != null">check_date,</if>
+            <if test="params.loginId != null">user_oper,</if>
+            <if test="userCheck != null">user_check,</if>
+            <if test="remarks != null">remarks,</if>
+
+
+            create_date,
+            <if test="createBy != null">create_by,</if>
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="prsCode != null and prsCode != ''">#{prsCode},</if>
+            <if test="invoiceDate != null">#{invoiceDate},</if>
+            <if test="invoiceStatus != null">#{invoiceStatus},</if>
+            <if test="invoiceType != null">#{invoiceType},</if>
+            <if test="workStatus != null">#{workStatus},</if>
+            <if test="workType != null">#{workType},</if>
+            <if test="workDept != null">#{workDept},</if>
+            <if test="workStaff != null">#{workStaff},</if>
+            <if test="formConfig != null">#{formConfig},</if>
+            <if test="warehouse != null">#{warehouse},</if>
+            <if test="checkDate != null">#{checkDate},</if>
+            <if test="params.loginId != null">${params.loginId},</if>
+            <if test="userCheck != null">#{userCheck},</if>
+            <if test="remarks != null">#{remarks},</if>
+
+            SysDate(),
+            <if test="createBy != null">#{createBy},</if>
+
+        </trim>
+    </insert>
+
+    <update id="updatePrsCheckinMaster" parameterType="PrsCheckinMaster">
+        update prs_checkin_master
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="prsCode != null and prsCode != ''">prs_code = #{prsCode},</if>
+            <if test="invoiceDate != null">invoice_date = #{invoiceDate},</if>
+            <if test="invoiceStatus != null">invoice_status = #{invoiceStatus},</if>
+            <if test="invoiceType != null">invoice_type = #{invoiceType},</if>
+            <if test="workStatus != null">work_status = #{workStatus},</if>
+            <if test="workType != null">work_type = #{workType},</if>
+            <if test="workDept != null">work_dept = #{workDept},</if>
+            <if test="workStaff != null">work_staff = #{workStaff},</if>
+            <if test="formConfig != null">form_config = #{formConfig},</if>
+            <if test="warehouse != null">warehouse = #{warehouse},</if>
+            <if test="checkDate != null">check_date = #{checkDate},</if>
+            <if test="userOper != null">user_oper = #{userOper},</if>
+            <if test="userCheck != null">user_check = #{userCheck},</if>
+            <if test="remarks != null">remarks = #{remarks},</if>
+            update_date = SysDate(),
+            <if test="updateBy != null">update_by = #{updateBy},</if>
+            version = version + 1 ,
+        </trim>
+        where prs_code = #{prsCode}
+        <include refid="com.njrsun.modules.prs.mapper.PrsOrderMasterMapper.baseDataScope"/>
+    </update>
+
+    <delete id="deletePrsCheckinMasterById" parameterType="Long">
+        delete
+        from prs_checkin_master
+        where unique_id = #{uniqueId}
+    </delete>
+
+    <update id="deletePrsCheckinMasterByIds">
+        <foreach item="item" collection="list"  separator=";">
+            update prs_checkin_master set del_flag = '1' where prs_code  =    #{item.prsCode}
+<include refid="com.njrsun.modules.prs.mapper.PrsOrderMasterMapper.batchDataScope"/>
+        </foreach>
+    </update>
+
+    <update id="deletePrsCheckinSalveByPrsCodes">
+        update prs_checkin_salve set del_flag = '1' where prs_code in
+        <foreach item="item" collection="list" open="(" separator="," close=")">
+            #{item.prsCode}
+        </foreach>
+    </update>
+
+    <delete id="deletePrsCheckinSalveByPrsCode" parameterType="Long">
+        delete
+        from prs_checkin_salve
+        where prs_code = #{prsCode}
+    </delete>
+    <update id="deletePrsCheckinSlave">
+        update prs_checkin_salve set del_flag = '1' where unique_id in
+        <foreach collection="array" separator="," item="item" index="index" close=")" open="(">
+            #{item}
+        </foreach>
+    </update>
+    <update id="updateCheckinSalve">
+        <foreach collection="list" index="index" item="item" separator=";">
+            update prs_checkin_salve
+            <trim prefix="SET" suffixOverrides=",">
+                <if test="item.prsCode != null">prs_code = #{item.prsCode},</if>
+                <if test="item.mpOrderCode != null">mp_order_code = #{item.mpOrderCode},</if>
+                <if test="item.prsOrderCode != null">prs_order_code = #{item.prsOrderCode},</if>
+                <if test="item.ppNumber != null">pp_number = #{item.ppNumber},</if>
+                <if test="item.invCode != null">inv_code = #{item.invCode},</if>
+                <if test="item.invName != null">inv_name = #{item.invName},</if>
+                <if test="item.invAttribute != null">inv_attribute = #{item.invAttribute},</if>
+                <if test="item.unitCode != null">unit_code = #{item.unitCode},</if>
+                <if test="item.unitName != null">unit_name = #{item.unitName},</if>
+                <if test="item.quantity != null">quantity = #{item.quantity},</if>
+                <if test="item.batchNumber != null">batch_number = #{item.batchNumber},</if>
+                <if test="item.woConfig != null">wo_config = #{item.woConfig},</if>
+                <if test="item.woCode != null">wo_code = #{item.woCode},</if>
+                <if test="item.woUniqueId != null">wo_unique_id = #{item.woUniqueId},</if>
+                <if test="item.woQuantity != null">wo_quantity = #{item.woQuantity},</if>
+                <if test="item.wiQuantityR != null">wi_quantity_r = #{item.wiQuantityR},</if>
+                <if test="item.wiQuantity != null">wi_quantity = #{item.wiQuantity},</if>
+                <if test="item.woInvoice != null">wo_invoice =#{item.woInvoice},</if>
+                <if test="item.woInvoiceId != null">wo_invoice_id = #{item.woInvoiceId},</if>
+                <if test="item.remarks != null">remarks = #{item.remarks},</if>
+                update_time =SysDate(),
+                <if test="item.updateBy != null">update_by = #{item.updateBy},</if>
+                <if test="item.woDate != null">wo_date = #{item.woDate},</if>
+                <if test="item.woType != null">wo_type = #{item.woType},</if>
+                <if test="item.woTypeId != null">wo_type_id = #{item.woTypeId},</if>
+                <if test="item.f1 != null">f1 = #{item.f1},</if>
+                <if test="item.f2 != null">f2 = #{item.f2},</if>
+                <if test="item.f3 != null">f3 = #{item.f3},</if>
+                <if test="item.f4 != null">f4 = #{item.f4},</if>
+                <if test="item.f5 != null">f5= #{item.f5},</if>
+                <if test="item.beltline != null">beltline = #{item.beltline},</if>
+                <if test="item.beltlineId != null">beltline_id = #{item.beltlineId},</if>
+                <if test="item.invSortRoot != null">inv_sort_root = #{item.invSortRoot},</if>
+                <if test="item.invSortId != null">inv_sort_id  = #{item.invSortId},</if>
+            </trim>
+            where unique_id = #{item.uniqueId}
+        </foreach>
+    </update>
+    <update id="changeStatus">
+        update prs_checkin_master
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="username != null">invoice_status = #{check}, user_check = #{username},check_date= SysDate(),</if>
+            <if test="username == null">invoice_status = #{check},user_check ='',check_date=null,</if>
+        </trim>
+        where prs_code = #{item.prsCode}
+        <include
+                refid="com.njrsun.modules.prs.mapper.PrsOrderMasterMapper.batchDataScope"/>
+    </update>
+    <update id="updateWorkStatus">
+        update prs_checkin_master set work_status =#{status},version =version + 1  where prs_code = #{item.prsCode} and version = #{item.version}
+        <include refid="com.njrsun.modules.prs.mapper.PrsOrderMasterMapper.batchDataScope"/>
+    </update>
+    <update id="changeQuantity">
+        update prs_checkin_salve set wi_quantity = wi_quantity + #{quantity} where unique_id = #{id}
+    </update>
+
+    <insert id="batchPrsCheckinSalve">
+        insert into prs_checkin_salve(prs_code, mp_order_code, prs_order_code, pp_number,
+        inv_code, inv_name, inv_attribute, unit_code, unit_name, quantity, batch_number, wo_config, wo_invoice,
+        wo_invoice_id, wo_type, wo_type_id, wo_date, wo_code, wo_unique_id, wo_quantity, remarks, f1, f2, f3, f4, f5,
+        create_time, create_by,beltline,beltline_id,inv_sort_root,inv_sort_id) values
+        <foreach item="item" index="index" collection="list" separator=",">
+            ( #{item.prsCode}, #{item.mpOrderCode}, #{item.prsOrderCode}, #{item.ppNumber},
+            #{item.invCode}, #{item.invName}, #{item.invAttribute}, #{item.unitCode},
+            #{item.unitName}, #{item.quantity}, #{item.batchNumber}, #{item.woConfig}, #{item.woInvoice},
+            #{item.woInvoiceId}, #{item.woType}, #{item.woTypeId}, #{item.woDate}, #{item.woCode}, #{item.woUniqueId},
+            #{item.woQuantity}, #{item.remarks}, #{item.f1}, #{item.f2}, #{item.f3}, #{item.f4}, #{item.f5}, SysDate(),
+            #{item.createBy},#{item.beltline},#{item.beltlineId},#{item.invSortRoot},#{item.invSortId})
+        </foreach>
+    </insert>
+    <select id="report" parameterType="com.njrsun.modules.prs.domain.PrsCheckinReport" resultType="com.njrsun.modules.prs.domain.PrsCheckinReport">
+      select  pp_number, beltline, inv_code, inv_name, inv_attribute, unit_name, wo_code,
+             quantity, batch_number, f1, f2, f3, f4, f5, invoice_date from prs_checkin_salve left join prs_checkin_master on prs_checkin_salve.prs_code = prs_checkin_master.prs_code
+            <where>
+                <if test="ppNumber != null and ppNumber != ''">
+                    and pp_number = #{ppNumber}
+                </if>
+                <if test="startDate != null">and invoice_date >= #{startDate} </if>
+                <if test="endDate != null ">and invoice_date  <![CDATA[ <= ]]> #{endDate}  </if>
+                <if test="invCode != null and invCode != ''">
+                    and inv_code = #{invCode}
+                </if>
+                <if test="invName != null and invName != ''">
+                    and inv_name like concat('%',#{invName},'%')
+                </if>
+                and prs_checkin_salve.del_flag = 0
+            </where>
+    </select>
+    <select id="selectPrsCheckinSalveById" resultType="com.njrsun.modules.prs.domain.PrsCheckinSalve">
+        <include refid="selectPrsCheckinSalveVo"></include>
+        where unique_id= #{id}
+    </select>
+    <select id="lead" resultType="java.util.Map">
+        select unique_id,prs_code, invoice_date, invoice_status, invoice_type, work_status,warehouse, form_config,
+        work_type, work_dept, work_staff, check_date, user_oper, user_check,remarks
+        from prs_checkin_master
+        <where>
+            <if test="prsCode != null and prsCode !=''">and prs_code = #{prsCode}</if>
+            <if test="warehouse != null and warehouse !=''">and warehouse = #{warehouse}</if>
+            and invoice_status = 1 and work_status = 0 and del_flag = 0
+            and prs_code in (select prs_code from prs_checkin_salve
+            <where>
+                and quantity-wi_quantity > 0
+                <if test="invCode != null and invCode != ''">
+                    and inv_code = #{invCode}
+                </if>
+                <if test="invName != null and invName != ''">
+                    and inv_name like concat('%',#{invName},'%')
+                </if>
+                and del_flag = 0
+            </where>
+            )
+        </where>
+        order by unique_id desc
+    </select>
+
+    <select id="leadInto" resultType="java.util.Map">
+        select prs_checkin_salve.unique_id,
+        prs_checkin_salve.prs_code,
+        mp_order_code,
+        prs_order_code,
+        pp_number,
+        beltline,
+        beltline_id,
+        inv_code,
+        inv_name,
+        beltline,
+        inv_attribute,
+        unit_code,
+        unit_name,
+        quantity,
+        batch_number,
+        wi_quantity,
+        wi_quantity_r,
+        invoice_type as 'invoice_type_id',
+        work_type as 'wo_type_id',
+        form_config,
+        inv_sort_id,inv_sort_root,
+        quantity - wi_quantity as 'surplus',f1,f2,f3,f4,f5
+        from prs_checkin_salve
+        left join prs_checkin_master on prs_checkin_salve.prs_code = prs_checkin_master.prs_code
+        <where>
+            <if test="prsCode != null and prsCode != ''">
+                and prs_checkin_salve.prs_code = #{prsCode}
+            </if>
+            and prs_checkin_salve.del_flag = 0 and quantity > wi_quantity
+        </where>
+    </select>
+
+</mapper>

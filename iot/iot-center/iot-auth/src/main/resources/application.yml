@@ -1,0 +1,33 @@
+server:
+  port: 8300
+
+spring:
+  application:
+    name: @project.artifactId@
+  profiles:
+    active:
+      - register
+      - monitor
+      - server
+      - mysql
+      - redis
+      - feign
+      - ${PROFILE_ACTIVE:dev}
+  main:
+    allow-bean-definition-overriding: true
+  mvc:
+    throw-exception-if-no-handler-found: true
+  web:
+    resources:
+      add-mappings: false
+  redis:
+    database: 1
+  cache:
+    redis:
+      time-to-live: ${CACHE_REDIS_TIME_TO_LIVE:12H}
+
+logging:
+  level:
+    com.dc3: DEBUG
+  file:
+    name: dc3/logs/center/auth/${spring.application.name}.log

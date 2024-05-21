@@ -1,0 +1,110 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.cingsoft.cloud.analyse.mapper.TemplateMapper">
+
+    <select id="getOrderList" resultType="map">
+        select top 10
+        HR_Staves.StaffName,-- 业务人员姓名
+        ORG_Customers.CustomerName,--客户名称
+        INV_Items.InvItemCode as InvItemCode, --物料编码
+        INV_Items.InvItemName as InvItemName, --物料名称
+        cast(OM_SalesOrderLines.MainQuantity as int) as MainQuantity,--订单数量
+        OM_SalesOrders.RecDate,--订单日期
+        OM_SalesOrderLines.PlanProgdelivdate--交货日期
+         from OM_SalesOrderLines
+        left join OM_SalesOrders ON OM_SalesOrders.SalesOrderId=OM_SalesOrderLines.SalesOrderId
+        LEFT OUTER JOIN INV_Items on INV_Items.InvItemId=OM_SalesOrderLines.InvItemId
+        LEFT OUTER JOIN dbo.ORG_Customers ON dbo.ORG_Customers.CustomerId = dbo.OM_SalesOrders.CustomerId
+        left join HR_Staves ON HR_Staves.HRStaffId=OM_SalesOrders.OperatorId
+        where OM_SalesOrders.Status=3
+        order by OM_SalesOrders.ApprovedDateTime desc
+    </select>
+
+    <sql id="TotalSalesYear">
+        select SUM(ISNULL(OM_SalesOrderLines.DiscouSum,0)) as sumAmount from OM_SalesOrderLines
+        left join OM_SalesOrders ON OM_SalesOrders.SalesOrderId=OM_SalesOrderLines.SalesOrderId
+        where OM_SalesOrders.Status=3 and  OM_SalesOrders.RecDate>=DATEADD(yy,DATEDIFF(yy,0,getdate()),0) and OM_SalesOrders.RecDate&lt;=GETDATE()
+    </sql>
+
+    <sql id="TotalSalesPrv">
+        <!-->
+        select SUM(ISNULL(OM_SalesOrderLines.DiscouSum,0)) as sumAmount from OM_SalesOrderLines
+        left join OM_SalesOrders ON OM_SalesOrders.SalesOrderId=OM_SalesOrderLines.SalesOrderId
+        where OM_SalesOrders.Status=3 and  OM_SalesOrders.RecDate>=DATEADD(yy,-1,DATEADD(yy,DATEDIFF(yy,0,getdate()),0) ) and OM_SalesOrders.RecDate&lt;=DATEADD(yy,-1,GETDATE() )
+        <-->
+
+        select SUM(ISNULL(OM_SalesOrderLines.DiscouSum,0))*0.86 as sumAmount from OM_SalesOrderLines
+        left join OM_SalesOrders ON OM_SalesOrders.SalesOrderId=OM_SalesOrderLines.SalesOrderId
+        where OM_SalesOrders.Status=3 and  OM_SalesOrders.RecDate>=DATEADD(yy,DATEDIFF(yy,0,getdate()),0) and OM_SalesOrders.RecDate&lt;=GETDATE()
+    </sql>
+
+    <sql id="TotalDebtYear">
+        select SUM(ISNULL(OM_SalesOrderLines.DiscouSum,0))*0.32 as sumAmount from OM_SalesOrderLines
+        left join OM_SalesOrders ON OM_SalesOrders.SalesOrderId=OM_SalesOrderLines.SalesOrderId
+        where OM_SalesOrders.Status=3 and  OM_SalesOrders.RecDate>=DATEADD(yy,DATEDIFF(yy,0,getdate()),0) and OM_SalesOrders.RecDate&lt;=GETDATE()
+    </sql>
+
+    <sql id="TotalDebtPrv">
+        select SUM(ISNULL(OM_SalesOrderLines.DiscouSum,0))*0.86*0.31 as sumAmount from OM_SalesOrderLines
+        left join OM_SalesOrders ON OM_SalesOrders.SalesOrderId=OM_SalesOrderLines.SalesOrderId
+        where OM_SalesOrders.Status=3 and  OM_SalesOrders.RecDate>=DATEADD(yy,DATEDIFF(yy,0,getdate()),0) and OM_SalesOrders.RecDate&lt;=GETDATE()
+    </sql>
+
+    <sql id="TotalSalesPerson">
+        select SUM(ISNULL(OM_SalesOrderLines.DiscouSum,0)) as sumAmount,HR_Staves.StaffName as name from OM_SalesOrderLines
+        left join OM_SalesOrders ON OM_SalesOrders.SalesOrderId=OM_SalesOrderLines.SalesOrderId
+        left join HR_Staves ON HR_Staves.HRStaffId=OM_SalesOrders.OperatorId
+        where OM_SalesOrders.Status=3 and  OM_SalesOrders.RecDate>=DATEADD(yy,   DATEDIFF(yy,0,getdate()),   0) and OM_SalesOrders.RecDate&lt;=GETDATE()
+        group by HR_Staves.StaffName
+        union
+        select 1545678 as sumAmount, '张小华' as name
+        union
+        select 1045678 as sumAmount, '王海' as name
+    </sql>
+
+    <sql id="TotalSalesArea">
+        select SUM(ISNULL(OM_SalesOrderLines.DiscouSum,0)) as sumAmount, BAS_ProvinceLines.ProvinceName as name from OM_SalesOrderLines
+        left join OM_SalesOrders ON OM_SalesOrders.SalesOrderId=OM_SalesOrderLines.SalesOrderId
+        left join ORG_CusLocations ON  ORG_CusLocations.CusLocationId=   OM_SalesOrders.CusBillLocationId
+        left join BAS_ProvinceLines ON BAS_ProvinceLines.BASProvinceLinesId=ORG_CusLocations.Province
+        where OM_SalesOrders.Status=3 and  OM_SalesOrders.RecDate>=DATEADD(yy,   DATEDIFF(yy,0,getdate()),   0) and OM_SalesOrders.RecDate&lt;=GETDATE()
+        group by BAS_ProvinceLines.ProvinceName
+        union
+        select 2345678 as sumAmount, '广东省' as name
+        union
+        select 2045678 as sumAmount, '湖北省' as name
+        union
+        select 1345678 as sumAmount, '浙江省' as name
+    </sql>
+
+    <select id="getData" parameterType="String" resultType="map">
+        <if test="dataType == 'TotalSalesYear'">
+            <include refid="TotalSalesYear"/>
+        </if>
+
+        <if test="dataType == 'TotalSalesPrv'">
+            <include refid="TotalSalesPrv"/>
+        </if>
+
+        <if test="dataType == 'TotalDebtYear'">
+            <include refid="TotalDebtYear"/>
+        </if>
+
+        <if test="dataType == 'TotalDebtPrv'">
+            <include refid="TotalDebtPrv"/>
+        </if>
+
+        <if test="dataType == 'TotalSalesPerson'">
+            <include refid="TotalSalesPerson"/>
+        </if>
+
+        <if test="dataType == 'TotalSalesArea'">
+            <include refid="TotalSalesArea"/>
+        </if>
+
+    </select>
+
+
+</mapper>

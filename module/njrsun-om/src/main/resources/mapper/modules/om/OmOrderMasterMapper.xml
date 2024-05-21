@@ -1,0 +1,1278 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.njrsun.modules.om.mapper.OmOrderMasterMapper">
+
+    <resultMap type="com.njrsun.modules.om.domain.OmOrderMaster" id="OmOrderMasterResult">
+        <result property="uniqueId" column="unique_id"/>
+        <result property="omCode" column="om_code"/>
+        <result property="invoiceDate" column="invoice_date"/>
+        <result property="invoiceStatus" column="invoice_status"/>
+        <result property="invoiceType" column="invoice_type"/>
+        <result property="workStatus" column="work_status"/>
+        <result property="workType" column="work_type"/>
+        <result property="workDept" column="work_dept"/>
+        <result property="workStaff" column="work_staff"/>
+        <result property="checkDate" column="check_date"/>
+        <result property="userOper" column="user_oper"/>
+        <result property="userCheck" column="user_check"/>
+        <result property="remarks" column="remarks"/>
+        <result property="customer" column="customer"/>
+        <result property="customerId" column="customer_id"/>
+        <result property="custCode" column="cust_code"/>
+        <result property="tel"    column="tel"    />
+        <result property="bank"    column="bank"    />
+        <result property="account"    column="account"    />
+        <result property="tax"    column="tax"    />
+        <result property="addr2"    column="addr2"    />
+        <result property="remark"    column="remark"    />
+        <result property="status"    column="status"    />
+        <result property="createBy"    column="create_by"    />
+        <result property="updateDate"    column="update_date"    />
+        <result property="updateBy"    column="update_by"    />
+        <result property="version"    column="version"    />
+        <result property="delFlag"    column="del_flag"    />
+        <result property="alias" column="alias"/>
+        <result property="city" column="city"/>
+        <result property="cityId" column="city_id"/>
+        <result property="credit" column="credit"/>
+        <result property="creditLimit" column="credit_limit"/>
+        <result property="type" column="type"/>
+        <result property="wMobile" column="w_mobile"/>
+        <result property="wContacts" column="w_contacts"/>
+        <result property="fMobile" column="f_mobile"/>
+        <result property="deliverDate" column="deliver_date"/>
+        <result property="deliverStatus" column="deliver_status"/>
+        <result property="currency" column="currency"/>
+        <result property="contact" column="contact"/>
+        <result property="mobile" column="mobile"/>
+        <result property="addr" column="addr"/>
+        <result property="delFlag" column="del_flag"/>
+        <result property="createDate" column="create_date"/>
+        <result property="createBy" column="create_by"/>
+        <result property="updateDate" column="update_date"/>
+        <result property="updateBy" column="update_by"/>
+        <result property="version" column="version"/>
+        <result property="country" column="country"/>
+        <result property="saleType" column="sale_type"/>
+        <result property="contractNo" column="contract_no"/>
+        <result property="paymentTeam" column="payment_team"/>
+        <result property="formConfig" column="form_config"/>
+        <result property="supplyType" column="supply_type"/>
+    </resultMap>
+
+    <resultMap id="OmOrderMasterOmOrderSalveResult" type="OmOrderMaster" extends="OmOrderMasterResult">
+        <collection property="omOrderSalveList" notNullColumn="unique_id" javaType="java.util.List"
+                    resultMap="OmOrderSalveResult"/>
+    </resultMap>
+
+    <resultMap type="com.njrsun.modules.om.domain.OmOrderSalve" id="OmOrderSalveResult">
+        <result property="uniqueId" column="id"/>
+        <result property="omCode" column="om_code"/>
+        <result property="invSortRoot" column="inv_sort_root"/>
+        <result property="invSortId" column="inv_sort_id"/>
+        <result property="invCode" column="inv_code"/>
+        <result property="invName" column="inv_name"/>
+        <result property="invAttribute" column="inv_attribute"/>
+        <result property="unitCode" column="unit_code"/>
+        <result property="unitName" column="unit_name"/>
+        <result property="qualityRemarks" column="quality_remarks"/>
+        <result property="documents" column="documents"/>
+        <result property="quantity" column="quantity"/>
+        <result property="price" column="price"/>
+        <result property="amount" column="amount"/>
+        <result property="woCode" column="wo_code"/>
+        <result property="woInvoice" column="wo_invoice"/>
+        <result property="woInvoiceId" column="wo_invoice_id"/>
+        <result property="wiQuantity" column="wi_quantity"/>
+        <result property="wiQuantityR" column="wi_quantity_r"/>
+        <result property="woUniqueId" column="wo_unique_id"/>
+        <result property="woQuantity" column="wo_quantity"/>
+        <result property="remarks" column="rs"/>
+        <result property="createTime" column="create_time"/>
+        <result property="createBy" column="create_by"/>
+        <result property="updateTime" column="update_time"/>
+        <result property="updateBy" column="ub"/>
+        <result property="piece" column="piece"/>
+        <result property="pkgRemarks" column="pkgRemarks"/>
+        <result property="minNumber" column="min_number"/>
+        <result property="minType" column="min_type"/>
+        <result property="pieceType" column="piece_type"/>
+        <result property="tax" column="tax"/>
+        <result property="pkgType" column="pkg_type"/>
+        <result property="pkgRemarks" column="pkg_remarks"/>
+        <result property="woDate" column="wo_date"/>
+        <result property="woType" column="wo_type"/>
+        <result property="woTypeId" column="wo_type_id"/>
+        <result property="woConfig" column="wo_config"/>
+        <result property="mpQuantity" column="mp_quantity"/>
+        <result property="prsQuantity" column="prs_quantity"/>
+        <result property="drawingNo" column="drawing_no"/>
+    </resultMap>
+
+    <sql id="selectOmOrderMasterVo">
+        select unique_id,
+               om_code,
+               country,
+               form_config,
+               invoice_date,
+               supply_type,
+               invoice_status,
+               invoice_type,
+               work_status,
+               work_type,
+               work_dept,
+               work_staff,
+               check_date,
+               user_oper,
+               user_check,
+               remarks,
+               customer,
+               customer_id,
+               cust_code,
+               deliver_date,
+               deliver_status,
+               currency,
+               contact,
+               mobile,
+               addr,
+               del_flag,
+               create_date,
+               create_by,
+               update_date,
+               update_by,
+               version,
+               currency,
+               payment_team,
+               sale_type,
+               contract_no
+        from om_order_master
+    </sql>
+
+    <sql id="selectOmOrderSalveVo">
+        select unique_id,
+               om_code,
+               inv_sort_root,
+               inv_sort_id,
+               inv_code,
+               inv_name,
+               inv_attribute,
+               unit_code,
+               unit_name,
+               quality_remarks,
+               documents,
+               quantity,
+               price,
+               amount,
+               tax,
+               pkg_remarks,
+               pkg_type,
+               piece,
+               piece_type,
+               min_number,
+               min_type,
+               wo_code,
+               wo_unique_id,
+               wo_quantity,
+               mp_quantity,
+               prs_quantity,
+               remarks,
+               create_time,
+               create_by,
+               update_time,
+               update_by,
+               del_flag,
+               wo_invoice,
+               wo_invoice_id,
+               wi_quantity,
+               wi_quantity_r,
+               wo_date,
+               wo_type_id,
+               wo_type,
+               wo_config,drawing_no
+    </sql>
+
+    <select id="selectOmOrderMasterList" parameterType="OmOrderMaster" resultMap="OmOrderMasterResult">
+        <include refid="selectOmOrderMasterVo"/>
+        <where>
+            <if test="omCode != null  and omCode != ''">and om_code = #{omCode}</if>
+            <if test="invoiceDate != null ">and invoice_date = #{invoiceDate}</if>
+            <if test="invoiceStatus != null  and invoiceStatus != ''">and invoice_status = #{invoiceStatus}</if>
+            <if test="invoiceType != null  and invoiceType != ''">and invoice_type = #{invoiceType}</if>
+            <if test="workStatus != null  and workStatus != ''">and work_status = #{workStatus}</if>
+            <if test="workType != null  and workType != ''">and work_type = #{workType}</if>
+            <if test="workDept != null  and workDept != ''">and work_dept = #{workDept}</if>
+            <if test="workStaff != null  and workStaff != ''">and work_staff = #{workStaff}</if>
+            <if test="checkDate != null ">and check_date = #{checkDate}</if>
+            <if test="userOper != null  and userOper != ''">and user_oper = #{userOper}</if>
+            <if test="userCheck != null  and userCheck != ''">and user_check = #{userCheck}</if>
+            <if test="remarks != null  and remarks != ''">and remarks = #{remarks}</if>
+            <if test="customer != null  and customer != ''">and customer = #{customer}</if>
+            <if test="customerId != null  and customerId != ''">and customer_id = #{customerId}</if>
+            <if test="custCode != null  and custCode != ''">and cust_code = #{custCode}</if>
+            <if test="deliverDate != null ">and deliver_date = #{deliverDate}</if>
+            <if test="deliverStatus != null  and deliverStatus != ''">and deliver_status = #{deliverStatus}</if>
+            <if test="currency != null  and currency != ''">and currency = #{currency}</if>
+            <if test="contact != null  and contact != ''">and contact = #{contact}</if>
+            <if test="mobile != null  and mobile != ''">and mobile = #{mobile}</if>
+            <if test="addr != null  and addr != ''">and addr = #{addr}</if>
+            <if test="createDate != null ">and create_date = #{createDate}</if>
+            <if test="updateDate != null ">and update_date = #{updateDate}</if>
+            <if test="startDate != null">and invoice_date >= #{startDate}</if>
+            <if test="endDate != null">and #{endDate} >= invoice_date</if>
+            <if test="contractNo != null">and contract_no = #{contractNo}</if>
+            <include refid="baseDataScope"/>
+            and del_flag = 0
+        </where>
+        order by unique_id desc
+    </select>
+
+    <select id="selectOmOrderMasterByCode" parameterType="String" resultMap="OmOrderMasterOmOrderSalveResult">
+        select a.unique_id,
+               a.om_code,
+               a.invoice_date,
+               a.invoice_status,
+               a.invoice_type,
+               a.work_status,
+               a.work_type,
+               a.work_dept,
+               a.work_staff,
+               a.check_date,
+               a.user_oper,
+               a.user_check,
+               a.remarks,
+               a.customer,
+               a.customer_id,
+               a.cust_code,
+               a.deliver_date,
+               a.deliver_status,
+               a.currency,
+               a.contact,
+               a.mobile,
+               a.addr,
+               a.create_date,
+               a.create_by,
+               a.update_date,
+               a.update_by,
+               a.version,
+               a.sale_type,
+               a.payment_team,
+               a.contract_no,
+               a.country,
+               a.form_config,
+               a.supply_type,
+               b.unique_id id,
+               b.om_code,
+               b.inv_sort_root,
+               b.inv_sort_id,
+               b.inv_code,
+               b.inv_name,
+               b.inv_attribute,
+               b.unit_code,
+               b.unit_name,
+               b.quality_remarks,
+               b.documents,
+               b.quantity,
+               b.price,
+               b.amount,
+               b.wo_code,
+               b.wo_unique_id,
+               b.wo_quantity,
+               b.remarks   rs,
+               b.create_time,
+               b.create_by,
+               b.update_time,
+               b.update_by ub,
+               b.piece_type,
+               b.piece,
+               b.min_number,
+               b.min_type,
+               b.pkg_remarks,
+               b.pkg_type,
+               b.tax,
+               b.wo_invoice,
+               b.wo_invoice_id,
+               b.wi_quantity,
+               b.wi_quantity_r,
+               b.wo_date,
+               b.wo_type,
+               b.wo_type_id,
+               b.wo_config,
+               b.mp_quantity,
+               b.drawing_no
+        from om_order_master a
+                 left join om_order_salve b on b.om_code = a.om_code and b.del_flag = 0
+        where a.om_code = #{omCode}
+    </select>
+
+    <select id="selectOmOrderMasterByMaster" parameterType="com.njrsun.modules.om.domain.OmOrderMaster"
+            resultMap="OmOrderMasterOmOrderSalveResult">
+        select a.unique_id, a.om_code, a.invoice_date, a.invoice_status, a.invoice_type, a.work_status, a.work_type,
+        a.work_dept,
+        a.work_staff, a.check_date, a.user_oper, a.user_check, a.remarks, a.customer, a.customer_id, a.cust_code,
+        a.deliver_date,
+        a.deliver_status, a.currency, a.contact, a.mobile, a.addr, a.create_date, a.create_by, a.update_date,
+        a.update_by, a.version,
+        a.sale_type,a.payment_team,a.contract_no,a.country,a.form_config,a.supply_type,
+        b.unique_id id, b.om_code, b.inv_sort_root, b.inv_sort_id, b.inv_code, b.inv_name, b.inv_attribute, b.unit_code,
+        b.unit_name,
+        b.quality_remarks, b.documents, b.quantity, b.price, b.amount, b.wo_code, b.wo_unique_id, b.wo_quantity,
+        b.remarks rs, b.create_time, b.create_by, b.update_time, b.update_by
+        ub,b.piece_type,b.piece,b.min_number,b.min_type,b.pkg_remarks,b.drawing_no,
+        b.pkg_type,b.tax,b.wo_invoice,b.wo_invoice_id,b.wi_quantity,b.wi_quantity_r,b.wo_date,b.wo_type,b.wo_type_id,b.wo_config,b.mp_quantity
+        from om_order_master a
+        left join om_order_salve b on b.om_code = a.om_code and b.del_flag = 0
+        where a.om_code = #{omCode}
+        <include refid="baseDataScope"/>
+    </select>
+
+    <select id="selectomOrderSalveByCode" resultType="java.lang.Long">
+        select unique_id
+        from om_order_salve
+        where om_code = #{omCode}
+          and del_flag = 0 for
+        update
+    </select>
+    <select id="selectomOrderSalveByCodes" resultType="java.lang.Long">
+        select unique_id from om_order_salve where om_code in
+        <foreach collection="list" item="item" index="index" separator="," close=")" open="(">
+            #{item}
+        </foreach>
+    </select>
+    <select id="selectOrderMasterId" resultType="java.lang.Long">
+        select unique_id from om_order_master
+        <where>
+            and del_flag = 0
+            <if test="workType != null and workType !=''">and work_type = #{workType}</if>
+            <include refid="baseDataScope"/>
+        </where>
+        order by unique_id
+    </select>
+    <select id="selectOmOrderMasterById" resultMap="OmOrderMasterOmOrderSalveResult" parameterType="java.lang.Long">
+        select a.unique_id,
+               a.om_code,
+               a.invoice_date,
+               a.invoice_status,
+               a.invoice_type,
+               a.work_status,
+               a.work_type,
+               a.work_dept,
+               a.work_staff,
+               a.check_date,
+               a.user_oper,
+               a.user_check,
+               a.remarks,
+               a.customer,
+               a.customer_id,
+               a.cust_code,
+               a.deliver_date,
+               a.deliver_status,
+               a.country,
+               a.currency,
+               a.contact,
+               a.mobile,
+               a.addr,
+               a.create_date,
+               a.create_by,
+               a.update_date,
+               a.update_by,
+               a.version,
+               a.sale_type,
+               a.payment_team,
+               a.contract_no,
+               a.contract_no,
+               a.payment_team,
+               a.sale_type,
+               a.form_config,
+               a.supply_type,
+               b.unique_id id,
+               b.om_code,
+               b.inv_sort_root,
+               b.inv_sort_id,
+               b.inv_code,
+               b.inv_name,
+               b.inv_attribute,
+               b.unit_code,
+               b.unit_name,
+               b.quality_remarks,
+               b.documents,
+               b.quantity,
+               b.price,
+               b.amount,
+               b.wo_code,
+               b.wo_unique_id,
+               b.wo_quantity,
+               b.remarks,
+               b.create_time,
+               b.create_by,
+               b.update_time,
+               b.update_by ub,
+               b.piece_type,
+               b.piece,
+               b.min_number,
+               b.min_type,
+               b.pkg_remarks,
+               b.pkg_type,
+               b.tax,
+               b.wo_invoice,
+               b.wo_invoice_id,
+               b.wi_quantity,
+               b.wi_quantity_r,
+               b.wo_date,
+               b.wo_type,
+               b.wo_type_id,
+               b.wo_config,
+               b.mp_quantity,
+               b.drawing_no
+        from om_order_master a
+                 left join om_order_salve b on b.om_code = a.om_code and b.del_flag = 0
+        where a.unique_id = #{id}
+          and a.del_flag = 0
+    </select>
+    <select id="getDetail" resultType="java.util.Map">
+        select oom.om_code,inv_name, inv_attribute, price, mobile,addr,amount,invoice_status,
+        pkg_remarks,pkg_type,unit_name,unit_code,quantity,(quantity-om_order_salve.wi_quantity) as
+        deliverable,(wi_quantity-om_order_salve.wi_quantity_r) as returnable ,invoice_type as
+        invoice_type_id,contact,DATE_FORMAT(deliver_date,'%Y-%m-%d')
+        deliverDate,wo_unique_id,wo_date,wo_type_id,wo_type,work_type as work_type_id,form_config,supply_type,
+        DATE_FORMAT(oom.invoice_date,'%Y-%m-%d') date
+        ,oom.sale_type,oom.work_type,work_dept,oom.work_staff,oom.contract_no,oom.customer,oom.cust_code,inv_code,
+               inv_attribute,om_order_salve.unique_id,tax,piece,quality_remarks,customer_id,inv_sort_root,inv_sort_id,
+               piece_type,wi_quantity,wi_quantity_r,drawing_no,
+        wo_config,oom.deliver_status,mp_quantity
+        from om_order_salve
+        left join om_order_master oom on om_order_salve.om_code = oom.om_code
+        <where>
+            <if test="customer != null and customer !=''">and customer like concat('%',#{customer},'%')</if>
+            <if test="startDate != null">and invoice_date >= #{startDate}</if>
+            <if test="endDate != null">and #{endDate} >= invoice_date</if>
+            <if test="contractNo != null and contractNo !=''">and contract_no = #{contractNo}</if>
+            <if test="workStaff != null and workStaff !=''">and work_staff = #{workStaff}</if>
+            <if test="omCode != null and omCode !=''">and oom.om_code = #{omCode}</if>
+            <if test="invoiceStatus != null and invoiceStatus !=''">and invoice_status = #{invoiceStatus}</if>
+            <if test="flag == true">and quantity-wi_quantity> 0 and work_status = '0' and work_type = 0</if>
+            <if test="flag ==  false">and wi_quantity - wi_quantity_r > 0</if>
+            <if test="saleType != null and saleType != ''">and sale_type =#{saleType}</if>
+            <if test="searchValue != null and searchValue !=''">and inv_name like concat('%',#{searchValue},'%')</if>
+            <if test="workType != null and workType !=''">and work_type = #{workType}</if>
+            and om_order_salve.del_flag = 0
+            <include refid="baseDataScope"/>
+        </where>
+        order by oom.unique_id desc
+    </select>
+    <select id="query" resultMap="OmOrderMasterOmOrderSalveResult" parameterType="java.lang.Long">
+        select a.unique_id,
+               a.om_code,
+               a.invoice_date,
+               a.invoice_status,
+               a.invoice_type,
+               a.work_status,
+               a.work_type,
+               a.work_dept,
+               a.work_staff,
+               a.check_date,
+               a.user_oper,
+               a.user_check,
+               a.remarks,
+               a.customer,
+               a.customer_id,
+               a.cust_code,
+               a.deliver_date,
+               a.deliver_status,
+               a.country,
+               a.currency,
+               a.contact,
+               a.mobile,
+               a.addr,
+               a.create_date,
+               a.create_by,
+               a.update_date,
+               a.update_by,
+               a.version,
+               a.sale_type,
+               a.payment_team,
+               a.contract_no,
+               a.contract_no,
+               a.payment_team,
+               a.sale_type,
+               a.supply_type,
+               b.unique_id id,
+               b.om_code,
+               b.inv_sort_root,
+               b.inv_sort_id,
+               b.inv_code,
+               b.inv_name,
+               b.inv_attribute,
+               b.unit_code,
+               b.unit_name,
+               b.quality_remarks,
+               b.documents,
+               b.quantity,
+               b.price,
+               b.amount,
+               b.wo_code,
+               b.wo_unique_id,
+               b.wo_quantity,
+               b.remarks,
+               b.create_time,
+               b.create_by,
+               b.update_time,
+               b.update_by ub,
+               b.piece_type,
+               b.piece,
+               b.min_number,
+               b.min_type,
+               b.pkg_remarks,
+               b.pkg_type,
+               b.tax,
+               b.wo_invoice,
+               b.wo_invoice_id,
+               b.wi_quantity,
+               b.wi_quantity_r,
+               b.wo_date,
+               b.wo_type,
+               b.wo_type_id,
+               b.wo_config,
+               b.drawing_no
+        from om_order_master a
+                 left join om_order_salve b on b.om_code = a.om_code and b.del_flag = 0
+        where a.om_code = (select om_code from om_order_salve where unique_id = #{uniqueId})
+    </select>
+
+    <select id="selectNum" parameterType="String" resultType="java.util.Map">
+        select sum(quantity) sum, sum(wo_quantity) wQuantity
+        from om_order_salve
+        where om_code = #{omCode}
+          and del_flag = 0
+
+    </select>
+
+    <select id="selectInvoiceStatusByCode" resultType="java.lang.String" parameterType="java.lang.String">
+        select invoice_status from om_order_master where om_code
+        in
+        <foreach collection="list" open="(" close=")" item="item" index="index" separator=",">
+            #{item}
+        </foreach>
+        and del_flag = 0
+    </select>
+
+    <update id="batchCheck">
+        <foreach collection="list" item="item" index="index" separator=";">
+            update om_order_master set invoice_status = '1',check_date = SysDate(),user_check = #{userName}
+            where om_code = #{item.omCode}
+            <include refid="batchDataScope"/>
+
+        </foreach>
+
+    </update>
+
+    <update id="batchAntiCheck">
+        <foreach collection="list" item="item" index="index" separator=";">
+            update om_order_master set invoice_status = '2',check_date =null,user_check = null
+            where om_code = #{item.omCode}
+            <include refid="batchDataScope"/>
+        </foreach>
+    </update>
+
+    <update id="changeQuantity">
+        update om_order_salve
+        set wi_quantity = wi_quantity + #{quantity}
+        where unique_id = #{id}
+    </update>
+
+    <select id="selectOmOrderSalveById"
+            resultType="com.njrsun.modules.om.domain.OmOrderSalve">
+        <include refid="selectOmOrderSalveVo"/>
+        from om_order_salve
+        where unique_id = #{woUniqueId}
+    </select>
+
+    <select id="selectOrderSalveBySalve" parameterType="com.njrsun.modules.om.domain.OmOrderSalve"
+            resultType="com.njrsun.modules.om.domain.OmOrderSalve">
+        <include refid="selectOmOrderSalveVo"/>
+        from om_order_salve
+        <where>
+            <if test="omCode != null and omCode != ''">and om_code =#{omCode}</if>
+            <if test="invCode != null and invCode != ''">and inv_code =#{invCode}</if>
+        </where>
+    </select>
+
+    <select id="selectOmOrderMasterByCodes" parameterType="String" resultMap="OmOrderMasterOmOrderSalveResult">
+        select a.unique_id, a.om_code, a.invoice_date, a.invoice_status, a.invoice_type, a.work_status, a.work_type,
+        a.work_dept, a.work_staff, a.check_date, a.user_oper, a.user_check, a.remarks, a.customer, a.customer_id,
+        a.cust_code, a.deliver_date, a.deliver_status, a.currency, a.contact, a.mobile, a.addr, a.create_date,
+        a.create_by, a.update_date, a.update_by,
+        a.version,a.sale_type,a.payment_team,a.contract_no,a.contract_no,a.payment_team,a.sale_type,a.country,a.form_config,a.supply_type,
+        b.unique_id id, b.om_code, b.inv_sort_root, b.inv_sort_id, b.inv_code, b.inv_name, b.inv_attribute, b.unit_code,
+        b.unit_name, b.quality_remarks, b.documents, b.quantity, b.price, b.amount, b.wo_code, b.wo_unique_id,b.drawing_no,
+        b.wo_quantity, b.remarks rs, b.create_time, b.create_by, b.update_time, b.update_by
+        ub,b.piece_type,b.piece,b.min_number,b.min_type,b.pkg_remarks,b.pkg_type,b.tax,b.wo_invoice,b.wo_invoice_id,b.wi_quantity,b.wi_quantity_r,b.wo_date,b.wo_type,b.wo_type_id,b.wo_config,b.mp_quantity
+        from om_order_master a
+        left join om_order_salve b on b.om_code = a.om_code and b.del_flag = 0
+        where a.om_code in
+        <foreach collection="array" open="(" close=")" item="item" index="index" separator=",">
+            #{item}
+        </foreach>
+    </select>
+
+
+    <select id="export" parameterType="com.njrsun.modules.om.domain.OmOrderMaster"
+            resultType="com.njrsun.modules.om.domain.ExportOrder">
+        select contract_no,oos.om_code,inv_code,inv_name,quantity,wi_quantity,pkg_type,piece,wo_config,
+        sale_type,invoice_date,work_staff,customer,price,amount,invoice_status
+        from om_order_master left join om_order_salve oos on om_order_master.om_code = oos.om_code
+        <where>
+            <if test="customer != null and customer !=''">and customer like concat('%',#{customer},'%')</if>
+            <if test="startDate != null">and invoice_date >= #{startDate}</if>
+            <if test="endDate != null">and #{endDate} >= invoice_date</if>
+            <if test="contractNo != null and contractNo !=''">and contract_no = #{contractNo}</if>
+            <if test="workStaff != null and workStaff !=''">and work_staff = #{workStaff}</if>
+            <if test="omCode != null and omCode !=''">and oos.om_code = #{omCode}</if>
+            <if test="invoiceStatus != null and invoiceStatus !=''">and invoice_status = #{invoiceStatus}</if>
+            <if test="flag == true">and quantity-wi_quantity> 0</if>
+            <if test="flag ==  false">and wi_quantity - wi_quantity_r > 0</if>
+            and oos.del_flag = 0
+            <include refid="baseDataScope"/>
+        </where>
+        order by om_order_master.unique_id desc
+    </select>
+
+    <insert id="insertOmOrderMaster" parameterType="OmOrderMaster" useGeneratedKeys="true" keyProperty="uniqueId">
+        insert into om_order_master
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="omCode != null and omCode != ''">om_code,</if>
+            <if test="invoiceDate != null">invoice_date,</if>
+            <if test="invoiceStatus != null">invoice_status,</if>
+            <if test="invoiceType != null">invoice_type,</if>
+            <if test="workStatus != null">work_status,</if>
+            <if test="workType != null">work_type,</if>
+            <if test="workDept != null">work_dept,</if>
+            <if test="workStaff != null">work_staff,</if>
+            <if test="checkDate != null">check_date,</if>
+            <if test="params.loginId != null">user_oper,</if>
+            <if test="userCheck != null">user_check,</if>
+            <if test="remarks != null">remarks,</if>
+            <if test="customer != null">customer,</if>
+            <if test="customerId != null">customer_id,</if>
+            <if test="custCode != null">cust_code,</if>
+            <if test="deliverDate != null">deliver_date,</if>
+            <if test="deliverStatus != null">deliver_status,</if>
+            <if test="country != null">country,</if>
+            <if test="currency != null">currency,</if>
+            <if test="contact != null">contact,</if>
+            <if test="mobile != null">mobile,</if>
+            <if test="addr != null">addr,</if>
+            <if test="delFlag != null">del_flag,</if>
+            create_date,
+            <if test="createBy != null">create_by,</if>
+            <if test="saleType != null">sale_type,</if>
+            <if test="contractNo != null">contract_no,</if>
+            <if test="paymentTeam != null">payment_team,</if>
+            <if test="formConfig != null">form_config,</if>
+            <if test="supplyType != null">supply_type,</if>
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="omCode != null and omCode != ''">#{omCode},</if>
+            <if test="invoiceDate != null">#{invoiceDate},</if>
+            <if test="invoiceStatus != null">#{invoiceStatus},</if>
+            <if test="invoiceType != null">#{invoiceType},</if>
+            <if test="workStatus != null">#{workStatus},</if>
+            <if test="workType != null">#{workType},</if>
+            <if test="workDept != null">#{workDept},</if>
+            <if test="workStaff != null">#{workStaff},</if>
+            <if test="checkDate != null">#{checkDate},</if>
+            <if test="params.loginId != null">${params.loginId},</if>
+            <if test="userCheck != null">#{userCheck},</if>
+            <if test="remarks != null">#{remarks},</if>
+            <if test="customer != null">#{customer},</if>
+            <if test="customerId != null">#{customerId},</if>
+            <if test="custCode != null">#{custCode},</if>
+            <if test="deliverDate != null">#{deliverDate},</if>
+            <if test="deliverStatus != null">#{deliverStatus},</if>
+            <if test="country != null">#{country},</if>
+            <if test="currency != null">#{currency},</if>
+            <if test="contact != null">#{contact},</if>
+            <if test="mobile != null">#{mobile},</if>
+            <if test="addr != null">#{addr},</if>
+            <if test="delFlag != null">#{delFlag},</if>
+            SysDate(),
+            <if test="createBy != null">#{createBy},</if>
+            <if test="saleType != null">#{saleType},</if>
+            <if test="contractNo != null">#{contractNo},</if>
+            <if test="paymentTeam != null">#{paymentTeam},</if>
+            <if test="formConfig != null">#{formConfig},</if>
+            <if test="supplyType != null">#{supplyType},</if>
+        </trim>
+    </insert>
+
+    <update id="updateOmOrderMaster" parameterType="OmOrderMaster">
+        update om_order_master
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="invoiceDate != null">invoice_date = #{invoiceDate},</if>
+            <if test="invoiceStatus != null">invoice_status = #{invoiceStatus},</if>
+            <if test="invoiceType != null">invoice_type = #{invoiceType},</if>
+            <if test="workStatus != null">work_status = #{workStatus},</if>
+            <if test="workType != null">work_type = #{workType},</if>
+            <if test="workDept != null">work_dept = #{workDept},</if>
+            <if test="workStaff != null">work_staff = #{workStaff},</if>
+            <if test="checkDate != null">check_date = #{checkDate},</if>
+            <if test="userOper != null">user_oper = #{userOper},</if>
+            <if test="userCheck != null">user_check = #{userCheck},</if>
+            <if test="remarks != null">remarks = #{remarks},</if>
+            <if test="customer != null">customer = #{customer},</if>
+            <if test="customerId != null">customer_id = #{customerId},</if>
+            <if test="custCode != null">cust_code = #{custCode},</if>
+            <if test="deliverDate != null">deliver_date = #{deliverDate},</if>
+            <if test="deliverStatus != null">deliver_status = #{deliverStatus},</if>
+            <if test="country != null">country = #{country},</if>
+            <if test="currency != null">currency = #{currency},</if>
+            <if test="contact != null">contact = #{contact},</if>
+            <if test="mobile != null">mobile = #{mobile},</if>
+            <if test="addr != null">addr = #{addr},</if>
+            <if test="saleType != null">sale_type = #{saleType},</if>
+            <if test="contractNo != null">contract_no =#{contractNo},</if>
+            <if test="paymentTeam != null">payment_team = #{paymentTeam},</if>
+            update_date = SysDate(),
+            <if test="updateBy != null">update_by = #{updateBy},</if>
+            <if test="supplyType != null">supply_type = #{supplyType},</if>
+            version = #{version} +1 ,
+        </trim>
+        <where>
+            <include refid="baseDataScope"/>
+            and unique_id = #{uniqueId} and version = #{version}
+        </where>
+    </update>
+
+    <update id="changeDate" parameterType="OmOrderMaster">
+        update om_order_master
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="invoiceStatus != null">invoice_status = #{invoiceStatus},</if>
+            <if test="invoiceType != null">invoice_type = #{invoiceType},</if>
+            <if test="workStatus != null">work_status = #{workStatus},</if>
+            <if test="userCheck != null">user_check = #{userCheck},</if>
+            <if test="deliverDate != null">deliver_date = #{deliverDate},</if>
+            <if test="deliverStatus != null">deliver_status = #{deliverStatus},</if>
+            update_date = SysDate(),
+            <if test="updateBy != null">update_by = #{updateBy},</if>
+            version = #{version} +1 ,
+        </trim>
+        <where>
+            <include refid="baseDataScope"/>
+            and om_code = #{omCode} and version = #{version}
+        </where>
+    </update>
+    <delete id="deleteOmOrderMasterById" parameterType="Long">
+        delete
+        from om_order_master
+        where unique_id = #{uniqueId}
+    </delete>
+
+    <update id="deleteOmOrderMasterByCodes" parameterType="String">
+        <foreach collection="list" separator=";" index="index" item="item">
+            update om_order_master set del_flag = 1 where om_code = #{item.omCode}
+            <include refid="batchDataScope"/>
+        </foreach>
+    </update>
+
+    <update id="deleteOmOrderSalveByOmCodes" parameterType="String">
+        update om_order_salve set del_flag = 1 where om_code in
+        <foreach item="omCode" collection="list" open="(" separator="," close=")">
+            #{omCode}
+        </foreach>
+    </update>
+
+    <delete id="deleteOmOrderSalveByOmCode" parameterType="Long">
+        delete
+        from om_order_salve
+        where om_code = #{omCode}
+    </delete>
+    <update id="deleteOmOrderSalveIds">
+        update om_order_salve set del_flag = 1 where unique_id in
+        <foreach collection="array" separator="," index="index" open="(" close=")" item="item">
+            #{item}
+        </foreach>
+    </update>
+    <update id="updateOmOrderSlave">
+        <foreach collection="list" item="item" index="index" separator=";">
+            update om_order_salve
+            <trim suffixOverrides="," prefix="SET">
+                <if test="item.invSortRoot != null">inv_sort_root = #{item.invSortRoot},</if>
+                <if test="item.invSortId != null">inv_sort_id = #{item.invSortId},</if>
+                <if test="item.invCode != null">inv_code = #{item.invCode},</if>
+                <if test="item.invName != null">inv_name = #{item.invName},</if>
+                <if test="item.invAttribute != null">inv_attribute = #{item.invAttribute},</if>
+                <if test="item.unitCode != null">unit_code = #{item.unitCode},</if>
+                <if test="item.unitName != null">unit_name = #{item.unitName},</if>
+                <if test="item.qualityRemarks != null">quality_remarks = #{item.qualityRemarks},</if>
+                <if test="item.documents != null">documents = #{item.documents},</if>
+                <if test="item.quantity != null">quantity = #{item.quantity},</if>
+                <if test="item.price != null">price = #{item.price},</if>
+                <if test="item.amount != null">amount = #{item.amount},</if>
+                <if test="item.woCode != null">wo_code = #{item.woCode},</if>
+                <if test="item.woUniqueId != null">wo_unique_id = #{item.woUniqueId},</if>
+                <if test="item.woQuantity != null">wo_quantity = #{item.woQuantity},</if>
+                <if test="item.remarks != null">remarks = #{item.remarks},</if>
+                update_time =SysDate(),
+                <if test="item.updateBy != null">update_by = #{item.updateBy},</if>
+                <if test="item.pkgRemarks != null">pkg_remarks = #{item.pkgRemarks},</if>
+                <if test="item.pkgType != null">pkg_type = #{item.pkgType},</if>
+                <if test="item.piece != null">piece = #{item.piece},</if>
+                <if test="item.minNumber != null">min_number = #{item.minNumber},</if>
+                <if test="item.minType != null">min_type = #{item.minType},</if>
+                <if test="item.tax != null">tax = #{item.tax},</if>
+                <if test="item.pieceType != null">piece_type = #{item.pieceType},</if>
+                <if test="item.woInvoice != null">wo_invoice = #{item.woInvoice},</if>
+                <if test="item.woInvoiceId != null">wo_invoice_id = #{item.woInvoiceId},</if>
+                <if test="item.wiQuantityR != null">wi_quantity_r = #{item.wiQuantityR},</if>
+                <if test="item.wiQuantity != null">wi_quantity = #{item.wiQuantity},</if>
+                <if test="item.woDate != null">wo_date = #{item.woDate},</if>
+                <if test="item.woType != null">wo_type = #{item.woType},</if>
+                <if test="item.woTypeId != null">wo_type_id = #{item.woTypeId},</if>
+                <if test="item.drawingNo != null">drawing_no = #{item.drawingNo},</if>
+            </trim>
+            where unique_id = #{item.uniqueId}
+        </foreach>
+    </update>
+
+    <insert id="batchOmOrderSalve" useGeneratedKeys="true" keyProperty="uniqueId">
+        insert into om_order_salve( om_code, inv_sort_root, inv_sort_id, inv_code, inv_name, inv_attribute, unit_code,
+        unit_name, quality_remarks, documents, quantity, price, amount, wo_code, wo_unique_id, remarks, create_time,
+        create_by,pkg_type,pkg_remarks,piece,piece_type,min_number,min_type,tax,wo_invoice,wo_invoice_id,wo_date,wo_type,wo_type_id,wo_config,drawing_no)
+        values
+        <foreach item="item" index="index" collection="list" separator=",">
+            ( #{item.omCode}, #{item.invSortRoot}, #{item.invSortId}, #{item.invCode}, #{item.invName},
+            #{item.invAttribute}, #{item.unitCode}, #{item.unitName}, #{item.qualityRemarks}, #{item.documents},
+            #{item.quantity}, #{item.price}, #{item.amount}, #{item.woCode}, #{item.woUniqueId}, #{item.remarks},
+            SysDate(),
+            #{item.createBy},#{item.pkgType},#{item.pkgRemarks},#{item.piece},#{item.pieceType},#{item.minNumber},#{item.minType},#{item.tax},#{item.woInvoice},#{item.woInvoiceId},#{item.woDate},#{item.woType},#{item.woTypeId},#{item.woConfig},#{item.drawingNo})
+        </foreach>
+    </insert>
+
+    <select id="linkDetail" resultType="java.util.Map">
+        select om_deliver_salve.unique_id as inv_unique_id,
+        odm.om_code as invoice_code,
+        om_deliver_salve.inv_code,
+        om_deliver_salve.inv_name,
+        om_deliver_salve.inv_attribute,
+        om_deliver_salve.unit_code,
+        om_deliver_salve.unit_name,
+        om_deliver_salve.quantity,
+        om_deliver_salve.price,
+        om_deliver_salve.amount,
+        o.work_type,
+        o.invoice_type,
+        date_format(o.invoice_date,'%Y-%m-%d') as invoice_date,
+        o.invoice_type as 'key',
+        om_deliver_salve.wo_invoice_id,
+        om_deliver_salve.wo_code,
+        om_deliver_salve.wo_unique_id
+        from om_deliver_salve left join om_order_salve odm on om_deliver_salve.wo_unique_id = odm.unique_id
+        left join om_deliver_master o on om_deliver_salve.om_code = o.om_code
+        where odm.unique_id = #{uniqueId}
+        <if test="params.user_oper != null">
+            and (o.user_oper = ${params.user_oper}
+            <if test="params.user_agent != null">
+                or o.user_oper in (${params.user_agent})
+            </if>
+            )
+        </if>
+
+    </select>
+
+    <select id="selectOrderReport" parameterType="com.njrsun.modules.om.domain.OmOrderReport"
+            resultType="com.njrsun.modules.om.domain.OmOrderReport">
+        select om_order_master.unique_id oomid , om_order_master.om_code , om_order_master.invoice_date,
+        om_order_master.invoice_status, om_order_master.invoice_type, om_order_master.work_status,
+        om_order_master.work_type, om_order_master.work_dept, om_order_master.work_staff,
+        om_order_master.sale_type, om_order_master.check_date, om_order_master.user_oper,
+        om_order_master.user_check, om_order_master.remarks, om_order_master.contract_no,
+        om_order_master.customer, om_order_master.customer_id, om_order_master.cust_code,
+        om_order_master.payment_team, om_order_master.deliver_date, om_order_master.deliver_status,
+        om_order_master.currency, om_order_master.country, om_order_master.contact, om_order_master.mobile,
+        om_order_master.addr,ods.unique_id odsid,oos.unique_id oosid,
+        oos.inv_sort_root, oos.inv_sort_id, oos.inv_code, oos.inv_name, oos.inv_attribute, oos.unit_code, oos.unit_name,
+        oos.quality_remarks, oos.documents, oos.quantity, oos.price, oos.amount,
+        oos.tax, oos.pkg_remarks, oos.pkg_type, oos.piece, oos.piece_type, oos.min_number, oos.min_type,
+        oos.wo_invoice, oos.wo_invoice_id, oos.wo_code, oos.wo_unique_id,
+        oos.remarks as remark,
+        sum(IFNULL(ods.wi_quantity,0)) as out_quantity,sum(IFNULL(ods.quantity,0)-IFNULL(ods.wi_quantity,0)) as
+        not_out_quantity,
+        sum(IFNULL(oos.wi_quantity,0)) as 'wi_quantity',sum(ifnull(oos.quantity,0)-ifnull(oos.wi_quantity,0)) as
+        not_wi_quantity
+        from om_order_master left join om_order_salve oos on om_order_master.om_code = oos.om_code
+        left join om_deliver_salve ods on ods.wo_unique_id = oos.unique_id
+        <where>
+            <if test="omCode != null and omCode !=''">and om_order_master.om_code = #{omCode}</if>
+            <if test="saleType != null and saleType !=''">and om_order_master.sale_type = #{saleType}</if>
+            <if test="customer != null and customer !=''">and om_order_master.customer like
+                concat('%',#{customer},'%')
+            </if>
+            <if test="workStaff != null and workStaff != ''">and om_order_master.work_staff like
+                concat('%',#{workStaff},'%')
+            </if>
+            <if test="invName != null and invName !=''">and oos.inv_name = #{invName}</if>
+            <if test="searchValue == 'true'">and date(om_order_master.invoice_date) >= DATE_SUB(CURDATE(),INTERVAL 7
+                DAY)
+            </if>
+            <if test="startDate != null">and om_order_master.invoice_date >= #{startDate}</if>
+            <if test="endDate != null">and #{endDate} >= om_order_master.invoice_date</if>
+            and oos.del_flag = 0
+        </where>
+        group by
+        om_order_master.unique_id, om_order_master.om_code, om_order_master.invoice_date,
+        om_order_master.invoice_status, om_order_master.invoice_type, om_order_master.work_status,
+        om_order_master.work_type, om_order_master.work_dept, om_order_master.work_staff,
+        om_order_master.sale_type, om_order_master.check_date, om_order_master.user_oper,
+        om_order_master.user_check, om_order_master.remarks, om_order_master.contract_no,
+        om_order_master.customer, om_order_master.customer_id, om_order_master.cust_code,
+        om_order_master.payment_team, om_order_master.deliver_date, om_order_master.deliver_status,
+        om_order_master.currency, om_order_master.country, om_order_master.contact, om_order_master.mobile,
+        om_order_master.addr,ods.unique_id,oos.unique_id,
+        oos.inv_sort_root, oos.inv_sort_id, oos.inv_code, oos.inv_name, oos.inv_attribute, oos.unit_code, oos.unit_name,
+        oos.quality_remarks, oos.documents, oos.quantity, oos.price, oos.amount,
+        oos.tax, oos.pkg_remarks, oos.pkg_type, oos.piece, oos.piece_type, oos.min_number, oos.min_type,
+        oos.wo_invoice, oos.wo_invoice_id, oos.wo_code, oos.wo_unique_id,oos.remarks
+        <if test="searchValue == 'true'">having not_out_quantity > 0</if>
+        <if test="searchValue == 'true'">order by om_order_master.deliver_date desc,om_order_master.customer desc</if>
+        <if test="searchValue =='false'">order by om_order_master.unique_id desc</if>
+    </select>
+
+
+    <select id="rank" resultType="com.njrsun.modules.om.domain.OmOrderRank">
+        select inv_sort_root, inv_sort_id, inv_code, inv_name, inv_attribute,sum(quantity) sumQuantity,avg(price)
+        avgPrice,sum(amount) sumAmount from(select om_order_salve.inv_sort_root, om_order_salve.inv_sort_id,
+        om_order_salve.inv_code, om_order_salve.inv_name,om_order_salve.inv_attribute, om_order_salve.quantity,
+        om_order_salve.price, om_order_salve.amount from om_order_salve left join om_order_master o on
+        om_order_salve.om_code = o.om_code
+        <where>
+            and om_order_salve.del_flag = 0
+            <if test="startDate != null">and o.invoice_date >= #{startDate}</if>
+            <if test="endDate != null">and #{endDate} >= o.invoice_date</if>
+            <if test="invSortRoot != null and invSortRoot !=''">and om_order_salve.inv_sort_root = #{invSortRoot}</if>
+        </where>
+        ) as oos
+        group by inv_sort_root, inv_sort_id, inv_code, inv_name, inv_attribute
+        order by sumQuantity desc
+    </select>
+
+    <select id="statistics" resultType="com.njrsun.modules.om.domain.OmWorkStaffStatistics">
+        select work_dept,customer,work_staff,sum(quantity) sumQuantity,avg(price) avgPrice ,sum(amount) sumAmount
+        from (
+        select om_order_master.work_dept,om_order_master.customer, om_order_master.work_staff,ods.quantity, ods.price,
+        ods.amount from om_order_master left join om_order_salve ods on om_order_master.om_code = ods.om_code and
+        ods.del_flag = 0
+        <where>
+            and om_order_master.del_flag = 0
+            <if test="startDate != null">and invoice_date >= #{startDate}</if>
+            <if test="endDate != null">and #{endDate} >= invoice_date</if>
+            <if test="workStaff != null and workStaff !=''">and work_staff = #{workStaff}</if>
+        </where>
+        )
+        allb group by work_dept,customer,work_staff order by sumQuantity desc
+    </select>
+
+    <select id="selectOmOrderMasterByWoCodeForUpdate" resultType="com.njrsun.modules.om.domain.OmOrderMaster">
+        select invoice_status, work_status
+        from om_order_master
+        where om_code = #{woCode}
+            for
+        update
+    </select>
+
+    <select id="selectSumQuantityByCode" resultType="java.math.BigDecimal">
+        select sum(quantity - wi_quantity)
+        from om_order_salve
+        where om_code = #{lastCode}
+          and del_flag = 0
+    </select>
+
+    <select id="updateWorkStatus">
+        update om_order_master
+        set work_status = #{status}
+        where om_code = #{lastCode}
+    </select>
+
+    <update id="updateWorkStatus_1">
+        update om_order_master set work_status = #{value} where om_code = #{item.omCode} and version = #{item.version}
+        <include refid="batchDataScope"/>
+    </update>
+
+    <select id="selectDetailByWorkType" parameterType="java.util.Map" resultType="java.util.Map">
+        select
+        om_order_master.om_code,supply_type,work_type,customer,work_staff,inv_name,inv_code,deliver_date,inv_attribute,sum(quantity)
+        as 'quantity',deliver_status from om_order_master left join om_order_salve oos on om_order_master.om_code =
+        oos.om_code and oos.del_flag = 0
+        <where>
+            <if test="customer != null and customer !=''">and customer = #{customer}</if>
+            <if test="invCode != null and invCode !=''">and inv_code like concat('%',#{invCode},'%')</if>
+            <if test="invName != null and invName !=''">and inv_name like concat('%',#{invName},'%')</if>
+            and find_in_set(supply_type,#{supplyType}) and invoice_status ='1' and wi_quantity = 0 and
+            om_order_master.del_flag = 0 and work_status = '0'
+        </where>
+        group by om_order_master.om_code,customer,work_staff,inv_name,inv_code,deliver_date,inv_attribute,deliver_status
+    </select>
+
+    <insert id="insertOpertion">
+        insert into om_order_sdd(om_code, work_status, deliver_date, deliver_status, create_date, create_by)
+        values (#{omCode}, #{newStatus}, #{deliverDate}, #{deliverStatus}, SysDate(), #{name})
+    </insert>
+
+    <select id="orderDetail" resultType="com.njrsun.modules.om.domain.OmOrderDetail">
+        select
+        work_staff,oos.om_code,work_type,deliver_date,deliver_status,inv_code,inv_name,quantity,quality_remarks,pkg_remarks,piece,country,sale_type,inv_attribute
+        from om_order_master left join om_order_salve oos on om_order_master.om_code = oos.om_code
+        <where>
+            <if test="supplyType != null and supplyType !=''">
+                and supply_type = #{supplyType}
+            </if>
+            and invoice_status = 1 and work_status = 0
+        </where>
+        order by oos.unique_id desc
+    </select>
+
+    <select id="selectOmOrderMasterByMap" parameterType="java.lang.String" resultType="java.util.Map">
+        select a.unique_id,
+               a.om_code,
+               a.invoice_date,
+               a.invoice_status,
+               a.invoice_type,
+               a.work_status,
+               a.work_type,
+               a.work_dept,
+               a.work_staff,
+               a.check_date,
+               a.user_oper,
+               a.user_check,
+               a.remarks,
+               a.customer,
+               a.customer_id,
+               a.cust_code,
+               a.deliver_date,
+               a.deliver_status,
+               a.currency,
+               a.contact,
+               a.mobile,
+               a.addr,
+               a.create_date,
+               a.create_by,
+               a.update_date,
+               a.update_by,
+               a.version,
+               a.sale_type,
+               a.payment_team,
+               a.contract_no,
+               a.country,
+               a.form_config,
+               a.supply_type,
+               b.unique_id id,
+               b.om_code,
+               b.inv_sort_root,
+               b.inv_sort_id,
+               b.inv_code,
+               b.inv_name,
+               b.inv_attribute,
+               b.unit_code,
+               b.unit_name,
+               b.quality_remarks,
+               b.documents,
+               b.quantity,
+               b.price,
+               b.amount,
+               b.wo_code,
+               b.wo_unique_id,
+               b.wo_quantity,
+               b.remarks   rs,
+               b.create_time,
+               b.create_by,
+               b.update_time,
+               b.update_by ub,
+               b.piece_type,
+               b.piece,
+               b.min_number,
+               b.min_type,
+               b.pkg_remarks,
+               b.pkg_type,
+               b.tax,
+               b.wo_invoice,
+               b.wo_invoice_id,
+               b.wi_quantity,
+               b.wi_quantity_r,
+               b.wo_date,
+               b.wo_type,
+               b.wo_type_id,
+               b.wo_config,
+               b.mp_quantity
+        from om_order_master a
+                 left join om_order_salve b on b.om_code = a.om_code and b.del_flag = 0
+        where a.om_code = #{omCode}
+
+    </select>
+
+    <update id="changeQuantityMp">
+        update om_order_salve
+        set mp_quantity = mp_quantity + #{quantity}
+        where unique_id = #{id}
+    </update>
+
+    <update id="changeQuantityPrs">
+        update om_order_salve
+        set prs_quantity = prs_quantity + #{quantity}
+        where unique_id = #{id}
+    </update>
+
+    <select id="leadMp" parameterType="com.njrsun.modules.om.domain.OmOrderReport" resultType="java.util.Map">
+        select unique_id, om_code, invoice_date, invoice_status, invoice_type, work_status, work_type,
+        work_dept, work_staff, form_config, sale_type, supply_type, check_date, user_oper,
+        user_check, remarks, contract_no, customer, customer_id, cust_code, payment_team,
+        DATE_FORMAT(deliver_date,'%Y-%m-%d') as 'deliverDate', deliver_status
+        from om_order_master
+        <where>
+            <if test="omCode != null and omCode != ''">and om_code like concat('%',#{omCode},'%')</if>
+            <if test="startDate != null">and invoice_date >= #{startDate}</if>
+            <if test="endDate != null">and #{endDate} >= invoice_date</if>
+            <if test="workType != null and workType ==  1 ">
+                and  work_type = '2'
+            </if>
+            <if test="workType != null and workType ==  0 ">
+                and  work_type in ('0','1')
+            </if>
+            and del_flag = 0 and invoice_status = '1' and
+            om_code in (
+            select DISTINCT om.om_code from om_order_salve left join om_order_master om on om_order_salve.om_code =
+            om.om_code and om_order_salve.del_flag = 0
+            <where>
+                <if test="invCode != null and invCode != ''">and inv_code = #{invCode}</if>
+                <if test="invName != null and invName != ''">and inv_name like concat('%',#{invName},'%')</if>
+                and quantity-mp_quantity-prs_quantity > 0
+            </where>
+
+            )
+            and work_status = '0' and invoice_status = '1' and supply_type =0
+
+        </where>
+        order by unique_id desc
+
+    </select>
+
+    <select id="leadIntoMp" parameterType="com.njrsun.modules.om.domain.OmOrderReport" resultType="Map">
+        select oom.om_code,inv_name, inv_attribute, quantity, price, mobile,addr,amount, pkg_remarks,
+        pkg_type,unit_name,unit_code,quantity,(quantity-om_order_salve.mp_quantity-om_order_salve.prs_quantity) as surplus,
+        invoice_type as invoice_type_id,contact,DATE_FORMAT(deliver_date,'%Y-%m-%d') deliverDate,
+        wo_unique_id,wo_date,wo_type_id,wo_type,work_type as work_type_id,form_config,supply_type,
+        DATE_FORMAT(oom.invoice_date,'%Y-%m-%d') date ,oom.sale_type,oom.work_type,work_dept,oom.work_staff,
+        oom.contract_no,oom.customer,oom.cust_code,inv_code,inv_attribute,om_order_salve.unique_id,tax,piece,
+        quality_remarks,customer_id,inv_sort_root,inv_sort_id,piece_type,wi_quantity,wi_quantity_r,
+        om_order_salve.remarks,oom.remarks remark,wo_config,oom.deliver_status,drawing_no
+        from om_order_salve
+        left join om_order_master oom on om_order_salve.om_code = oom.om_code
+        <where>
+            <if test="omCode != null and omCode != ''">and oom.om_code = #{omCode}</if>
+            <if test="customer != null and customer !=''">and customer like concat('%',#{customer},'%')</if>
+            <if test="startDate != null">and invoice_date >= #{startDate}</if>
+            <if test="endDate != null">and #{endDate} >= invoice_date</if>
+            <if test="contractNo != null and contractNo !=''">and contract_no = #{contractNo}</if>
+            <if test="workStaff != null and workStaff !=''">and work_staff = #{workStaff}</if>
+            and quantity-mp_quantity-prs_quantity > 0
+            <if test="saleType != null and saleType != ''">and sale_type =#{saleType}</if>
+            <if test="searchValue != null and searchValue !=''">and inv_name like concat('%',#{searchValue},'%')</if>
+            <if test="workType != null and workType !=''">and work_type = #{workType}</if>
+            and om_order_salve.del_flag = 0
+        </where>
+        order by invoice_date desc
+    </select>
+
+    <select id="leadPrs" parameterType="com.njrsun.modules.om.domain.OmOrderReport" resultType="java.util.Map">
+        select unique_id, om_code, invoice_date, invoice_status, invoice_type, work_status, work_type,
+        work_dept, work_staff, form_config, sale_type, supply_type, check_date, user_oper,
+        user_check, remarks, contract_no, customer, customer_id, cust_code, payment_team,
+        DATE_FORMAT(deliver_date,'%Y-%m-%d') as 'deliverDate', deliver_status
+        from om_order_master
+        <where>
+            <if test="omCode != null and omCode != ''">and om_code like concat('%',#{omCode},'%')</if>
+            <if test="startDate != null">and invoice_date >= #{startDate}</if>
+            <if test="endDate != null">and #{endDate} >= invoice_date</if>
+            <if test="workType != null and workType ==  1 ">
+                and  work_type = '2'
+            </if>
+            <if test="workType != null and workType ==  0 ">
+                and  work_type in ('0','1')
+            </if>
+            and del_flag = 0 and invoice_status = '1' and
+            om_code in (
+            select DISTINCT om.om_code from om_order_salve left join om_order_master om on om_order_salve.om_code =
+            om.om_code and om_order_salve.del_flag = 0
+            <where>
+                <if test="invCode != null and invCode != ''">and inv_code = #{invCode}</if>
+                <if test="invName != null and invName != ''">and inv_name like concat('%',#{invName},'%')</if>
+                and quantity-prs_quantity-mp_quantity > 0
+            </where>
+
+            )
+            and work_status = '0' and invoice_status = '1' and supply_type =0
+
+        </where>
+        order by unique_id desc
+
+    </select>
+
+    <select id="leadIntoPrs" parameterType="com.njrsun.modules.om.domain.OmOrderReport" resultType="Map">
+        select oom.om_code,inv_name, inv_attribute, quantity, price, mobile,addr,amount, pkg_remarks,
+        pkg_type,unit_name,unit_code,quantity,(om_order_salve.mp_quantity + om_order_salve.prs_quantity) as do_quantity,(quantity-om_order_salve.mp_quantity-om_order_salve.prs_quantity) as surplus,
+        invoice_date ,invoice_type as invoice_type_id,contact,DATE_FORMAT(deliver_date,'%Y-%m-%d') deliverDate,
+        wo_unique_id,wo_date,wo_type_id,wo_type,work_type as work_type_id,form_config,supply_type,
+        DATE_FORMAT(oom.invoice_date,'%Y-%m-%d') date ,oom.sale_type,oom.work_type,work_dept,oom.work_staff,
+        oom.contract_no,oom.customer,oom.cust_code,inv_code,inv_attribute,om_order_salve.unique_id,tax,piece,
+        quality_remarks,customer_id,inv_sort_root,inv_sort_id,piece_type,wi_quantity,wi_quantity_r,
+        om_order_salve.remarks,oom.remarks remark,wo_config,oom.deliver_status,drawing_no
+        from om_order_salve
+        left join om_order_master oom on om_order_salve.om_code = oom.om_code
+        <where>
+            <if test="ppNumber != null and ppNumber != ''">and oom.om_code = #{ppNumber}</if>
+            <if test="customer != null and customer !=''">and customer like concat('%',#{customer},'%')</if>
+            <if test="startDate != null">and deliver_date >= #{startDate}</if>
+            <if test="endDate != null">and #{endDate} >= deliver_date</if>
+            <if test="invCode != null and invCode !=''">and inv_code = #{invCode}</if>
+            <if test="invName != null and invName !=''">and inv_name = #{invName}</if>
+            and quantity-prs_quantity-mp_quantity > 0
+            <if test="saleType != null and saleType != ''">and sale_type =#{saleType}</if>
+            <if test="searchValue != null and searchValue !=''">and inv_name like concat('%',#{searchValue},'%')</if>
+            <if test="workType != null and workType !=''">and work_type = #{workType}</if>
+            and om_order_salve.del_flag = 0 and supply_type = 0
+        </where>
+        order by invoice_date desc
+    </select>
+
+    <select id="selectOrderDetailMp" parameterType="com.njrsun.modules.om.domain.OmOrderMpReport"
+            resultType="com.njrsun.modules.om.domain.OmOrderMpReport">
+        select
+        contract_no,oos.om_code,invoice_date,supply_type,sale_type,work_staff,customer,deliver_date,inv_code,inv_name,inv_attribute,unit_code,unit_name,
+        quantity,mp_quantity,quantity-mp_quantity as notMpQuantity
+        from om_order_master left join om_order_salve oos on om_order_master.om_code = oos.om_code and oos.del_flag = 0
+        <where>
+            <if test="customer != null and customer !=''">and customer like concat('%',#{customer},'%')</if>
+            <if test="startDate != null">and invoice_date >= #{startDate}</if>
+            <if test="endDate != null">and #{endDate} >= invoice_date</if>
+            <if test="contractNo != null and contractNo !=''">and contract_no = #{contractNo}</if>
+            <if test="workStaff != null and workStaff !=''">and work_staff = #{workStaff}</if>
+            <if test="omCode != null and omCode !=''">and oos.om_code = #{omCode}</if>
+            <if test="saleType != null and saleType != ''">and sale_type = #{saleType}</if>
+            <if test="invName != null and invName != ''">and inv_name like concat('%',#{invName},'%')</if>
+            <if test="invCode != null and invCode !=''">and inv_code like concat(#{invCode},'%')</if>
+            and supply_type in ('0','1','3') and quantity - mp_quantity > 0
+            <include refid="baseDataScope"/>
+            and invoice_status = '1' and work_status ='0'
+        </where>
+        order by oos.unique_id desc
+    </select>
+
+    <select id="selectCustomerNameByPpNumber" resultType="java.util.Map">
+        select customer, customer_id, form_config from om_order_master where om_code= #{ppNumber}
+    </select>
+
+    <select id="queryOrderSalveByUniqueId" resultType="com.njrsun.modules.om.domain.OmOrderSalve">
+        <include refid="selectOmOrderSalveVo"/>
+        from om_order_salve
+        where unique_id= #{uniqueId}
+    </select>
+</mapper>

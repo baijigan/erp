@@ -1,0 +1,394 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.njrsun.modules.prs.mapper.PrsOrderMasterMapper">
+    
+    <resultMap type="com.njrsun.modules.prs.domain.PrsOrderMaster" id="PrsOrderMasterResult">
+        <result property="uniqueId"    column="unique_id"    />
+        <result property="prsCode"    column="prs_code"    />
+        <result property="invoiceDate"    column="invoice_date"    />
+        <result property="invoiceStatus"    column="invoice_status"    />
+        <result property="invoiceType"    column="invoice_type"    />
+        <result property="workStatus"    column="work_status"    />
+        <result property="workType"    column="work_type"    />
+        <result property="workDept"    column="work_dept"    />
+        <result property="workStaff"    column="work_staff"    />
+        <result property="formConfig"    column="form_config"    />
+        <result property="checkDate"    column="check_date"    />
+        <result property="userOper"    column="user_oper"    />
+        <result property="userCheck"    column="user_check"    />
+        <result property="remarks"    column="remarks"    />
+        <result property="delFlag"    column="del_flag"    />
+        <result property="createDate"    column="create_date"    />
+        <result property="createBy"    column="create_by"    />
+        <result property="updateDate"    column="update_date"    />
+        <result property="updateBy"    column="update_by"    />
+        <result property="version"    column="version"    />
+        <result property="beltline" column="beltline"/>
+        <result property="beltlineId" column="beltline_id"/>
+        <result property="ppNumber"  column="pp_number"/>
+        <result property="ppDate" column="pp_date"/>
+        <result property="mpOrderCode" column="mp_order_code"/>
+        <result property="invCode" column="inv_code"/>
+        <result property="invName" column="inv_name"/>
+        <result property="invAttribute" column="inv_attribute"/>
+        <result property="unitName" column="unit_name"/>
+        <result property="unitCode" column="unit_code"/>
+        <result property="invQuantity" column="inv_quantity"/>
+        <result property="needDate"  column="need_date"/>
+        <result property="salesman" column="salesman"/>
+        <result property="wiQuantity" column="wi_quantity"/>
+        <result property="woUniqueId" column="woUniqueId"/>
+        <result property="woConfig" column="woConfig"/>
+        <result property="woCode" column="woCode"/>
+        <result property="arrangeDate" column="arrange_date"/>
+        <result property="duration" column="duration"/>
+        <result property="processId" column="process_id"/>
+        <result property="process" column="process"/>
+        <result property="drawingNo" column="drawing_no"/>
+        <result property="uniqueId" column="unique_id"/>
+        <result property="prsCode" column="prs_code"/>
+        <result property="invoiceDate" column="invoice_date"/>
+        <result property="invoiceStatus" column="invoice_status"/>
+        <result property="invoiceType" column="invoice_type"/>
+        <result property="workStatus" column="work_status"/>
+        <result property="workType" column="work_type"/>
+        <result property="workDept" column="work_dept"/>
+        <result property="checkDate" column="check_date"/>
+        <result property="userOper" column="user_oper"/>
+        <result property="userCheck" column="user_check"/>
+        <result property="remarks" column="remarks"/>
+        <result property="delFlag" column="del_flag"/>
+        <result property="createDate" column="create_date"/>
+        <result property="createBy" column="create_by"/>
+        <result property="updateDate" column="update_date"/>
+        <result property="updateBy" column="update_by"/>
+        <result property="version" column="version"/>
+        <result property="invSortId" column="inv_sort_id"/>
+        <result property="invSortRoot" column="inv_sort_root"/>
+    </resultMap>
+
+    <resultMap id="PrsOrderMasterPrsOrderSalveResult" type="PrsOrderMaster" extends="PrsOrderMasterResult">
+    </resultMap>
+
+    <sql id="selectPrsOrderMasterVo">
+        select unique_id, prs_code,invoice_date,duration,process,inv_sort_id,inv_sort_root,invoice_status,process_id,arrange_date,drawing_no,
+               invoice_type,wo_code,wo_unique_id,wo_config, work_status, work_type, work_dept, work_staff, salesman, pp_number, pp_date, mp_order_code,
+               inv_code, inv_name, inv_attribute, unit_code, unit_name, inv_quantity, need_date, arrange_date, beltline, beltline_id, wo_unique_id, wo_code,
+               wo_config, wi_quantity, form_config, check_date, user_oper, user_check, remarks, del_flag, create_date, create_by, update_date, update_by, version
+        from prs_order_master
+    </sql>
+
+    <sql id="selectPrsOrderSalveVo">
+        select  unique_id, prs_code, inv_sort_root, inv_sort_id, inv_code, inv_name, inv_attribute, unit_code, unit_name, quantity, inv_out_type, wo_config,
+               wo_invoice, wo_invoice_id, wo_type, wo_type_id, wo_date, wo_code, wo_unique_id, wo_quantity, wi_quantity, wi_quantity_r, remarks
+        from prs_pick_salve
+    </sql>
+
+
+    <select id="selectPrsOrderMasterByCodeForUpdate"
+            resultType="com.njrsun.modules.prs.domain.PrsOrderMaster">
+        select  unique_id, prs_code,process, invoice_date, invoice_status,duration, process_id,invoice_type, work_status, work_type, work_dept, work_staff, salesman, pp_number, pp_date, mp_order_code, inv_code, inv_name, inv_attribute, unit_code, unit_name, inv_quantity, need_date, arrange_date, beltline, beltline_id, wo_unique_id, wo_code, wo_config, wi_quantity, form_config, check_date, user_oper, user_check, remarks, del_flag, create_date, create_by, update_date, update_by, version from prs_order_master where prs_code = #{prsCode}  for update
+    </select>
+
+    <select id="selectPrsInvoiceForCode" resultType="com.njrsun.modules.prs.domain.PrsOrderMaster">
+        select   unique_id, prs_code, pp_number, mp_order_code, inv_code, inv_name, inv_quantity, arrange_date,process_id,process, invoice_date, invoice_status,duration, invoice_type, work_status, work_type, work_dept, work_staff, form_config,wo_unique_id, wo_code
+        from prs_order_master where prs_code in (<foreach collection="list" separator="," item="item" index="index">
+        #{item.prsCode}
+    </foreach> )
+    </select>
+
+    <insert id="insertPrsOrderMaster" parameterType="com.njrsun.modules.prs.domain.PrsOrderMaster" useGeneratedKeys="true" keyProperty="uniqueId">
+        insert into prs_order_master
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="prsCode != null and prsCode != ''">prs_code,</if>
+            <if test="invoiceDate != null">invoice_date,</if>
+            <if test="invoiceStatus != null">invoice_status,</if>
+            <if test="invoiceType != null">invoice_type,</if>
+            <if test="workStatus != null">work_status,</if>
+            <if test="workType != null">work_type,</if>
+            <if test="workDept != null">work_dept,</if>
+            <if test="workStaff != null">work_staff,</if>
+            <if test="formConfig != null">form_config,</if>
+            <if test="checkDate != null">check_date,</if>
+            <if test="params.loginId != null">user_oper,</if>
+            <if test="userCheck != null">user_check,</if>
+            <if test="remarks != null">remarks,</if>
+            create_date,
+            <if test="createBy != null">create_by,</if>
+            <if test="beltline != null">beltline,</if>
+            <if test="beltlineId != null">beltline_id,</if>
+            <if test="ppNumber != null">pp_number,</if>
+            <if test="ppDate != null">pp_date,</if>
+            <if test="mpOrderCode != null">mp_order_code,</if>
+            <if test="invName != null">inv_name,</if>
+            <if test="invCode != null">inv_code,</if>
+            <if test="invAttribute != null">inv_attribute,</if>
+            <if test="invQuantity != null">inv_quantity,</if>
+            <if test="needDate != null">need_date,</if>
+            <if test="salesman != null">salesman,</if>
+            <if test="unitCode != null">unit_code,</if>
+            <if test="unitName != null">unit_name,</if>
+            <if test="woConfig != null"> wo_config,</if>
+            <if  test="woUniqueId != null">wo_unique_id,</if>
+            <if test="woCode != null"> wo_code,</if>
+            <if test="arrangeDate != null">arrange_date,</if>
+            <if test="duration != null">duration,</if>
+            <if test="woQuantity != null">wo_quantity,</if>
+            <if test="woType != null"> wo_type,</if>
+            <if test="woTypeId != null">wo_type_id,</if>
+            <if test="woInvoice != null">wo_invoice,</if>
+            <if test="woInvoiceId != null">wo_invoice_id,</if>
+            <if test="woDate != null">wo_date,</if>
+            <if test="processId != null">process_id,</if>
+            <if test="process != null">process,</if>
+            <if test="drawingNo != null" > drawing_no,</if>
+            <if test="invSortRoot != null">inv_sort_root,</if>
+            <if test="invSortId != null">inv_sort_id,</if>
+            </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="prsCode != null and prsCode != ''">#{prsCode},</if>
+            <if test="invoiceDate != null">#{invoiceDate},</if>
+            <if test="invoiceStatus != null">#{invoiceStatus},</if>
+            <if test="invoiceType != null">#{invoiceType},</if>
+            <if test="workStatus != null">#{workStatus},</if>
+            <if test="workType != null">#{workType},</if>
+            <if test="workDept != null">#{workDept},</if>
+            <if test="workStaff != null">#{workStaff},</if>
+            <if test="formConfig != null">#{formConfig},</if>
+            <if test="checkDate != null">#{checkDate},</if>
+            <if test="params.loginId != null">${params.loginId},</if>
+            <if test="userCheck != null">#{userCheck},</if>
+            <if test="remarks != null">#{remarks},</if>
+            SysDate(),
+            <if test="createBy != null">#{createBy},</if>
+            <if test="beltline != null">#{beltline},</if>
+            <if test="beltlineId != null">#{beltlineId},</if>
+            <if test="ppNumber != null">#{ppNumber},</if>
+            <if test="ppDate != null">#{ppDate},</if>
+            <if test="mpOrderCode != null">#{mpOrderCode},</if>
+            <if test="invName != null">#{invName},</if>
+            <if test="invCode != null">#{invCode},</if>
+            <if test="invAttribute != null">#{invAttribute},</if>
+            <if test="invQuantity != null">#{invQuantity},</if>
+            <if test="needDate != null">#{needDate},</if>
+            <if test="salesman != null">#{salesman},</if>
+            <if test="unitCode != null">#{unitCode},</if>
+            <if test="unitName != null">#{unitName},</if>
+            <if test="woConfig != null"> #{woConfig},</if>
+            <if  test="woUniqueId != null">#{woUniqueId},</if>
+            <if test="woCode != null"> #{woCode},</if>
+            <if test="arrangeDate != null">#{arrangeDate},</if>
+            <if test="duration != null">#{duration},</if>
+            <if test="woQuantity != null">#{woQuantity},</if>
+            <if test="woType != null"> #{woType},</if>
+            <if test="woTypeId != null">#{woTypeId},</if>
+            <if test="woInvoice != null">#{woInvoice},</if>
+            <if test="woInvoiceId != null">#{woInvoiceId},</if>
+            <if test="woDate != null">#{woDate},</if>
+            <if  test="processId != null">#{processId},</if>
+            <if test="process != null">#{process},</if>
+            <if test="drawingNo != null"> #{drawingNo},</if>
+            <if test="invSortRoot != null">#{invSortRoot},</if>
+            <if test="invSortId != null">#{invSortId},</if>
+        </trim>
+    </insert>
+
+    <update id="updatePrsOrderMaster" parameterType="PrsOrderMaster">
+        update prs_order_master
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="prsCode != null and prsCode != ''">prs_code = #{prsCode},</if>
+            <if test="invoiceDate != null">invoice_date = #{invoiceDate},</if>
+            <if test="invoiceStatus != null">invoice_status = #{invoiceStatus},</if>
+            <if test="invoiceType != null">invoice_type = #{invoiceType},</if>
+            <if test="workStatus != null">work_status = #{workStatus},</if>
+            <if test="workType != null">work_type = #{workType},</if>
+            <if test="workDept != null">work_dept = #{workDept},</if>
+            <if test="workStaff != null">work_staff = #{workStaff},</if>
+            <if test="formConfig != null">form_config = #{formConfig},</if>
+            <if test="checkDate != null">check_date = #{checkDate},</if>
+            <if test="userOper != null">user_oper = #{userOper},</if>
+            <if test="userCheck != null">user_check = #{userCheck},</if>
+            <if test="remarks != null">remarks = #{remarks},</if>
+            update_date = SysDate(),
+            <if  test="woUniqueId != null">wo_unique_id = #{woUniqueId},</if>
+            <if test="woCode != null"> wo_code = #{woCode},</if>
+            <if test="arrangeDate != null">arrange_date = #{arrangeDate},</if>
+            <if test="duration != null">duration = #{duration},</if>
+            <if test="drawingNo != null">drawing_no = #{drawingNo},</if>
+            <if test="invSortRoot != null">inv_sort_root =#{invSortRoot},</if>
+            <if test="invSortId != null">inv_sort_id = #{invSortId},</if>
+            version = version + 1 ,
+        </trim>
+        where unique_id = #{uniqueId}  and version = #{version}  <include refid="baseDataScope"/>
+    </update>
+
+    <delete id="deletePrsOrderMasterById" parameterType="Long">
+        delete from prs_order_master where unique_id = #{uniqueId}
+    </delete>
+
+    <update id="deletePrsOrderMasterByIds" parameterType="com.njrsun.modules.prs.domain.PrsOrderMaster">
+        <foreach item="item" collection="list"  separator=";" >
+            update   prs_order_master  set del_flag  = 1   where prs_order_master.prs_code   =  #{item.prsCode}
+       <include refid="batchDataScope"/>
+        </foreach>
+    </update>
+
+
+    
+    <update id="changeStatus" >
+    update  prs_order_master
+        <trim prefix="SET" suffixOverrides=",">
+        <if test="username != null"> user_check = #{username},check_date= SysDate(),invoice_status=#{check}</if>
+        <if test="username == null">user_check ='',check_date=null,invoice_status = #{check}</if>
+        </trim>
+        where prs_code = #{item.prsCode}
+    <include refid="batchDataScope"/>
+    </update>
+    <select id="selectPrsCodeList" resultType="java.lang.String">
+        select prs_code from prs_order_master
+        <where>
+            <if test="workType != null and workType != ''">
+                and work_type = #{workType}
+            </if>
+            and del_flag = 0
+        </where>
+
+            <include refid="baseDataScope"/>
+
+    </select>
+
+    <select id="upData" parameterType="com.njrsun.modules.prs.domain.PrsOrderExport" resultType="java.util.Map">
+        select prs_order_master.wo_code as code,
+               inv_code,
+               inv_name,
+               inv_attribute,
+               unit_name,
+               wo_quantity  as 'quantity',
+               wo_invoice as invoice,
+               wo_invoice_id as invoice_id,
+               wo_type as type,
+               wo_type_id as type_id,
+               date_format(wo_date,'%Y-%m-%d') as date,
+               wo_config as form_config
+        from prs_order_master where unique_id = #{uniqueId}
+    </select>
+
+    <update id="updateWorkStatus">
+        update prs_order_master set work_status  = #{status},version = version + 1 where prs_code = #{item.prsCode} and version = #{item.version}
+     </update>
+
+    <select id="leadInto" parameterType="com.njrsun.modules.prs.domain.PrsOrderMaster" resultType="Map">
+#         select  prs_order_salve.unique_id, prs_order_salve.prs_code, inv_sort_root, inv_sort_id, inv_code, inv_name, inv_attribute, unit_code, unit_name,
+#                quantity, need_date, arrange_date, wi_quantity, wi_quantity_r, prs_order_salve.remarks, (quantity-wi_quantity) as surplus,
+#                invoice_type as 'invoice_type_id',form_config,invoice_date as 'date',work_type as 'work_type_id'
+#         from prs_order_salve left join prs_order_master pom on prs_order_salve.prs_code = pom.prs_code
+#         where prs_order_salve.del_flag = 0 and prs_order_salve.prs_code = #{prsCode}
+    </select>
+
+    <select id="leadToPick" parameterType="com.njrsun.modules.prs.domain.PrsOrderMaster" resultType="Map">
+ select unique_id, prs_code, invoice_date, invoice_status, invoice_type, work_status, work_type, work_dept, work_staff, pp_number, pp_date, mp_order_code as mp_code, beltline, beltline_id,remarks,inv_sort_id,inv_sort_root,
+ from prs_order_master
+        <where>
+            <if test="ppNumber != null and ppNumber != ''">
+                and pp_number = #{ppNumber}
+            </if>
+            <if test="startDate != null">and invoice_date >= #{startDate} </if>
+            <if test="endDate != null ">and invoice_date  <![CDATA[ <= ]]> #{endDate}  </if>
+            and invoice_status = '1' and work_status = '0'
+        </where>
+
+        order by invoice_date  desc , pick_count
+    </select>
+    <select id="lead" parameterType="com.njrsun.modules.prs.domain.PrsOrderMaster" resultType="Map">
+        select unique_id, prs_code, inv_code, inv_name, inv_attribute, unit_code, unit_name,inv_sort_id,inv_sort_root,
+                 need_date, arrange_date,inv_quantity, wi_quantity, remarks, (inv_quantity-wi_quantity) as surplus,
+                invoice_type as 'invoice_type_id',form_config,invoice_date as 'date',work_type as 'work_type_id',
+                pp_number, pp_date, mp_order_code, beltline_id,beltline,process_id,process
+        from  prs_order_master pom
+        <where>
+            <if test="invCode != null and invCode != ''">
+                and inv_code = #{invCode}
+            </if>
+            <if test="invName != null and invName != ''">
+                and inv_name like concat('%',#{invName},'%')
+            </if>
+            <if test="startDate != null">and arrange_date >= #{startDate} </if>
+            <if test="endDate != null ">and arrange_date  <![CDATA[ <= ]]> #{endDate}  </if>
+            <if test="ppNumber != null and ppNumber != ''">
+                and pp_number = #{ppNumber}
+            </if>
+            <if test="prsCode != null and prsCode != ''">
+                and prs_code = #{prsCode}
+            </if>
+            and del_flag = 0 and inv_quantity > wi_quantity and invoice_status ='1' and work_status='0'
+        </where>
+        order by prs_code desc
+    </select>
+
+
+    <update id="changeWorkStatus">
+        update  prs_order_master set work_status = #{value} where prs_code = #{code}
+    </update>
+
+    <update id="changeQuantity">
+        update prs_order_master set wi_quantity = wi_quantity + #{quantity} where unique_id = #{id}
+    </update>
+
+    <select id="export" resultType="com.njrsun.modules.prs.domain.PrsOverdueExport">
+        select prs_order_master.pp_number,prs_order_master.prs_code, prs_order_master.pp_date, prs_order_master.inv_code, prs_order_master.inv_name, prs_order_master.inv_attribute,
+               prs_order_master.unit_name, prs_order_master.inv_quantity, prs_order_master.arrange_date,prs_order_master.beltline,
+               sum(prs_product_master.inv_quantity) as 'productQuantity',
+               prs_order_master.inv_quantity - sum(prs_product_master.inv_quantity) as notProductQuantity
+        from prs_order_master left join prs_product_master on  prs_order_master.unique_id = prs_product_master.wo_unique_id and prs_product_master.invoice_status ='1'
+        where  now() > prs_order_master.pp_date
+        group by prs_order_master.pp_number,prs_order_master.prs_code, prs_order_master.pp_date, prs_order_master.inv_code, prs_order_master.inv_name, prs_order_master.inv_attribute,
+                 prs_order_master.unit_name, prs_order_master.inv_quantity, prs_order_master.arrange_date,prs_order_master.beltline
+            having prs_order_master.inv_quantity > sum(prs_product_master.inv_quantity)
+        order by prs_order_master.prs_code desc
+    </select>
+
+    <select id="production" resultType="java.util.Map">
+        select unique_id, work_type, code, name, process_route, order_id, status   from  prs_beltline
+        <where>
+             and  work_type = #{workType}
+        </where>
+        order by order_id desc
+    </select>
+
+    <select id="selectPrsOrderMasterByBeltlineId" resultType="com.njrsun.modules.prs.domain.PrsOrderMaster">
+        select  unique_id, prs_code, invoice_date, invoice_status, invoice_type, work_status, work_type, work_dept, work_staff, salesman, pp_number, pp_date, mp_order_code, inv_code, inv_name, inv_attribute, unit_code, unit_name, inv_quantity, need_date, arrange_date, beltline, beltline_id, duration, wi_quantity, form_config  from prs_order_master
+        <where>
+            <if test="flag != null and flag == 0">
+                and    arrange_date <![CDATA[>= date_sub(now(),interval 3 day) ]]>
+            </if>
+            <if test="flag != null and flag == 1 ">
+                and arrange_date <![CDATA[>= date_sub(now(),interval 1 week) ]]>
+            </if>
+            <if test="flag != null and flag == 2">
+                and arrange_date <![CDATA[>= date_sub(now(),interval 1 month) ]]>
+            </if>
+            and  work_type = #{workType} and invoice_status = '1' and del_flag = 0
+            and  beltline_id = #{beltline_id}
+        </where>
+            order by arrange_date
+    </select>
+    <select id="selectPrsOrderMaster" resultType="com.njrsun.modules.prs.domain.PrsOrderMaster">
+        select  unique_id, prs_code, invoice_date, invoice_status, invoice_type, work_status, work_type, work_dept, work_staff, salesman, pp_number, pp_date, mp_order_code, inv_code, inv_name, inv_attribute, unit_code, unit_name, inv_quantity, need_date, arrange_date, beltline, beltline_id, duration, wi_quantity, form_config  from prs_order_master
+        <where>
+            <if test="flag != null and flag == 0">
+                and    arrange_date <![CDATA[>= date_sub(now(),interval 3 day) ]]>
+            </if>
+            <if test="flag != null and flag == 1 ">
+                and arrange_date <![CDATA[>= date_sub(now(),interval 1 week) ]]>
+            </if>
+            <if test="flag != null and flag == 2">
+                and arrange_date <![CDATA[>= date_sub(now(),interval 1 month) ]]>
+            </if>
+            and  work_type = #{workType} and invoice_status = '1' and del_flag = 0
+        </where>
+        order by arrange_date
+    </select>
+
+</mapper>

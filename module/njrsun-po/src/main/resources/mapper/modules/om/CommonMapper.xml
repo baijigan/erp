@@ -1,0 +1,60 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.njrsun.modules.om.mapper.OmOrderMasterMapper">
+
+    <resultMap type="OmDeliverMaster" id="OmDeliverMasterResult">
+        <result property="uniqueId"    column="unique_id"    />
+        <result property="omCode"    column="om_code"    />
+        <result property="invoiceDate"    column="invoice_date"    />
+        <result property="invoiceStatus"    column="invoice_status"    />
+        <result property="invoiceType"    column="invoice_type"    />
+        <result property="workStatus"    column="work_status"    />
+        <result property="workType"    column="work_type"    />
+        <result property="workDept"    column="work_dept"    />
+        <result property="workStaff"    column="work_staff"    />
+        <result property="checkDate"    column="check_date"    />
+        <result property="userOper"    column="user_oper"    />
+        <result property="userCheck"    column="user_check"    />
+        <result property="remarks"    column="remarks"    />
+        <result property="customer"    column="customer"    />
+        <result property="customerId"    column="customer_id"    />
+        <result property="deliverDate"    column="deliver_date"    />
+        <result property="whCode"    column="wh_code"    />
+        <result property="storageNo"    column="storage_no"    />
+        <result property="contact"    column="contact"    />
+        <result property="mobile"    column="mobile"    />
+        <result property="addr"    column="addr"    />
+        <result property="delFlag"    column="del_flag"    />
+        <result property="createDate"    column="create_date"    />
+        <result property="createBy"    column="create_by"    />
+        <result property="updateDate"    column="update_date"    />
+        <result property="updateBy"    column="update_by"    />
+        <result property="version"    column="version"    />
+        <result property="formConfig" column="form_config"/>
+    </resultMap>
+
+    <sql id="baseDataScope">
+        <if test="params.user_oper != null">
+            and (user_oper = ${params.user_oper}
+            <if test="params.user_agent != null">
+                or user_oper in (${params.user_agent})
+            </if>
+            )</if>
+        <if test="params.workType != null">
+            and (work_type in (${params.workType})
+            )</if>
+    </sql>
+
+    <sql id="batchDataScope">
+        <if test="item.params.user_oper != null">
+            and (user_oper = ${item.params.user_oper}
+            <if test="item.params.user_agent != null">
+                or user_oper in (${item.params.user_agent})
+            </if>
+            )</if>
+        <if test="item.params.workType != null">
+            and (work_type in (${item.params.workType})
+            )</if>
+    </sql>
+
+</mapper>

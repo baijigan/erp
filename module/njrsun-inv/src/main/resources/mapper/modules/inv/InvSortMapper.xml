@@ -1,0 +1,171 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.njrsun.modules.inv.mapper.InvSortMapper">
+    
+    <resultMap type="com.njrsun.modules.inv.domain.InvSort" id="InvSortResult">
+        <result property="sortId"    column="sort_id"    />
+        <result property="parentId"    column="parent_id"    />
+        <result property="ancestors"    column="ancestors"    />
+        <result property="sortName"    column="sort_name"    />
+        <result property="sortCode"    column="sort_code"    />
+        <result property="unitCode"  column="unit_code"/>
+        <result property="unitName" column="unit_name"/>
+        <result property="serialNumber"    column="serial_number"    />
+        <result property="serialLength"    column="serial_length"    />
+        <result property="status"    column="status"    />
+        <result property="delFlag"    column="del_flag"    />
+        <result property="createBy"    column="create_by"    />
+        <result property="createTime"    column="create_time"    />
+        <result property="updateBy"    column="update_by"    />
+        <result property="updateTime"    column="update_time"    />
+        <result property="version"    column="version"    />
+        <result property="supplyType" column="supply_type"/>
+    </resultMap>
+
+    <sql id="selectInvSortVo">
+        select  sort_id, parent_id, ancestors, sort_name, sort_code,unit_code,unit_name, serial_number, serial_length,
+               status, del_flag, create_by, create_time, update_by, update_time, version,supply_type from inv_sort
+    </sql>
+    <delete id="clear">
+        delete from inv_sort
+    </delete>
+
+    <select id="selectInvSortList" parameterType="InvSort" resultMap="InvSortResult">
+        <include refid="selectInvSortVo"/>
+        <where>
+            <if test="sortName != null  and sortName != ''"> and sort_name like concat('%', #{sortName}, '%')</if>
+            and del_flag = 0
+        </where>
+
+    </select>
+    <select id="selectInvSortListBySortId" resultMap="InvSortResult">
+        <include refid="selectInvSortVo"/>
+    where sort_id = #{parentId} limit 1
+    for update
+    </select>
+    <select id="hasChild" resultType="java.lang.Integer">
+        select  count(1) from inv_sort where parent_id = #{sortId} and del_flag = 0
+    </select>
+    <select id="isSameName" resultType="com.njrsun.modules.inv.domain.InvSort" parameterType="InvSort">
+        <include refid="selectInvSortVo"/>
+         where  sort_name = #{sortName}  and del_flag = 0 and parent_id = #{parentId} limit 1
+    </select>
+    <select id="isSameCode" resultType="com.njrsun.modules.inv.domain.InvSort">
+        <include refid="selectInvSortVo"/>
+        where sort_code =#{sortCode} and del_flag = 0 and parent_id =#{parentId} limit 1
+    </select>
+    <select id="selectInvSortBySortId" resultType="java.lang.String">
+        select sort_name from inv_sort where sort_id = #{sortId}
+    </select>
+    <select id="selectAncestorsBySortId" resultType="java.lang.String">
+        select ancestors from inv_sort where sort_id = #{sortId} limit 1
+    </select>
+    <select id="selectInvSortByName" resultType="com.njrsun.modules.inv.domain.InvSort">
+        <include refid="selectInvSortVo"/>
+        where sort_name = #{name} and del_flag = 0
+    </select>
+    <select id="selectSortCodeByName" resultType="java.lang.String">
+        select sort_code from inv_sort where sort_name in (
+            <foreach collection="array" separator="," open="" close="" index="index" item="item">
+                #{item}
+            </foreach>
+            )
+    </select>
+    <select id="selectInvSortDTOList" resultType="com.njrsun.common.dto.InvSortDTO">
+        <include refid="selectInvSortVo"/>
+        <where>
+            <if test="sortName != null  and sortName != ''"> and sort_name like concat('%', #{sortName}, '%')</if>
+            and del_flag = 0
+        </where>
+    </select>
+    <select id="selectInvChildBySortName" resultType="java.util.Map">
+        select sort_id,sort_name,sort_code from inv_sort where parent_id = #{sortId} and del_flag  = 0
+    </select>
+    <select id="selectInvSortByRootName" resultType="com.njrsun.modules.inv.domain.InvSort">
+        select sort_id, parent_id, ancestors, sort_name, sort_code, unit_code, unit_name, serial_number, serial_length, status,supply_type
+        from inv_sort
+        where sort_name  = #{sortName} and del_flag = 0 and parent_id = '0'
+    </select>
+
+
+
+    <insert id="insertInvSort" parameterType="InvSort" useGeneratedKeys="true" keyProperty="sortId" keyColumn="sort_id">
+        insert into inv_sort
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="parentId != null">parent_id,</if>
+            <if test="ancestors != null">ancestors,</if>
+            <if test="sortName != null">sort_name,</if>
+            <if test="sortCode != null and sortCode != ''">sort_code,</if>
+            <if test="unitCode != null and unitCode != ''">unit_code,</if>
+            <if test="unitName != null and unitName != ''">unit_name,</if>
+            <if test="serialNumber != null">serial_number,</if>
+            <if test="serialLength != null">serial_length,</if>
+            <if test="status != null">status,</if>
+            <if test="delFlag != null">del_flag,</if>
+            <if test="createBy != null">create_by,</if>
+            <if test="createTime != null">create_time,</if>
+            <if test="supplyType != null">supply_type,</if>
+         </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="parentId != null">#{parentId},</if>
+            <if test="ancestors != null">#{ancestors},</if>
+            <if test="sortName != null">#{sortName},</if>
+            <if test="sortCode != null and sortCode != ''">#{sortCode},</if>
+            <if test="unitCode != null and unitCode != ''">#{unitCode},</if>
+            <if test="unitName != null and unitName != ''">#{unitName},</if>
+            <if test="serialNumber != null">#{serialNumber},</if>
+            <if test="serialLength != null">#{serialLength},</if>
+            <if test="status != null">#{status},</if>
+            <if test="delFlag != null">#{delFlag},</if>
+            <if test="createBy != null">#{createBy},</if>
+            <if test="createTime != null">#{createTime},</if>
+            <if test="supplyType != null">#{supplyType},</if>
+         </trim>
+    </insert>
+    <insert id="batchInsertSort">
+        insert into inv_sort(sort_id, parent_id, ancestors, sort_name, sort_code, unit_code, unit_name, serial_number, serial_length, status, create_by, create_time, supply_type)
+            values <foreach collection="list" index="index" item="item" separator=",">
+        (#{item.sortId},#{item.parentId},#{item.ancestors},#{item.sortName},#{item.sortCode},#{item.unitCode},#{item.unitName},#{item.serialNumber},#{item.serialLength},#{item.status},#{item.createBy},SysDate(),#{item.supplyType})
+    </foreach>
+
+    </insert>
+    <update id="addSerialNumberBySortId">
+        update  inv_sort set serial_number = serial_number + 1 where sort_id = #{sortId}
+    </update>
+
+    <update id="updateInvSort" parameterType="InvSort">
+        update inv_sort
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="parentId != null">parent_id = #{parentId},</if>
+            <if test="ancestors != null">ancestors = #{ancestors},</if>
+            <if test="sortName != null">sort_name = #{sortName},</if>
+            <if test="sortCode != null and sortCode != ''">sort_code = #{sortCode},</if>
+            <if test="unitCode != null and unitCode != ''">unit_code = #{unitCode},</if>
+            <if test="unitName != null and unitName != ''">unit_name = #{unitName},</if>
+            <if test="serialNumber != null">serial_number = #{serialNumber},</if>
+            <if test="serialLength != null">serial_length = #{serialLength},</if>
+            <if test="status != null">status = #{status},</if>
+            <if test="updateBy != null">update_by = #{updateBy},</if>
+            <if test="updateTime != null">update_time = #{updateTime},</if>
+            <if test="supplyType != null">supply_type = #{supplyType},</if>
+            version = version + 1
+        </trim>
+        where sort_id = #{sortId} and version = #{version}
+    </update>
+
+    <update id="deleteInvSortById" parameterType="Long">
+       update inv_sort set del_flag = 1 where sort_id = #{sortId}
+    </update>
+
+    <update id="deleteInvSortByIds" parameterType="String">
+        update  inv_sort set del_flag = 1 where sort_id in
+        <foreach item="uniqueId" collection="array" open="(" separator="," close=")">
+            #{sortId}
+        </foreach>
+    </update>
+    <update id="updateSerialNumber">
+        update  inv_sort set serial_number = 0  where sort_id = #{sortId} or find_in_set(#{sortId},ancestors)
+    </update>
+</mapper>

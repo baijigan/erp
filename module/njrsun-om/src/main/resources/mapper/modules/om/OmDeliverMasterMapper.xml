@@ -1,0 +1,518 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.njrsun.modules.om.mapper.OmDeliverMasterMapper">
+    
+    <resultMap type="OmDeliverMaster" id="OmDeliverMasterResult">
+        <result property="uniqueId"    column="unique_id"    />
+        <result property="omCode"    column="om_code"    />
+        <result property="invoiceDate"    column="invoice_date"    />
+        <result property="invoiceStatus"    column="invoice_status"    />
+        <result property="invoiceType"    column="invoice_type"    />
+        <result property="workStatus"    column="work_status"    />
+        <result property="workType"    column="work_type"    />
+        <result property="workDept"    column="work_dept"    />
+        <result property="workStaff"    column="work_staff"    />
+        <result property="checkDate"    column="check_date"    />
+        <result property="userOper"    column="user_oper"    />
+        <result property="userCheck"    column="user_check"    />
+        <result property="remarks"    column="remarks"    />
+        <result property="customer"    column="customer"    />
+        <result property="customerId"    column="customer_id"    />
+        <result property="deliverDate"    column="deliver_date"    />
+        <result property="whCode"    column="wh_code"    />
+        <result property="storageNo"    column="storage_no"    />
+        <result property="contact"    column="contact"    />
+        <result property="mobile"    column="mobile"    />
+        <result property="addr"    column="addr"    />
+        <result property="delFlag"    column="del_flag"    />
+        <result property="createDate"    column="create_date"    />
+        <result property="createBy"    column="create_by"    />
+        <result property="updateDate"    column="update_date"    />
+        <result property="updateBy"    column="update_by"    />
+        <result property="version"    column="version"    />
+        <result property="formConfig" column="form_config"/>
+    </resultMap>
+
+    <resultMap id="OmDeliverMasterOmDeliverSalveResult" type="OmDeliverMaster" extends="OmDeliverMasterResult">
+        <collection property="omDeliverSalveList" notNullColumn="unique_id" javaType="java.util.List" resultMap="OmDeliverSalveResult" />
+    </resultMap>
+
+    <resultMap type="OmDeliverSalve" id="OmDeliverSalveResult">
+        <result property="uniqueId"    column="id"    />
+        <result property="omCode"    column="om_code"    />
+        <result property="ppNumber"    column="pp_number"    />
+        <result property="invSortRoot"    column="inv_sort_root"    />
+        <result property="invSortId"    column="inv_sort_id"    />
+        <result property="invCode"    column="inv_code"    />
+        <result property="invName"    column="inv_name"    />
+        <result property="invAttribute"    column="inv_attribute"    />
+        <result property="unitCode"    column="unit_code"    />
+        <result property="unitName"    column="unit_name"    />
+        <result property="quantity"    column="quantity"    />
+        <result property="price"    column="price"    />
+        <result property="amount"    column="amount"    />
+        <result property="tax"    column="tax"    />
+        <result property="billName"    column="bill_name"    />
+        <result property="pkgType"    column="pkg_type"    />
+        <result property="piece"    column="piece"    />
+        <result property="pieceType"    column="piece_type"    />
+        <result property="woInvoice"   column="wo_invoice"/>
+        <result property="woInvoiceId" column="wo_invoice_id"/>
+        <result property="woCode"    column="wo_code"    />
+        <result property="woUniqueId"    column="wo_unique_id"    />
+        <result property="woQuantity"    column="wo_quantity"    />
+        <result property="wiQuantityR"    column="wi_quantity_r"    />
+        <result property="wiQuantity"    column="wi_quantity"    />
+        <result property="remarks"    column="rs"    />
+        <result property="createTime"    column="ct"    />
+        <result property="createBy"    column="cb"    />
+        <result property="updateTime"    column="ut"    />
+        <result property="updateBy"    column="ub"    />
+        <result property="woDate" column="wo_date"/>
+        <result property="woType" column="wo_type"/>
+        <result property="woTypeId" column="wo_type_id"/>
+        <result property="woConfig" column="wo_config"/>
+        <result property="tel"    column="tel"    />
+        <result property="bank"    column="bank"    />
+        <result property="account"    column="account"    />
+        <result property="tax"    column="tax"    />
+        <result property="addr2"    column="addr2"    />
+        <result property="remark"    column="remark"    />
+        <result property="status"    column="status"    />
+        <result property="createBy"    column="create_by"    />
+        <result property="updateDate"    column="update_date"    />
+        <result property="updateBy"    column="update_by"    />
+        <result property="version"    column="version"    />
+        <result property="delFlag"    column="del_flag"    />
+        <result property="alias" column="alias"/>
+        <result property="city" column="city"/>
+        <result property="cityId" column="city_id"/>
+        <result property="credit" column="credit"/>
+        <result property="creditLimit" column="credit_limit"/>
+        <result property="type" column="type"/>
+        <result property="wMobile" column="w_mobile"/>
+        <result property="wContacts" column="w_contacts"/>
+        <result property="fMobile" column="f_mobile"/>
+    </resultMap>
+
+    <sql id="selectOmDeliverMasterVo">
+        select unique_id, om_code, invoice_date, invoice_status,form_config, invoice_type, work_status, work_type, work_dept, work_staff, check_date, user_oper, user_check, remarks, customer, customer_id, deliver_date, wh_code, storage_no, contact, mobile, addr, del_flag, create_date, create_by, update_date, update_by, version from om_deliver_master
+    </sql>
+
+    <select id="selectOmDeliverMasterList" parameterType="OmDeliverMaster" resultMap="OmDeliverMasterResult">
+        <include refid="selectOmDeliverMasterVo"/>
+        <where>  
+            <if test="omCode != null  and omCode != ''"> and om_code = #{omCode}</if>
+            <if test="invoiceDate != null "> and invoice_date = #{invoiceDate}</if>
+            <if test="invoiceStatus != null  and invoiceStatus != ''"> and invoice_status = #{invoiceStatus}</if>
+            <if test="invoiceType != null  and invoiceType != ''"> and invoice_type = #{invoiceType}</if>
+            <if test="workStatus != null  and workStatus != ''"> and work_status = #{workStatus}</if>
+            <if test="workType != null  and workType != ''"> and work_type = #{workType}</if>
+            <if test="workDept != null  and workDept != ''"> and work_dept = #{workDept}</if>
+            <if test="workStaff != null  and workStaff != ''"> and work_staff = #{workStaff}</if>
+            <if test="checkDate != null "> and check_date = #{checkDate}</if>
+            <if test="userOper != null  and userOper != ''"> and user_oper = #{userOper}</if>
+            <if test="userCheck != null  and userCheck != ''"> and user_check = #{userCheck}</if>
+            <if test="remarks != null  and remarks != ''"> and remarks = #{remarks}</if>
+            <if test="customer != null  and customer != ''"> and customer = #{customer}</if>
+            <if test="customerId != null  and customerId != ''"> and customer_id = #{customerId}</if>
+            <if test="deliverDate != null "> and deliver_date = #{deliverDate}</if>
+            <if test="startDate != null"> and invoice_date >= #{startDate}</if>
+            <if test="endDate != null"> and  #{endDate} >= invoice_date</if>
+             and del_flag = 0
+             <include refid="com.njrsun.modules.om.mapper.OmOrderMasterMapper.baseDataScope"/>
+        </where>
+        order by unique_id desc
+    </select>
+    
+    <select id="selectOmDeliverMasterByCode" parameterType="String" resultMap="OmDeliverMasterOmDeliverSalveResult">
+        select a.unique_id, a.om_code, a.invoice_date, a.invoice_status, a.invoice_type, a.work_status, a.work_type, a.work_dept, a.work_staff, a.check_date, a.user_oper, a.user_check, a.remarks, a.customer, a.customer_id, a.deliver_date, a.wh_code, a.storage_no, a.contact, a.mobile, a.addr, a.del_flag, a.create_date, a.create_by, a.update_date, a.update_by, a.version,a.form_config,
+            b.unique_id id, b.om_code, b.pp_number, b.inv_sort_root, b.inv_sort_id, b.inv_code, b.inv_name, b.inv_attribute, b.unit_code, b.unit_name, b.quantity, b.price, b.amount, b.tax, b.bill_name, b.pkg_type, b.piece, b.piece_type, b.wo_code, b.wo_unique_id, b.wo_quantity, b.wi_quantity, b.wi_quantity_r, b.remarks rs, b.create_time ct, b.create_by cb, b.update_time ut, b.update_by ub,b.wo_invoice_id,b.wo_invoice,b.wo_date,b.wo_type_id,b.wo_type,b.wo_config
+        from om_deliver_master a
+        left join om_deliver_salve b on b.om_code = a.om_code and b.del_flag = 0
+        where a.om_code = #{omCode}
+    </select>
+    <select id="selectOmDeliverSalveByCode" resultType="java.lang.Long">
+        select unique_id from om_deliver_salve where om_code = #{omCode} and del_flag = 0
+    </select>
+    <select id="selectOmDeliverId" resultType="java.lang.Long">
+        select unique_id from om_deliver_master where del_flag = 0
+            <include refid="com.njrsun.modules.om.mapper.OmOrderMasterMapper.baseDataScope"/>
+    </select>
+    <select id="selectOmDeliverMasterById" parameterType="Long" resultMap="OmDeliverMasterOmDeliverSalveResult">
+        select a.unique_id, a.om_code, a.invoice_date, a.invoice_status, a.invoice_type, a.work_status, a.work_type, a.work_dept, a.work_staff, a.check_date, a.user_oper, a.user_check, a.remarks, a.customer, a.customer_id, a.deliver_date, a.wh_code, a.storage_no, a.contact, a.mobile, a.addr, a.del_flag, a.create_date, a.create_by, a.update_date, a.update_by, a.version,a.form_config,
+               b.unique_id, b.om_code, b.pp_number, b.inv_sort_root, b.inv_sort_id, b.inv_code, b.inv_name, b.inv_attribute, b.unit_code, b.unit_name, b.quantity, b.price, b.amount, b.tax, b.bill_name, b.pkg_type, b.piece, b.piece_type, b.wo_code, b.wo_unique_id, b.wo_quantity, b.wi_quantity_r, b.wi_quantity, b.remarks, b.create_time, b.create_by, b.update_time, b.update_by, b.del_flag,wo_invoice_id,wo_invoice,b.wo_date,b.wo_type_id,b.wo_type,b.wo_config
+        from om_deliver_master a
+                 left join om_deliver_salve b on b.om_code = a.om_code
+        where a.unique_id = #{id}
+    </select>
+    <select id="selectInvoiceStatus" resultType="java.lang.String">
+        select invoice_status from om_deliver_master where om_code in
+        <foreach collection="array" open="(" close=")" item="item" index="index" separator=",">
+            #{item}
+        </foreach> for update
+
+
+    </select>
+    <select id="selectOmDeliverMasterByCodes" parameterType="String" resultMap="OmDeliverMasterOmDeliverSalveResult">
+        select a.unique_id, a.om_code, a.invoice_date, a.invoice_status, a.invoice_type, a.work_status, a.work_type, a.work_dept, a.work_staff, a.check_date, a.user_oper, a.user_check, a.remarks, a.customer, a.customer_id, a.deliver_date, a.wh_code, a.storage_no, a.contact, a.mobile, a.addr, a.del_flag, a.create_date, a.create_by, a.update_date, a.update_by, a.version,a.form_config,
+               b.unique_id id, b.om_code, b.pp_number, b.inv_sort_root, b.inv_sort_id, b.inv_code, b.inv_name, b.inv_attribute, b.unit_code, b.unit_name, b.quantity, b.price, b.amount, b.tax, b.bill_name, b.pkg_type, b.piece, b.piece_type, b.wo_code, b.wo_unique_id, b.wo_quantity, b.wi_quantity_r, b.wi_quantity, b.remarks rs, b.create_time ct, b.create_by cb, b.update_time ut, b.update_by ub,b.wo_date,b.wo_type_id,b.wo_type,b.wo_config
+        from om_deliver_master a
+                 left join om_deliver_salve b on b.om_code = a.om_code and b.del_flag = 0
+        where  a.om_code in
+        <foreach collection="array" separator="," index="index" item="item" close=")" open="(">
+            #{item}
+        </foreach>
+    </select>
+    <select id="export" resultType="com.njrsun.modules.om.domain.ExportDeliver" parameterType="com.njrsun.modules.om.domain.OmDeliverMaster">
+        select   pp_number,customer,inv_code,inv_name,quantity,wi_quantity_r,pkg_type,piece,invoice_date,work_staff,invoice_status
+        from om_deliver_master left join om_deliver_salve ods on om_deliver_master.om_code = ods.om_code
+        <where>
+            <if test="customer != null and customer !=''"> and customer like concat('%',#{customer},'%')</if>
+            <if test="startDate != null"> and invoice_date >= #{startDate}</if>
+            <if test="endDate != null"> and #{endDate} >= invoice_date </if>
+            <if test="workStaff != null and workStaff !=''"> and work_staff = #{workStaff}</if>
+            <if test="omCode != null and omCode !=''">and ods.om_code = #{omCode}</if>
+            <if test="invoiceStatus != null and invoiceStatus !=''"> and invoice_status = #{invoiceStatus}</if>
+            <if test="flag == true"> and   quantity-wi_quantity+wi_quantity_r > 0 </if>
+            and ods.del_flag = 0
+            <include refid="com.njrsun.modules.om.mapper.OmOrderMasterMapper.baseDataScope"/>
+        </where>
+
+
+    </select>
+    <select id="linkDetail" resultType="java.util.Map">
+        select odm.om_code code,
+        ods.inv_code,
+        ods.inv_name,
+        ods.inv_attribute,
+        ods.unit_name,
+        ods.quantity,
+        odm.form_config,
+        odm.work_type as type_id,
+        odm.invoice_type as invoice_id,
+        date_format(odm.invoice_date,'%Y-%m-%d') as  date
+        from om_deliver_salve ods left join om_deliver_master odm on ods.om_code = odm.om_code
+        where odm.invoice_status = 1 and ods.wo_unique_id = #{uniqueId}  and ods.del_flag = 0
+    </select>
+
+    <select id="reportDeliver" resultType="com.njrsun.modules.om.domain.OmDeliverReport">
+        select om_deliver_master.invoice_date, om_deliver_master.invoice_status,
+        om_deliver_master.invoice_type, om_deliver_master.work_status, om_deliver_master.work_type, om_deliver_master.work_dept,
+        om_deliver_master.work_staff, om_deliver_master.check_date, om_deliver_master.user_oper, om_deliver_master.user_check,
+        om_deliver_master.remarks, om_deliver_master.customer, om_deliver_master.customer_id, om_deliver_master.deliver_date,
+        om_deliver_master.wh_code,
+               ors.unique_id, ors.om_code, ors.pp_number, ors.inv_sort_root, ors.inv_sort_id, ors.inv_code, ors.inv_name, ors.inv_attribute,
+               ors.unit_code, ors.unit_name, ors.quantity, ors.price, ors.amount, ors.tax, ors.bill_name, ors.pkg_type, ors.wo_invoice,
+               ors.wo_invoice_id, ors.wo_code, ors.wo_unique_id, ors.wo_quantity, ors.wi_quantity, ors.wi_quantity_r, ors.remarks as remark
+               ,(ors.quantity-ors.wi_quantity) as notWiQuantity
+        from om_deliver_master left join om_deliver_salve ors on om_deliver_master.om_code = ors.om_code and ors.del_flag = 0
+        <where>
+            and om_deliver_master.invoice_status = 1
+            <if test="omCode != null and omCode !=''"> and om_deliver_master.om_code = #{omCode}</if>
+            <if test="customer != null and customer !=''"> and om_deliver_master.customer = like concat('%',#{customer},'%')</if>
+            <if test="workStaff != null and workStaff != ''"> and om_deliver_master.work_staff like concat('%',#{workStaff},'%') </if>
+            <if test="invName != null and invName !=''"> and ors.inv_name = #{invName}</if>
+            <if test="searchValue  == 'true'"> and ors.wi_quantity > 0 </if>
+            <if test="startDate != null"> and om_deliver_master.invoice_date >= #{startDate}</if>
+            <if test="endDate != null"> and  #{endDate} >= om_deliver_master.invoice_date</if>
+           and om_deliver_master.del_flag = 0
+        </where>
+        order by unique_id desc
+    </select>
+    <select id="selectOmDeliverSalveWoById" resultType="java.util.Map">
+        select  ods.wo_code as code,
+               inv_code,
+               inv_name,
+               inv_attribute,
+               unit_name,
+               wo_quantity  as 'quantity',
+               wo_invoice as invoice,
+               wo_invoice_id as invoice_id,
+               wo_type as type,
+               wo_type_id as type_id,
+               date_format(wo_date,'%Y-%m-%d') as date,
+               wo_config as form_config
+        from om_deliver_salve ods left join om_deliver_master odm on odm.om_code = ods.om_code
+        where ods.unique_id = #{uniqueId} and wo_type !=''
+    </select>
+    <select id="selectOmDeliverMasterByCodeForUpdate"
+            resultMap="OmDeliverMasterResult">
+        select a.unique_id, a.om_code, a.invoice_date, a.invoice_status, a.invoice_type, a.work_status, a.work_type, a.work_dept, a.work_staff, a.check_date, a.user_oper, a.user_check, a.remarks, a.customer, a.customer_id, a.deliver_date, a.wh_code, a.storage_no, a.contact, a.mobile, a.addr, a.del_flag, a.create_date, a.create_by, a.update_date, a.update_by, a.version,a.form_config
+        from om_deliver_master a
+        where a.om_code = #{omCode}  for update
+    </select>
+    <select id="selectOmDeliverSalveByOmCode" resultType="com.njrsun.modules.om.domain.OmDeliverSalve">
+        select  unique_id, om_code, pp_number, inv_sort_root, inv_sort_id, inv_code, inv_name, inv_attribute, unit_code, unit_name, quantity, price, amount, tax, bill_name, pkg_type, piece, piece_type, wo_invoice, wo_invoice_id, wo_type, wo_type_id, wo_date, wo_code, wo_unique_id, wo_quantity, wi_quantity, wi_quantity_r, remarks, create_time, create_by, update_time, update_by, del_flag,wo_config
+        from om_deliver_salve where om_code = #{omCode} and wo_unique_id  != 0  and del_flag = 0 order by wo_code
+    </select>
+    <select id="selectOmDeliverMasterByMaster" parameterType="com.njrsun.modules.om.domain.OmDeliverMaster" resultMap="OmDeliverMasterOmDeliverSalveResult">
+    select a.unique_id, a.om_code, a.invoice_date, a.invoice_status, a.invoice_type, a.work_status, a.work_type, a.work_dept, a.work_staff, a.check_date, a.user_oper, a.user_check, a.remarks, a.customer, a.customer_id, a.deliver_date, a.wh_code, a.storage_no, a.contact, a.mobile, a.addr, a.del_flag, a.create_date, a.create_by, a.update_date, a.update_by, a.version,a.form_config,
+               b.unique_id id, b.om_code, b.pp_number, b.inv_sort_root, b.inv_sort_id, b.inv_code, b.inv_name, b.inv_attribute, b.unit_code, b.unit_name, b.quantity, b.price, b.amount, b.tax, b.bill_name, b.pkg_type, b.piece, b.piece_type, b.wo_code, b.wo_unique_id, b.wo_quantity, b.wi_quantity, b.wi_quantity_r, b.remarks rs, b.create_time ct, b.create_by cb, b.update_time ut, b.update_by ub,b.wo_invoice_id,b.wo_invoice,b.wo_date,b.wo_type_id,b.wo_type,b.wo_config
+    from om_deliver_master a
+                 left join om_deliver_salve b on b.om_code = a.om_code and b.del_flag = 0
+    where a.om_code = #{omCode}
+    <include refid="com.njrsun.modules.om.mapper.OmOrderMasterMapper.baseDataScope"/>
+    </select>
+    <select id="leadInto" resultType="java.util.Map" parameterType="com.njrsun.modules.om.domain.OmDeliverMaster">
+       select a.om_code, a.customer, a.customer_id, invoice_type as invoice_type_id, work_type as work_type_id , DATE_FORMAT(invoice_date,'%Y-%m-%d') as date, work_staff,
+             b.unique_id, b.pp_number, b.inv_sort_root, b.inv_sort_id, b.inv_code, b.inv_name, b.inv_attribute, b.unit_code, b.unit_name, b.quantity, b.wi_quantity_r, (quantity-wi_quantity_r) as surplus
+       from om_deliver_master a left join om_deliver_salve b
+       on a.om_code= b.om_code
+        <where>
+            and a.del_flag = 0 and a.invoice_status= 1 and work_status= 0
+            and quantity- wi_quantity_r>0
+            <if test="omCode != null and omCode != ''"> and a.om_code = #{omCode}</if>
+            <if test="ppNumber != null and ppNumber != ''"> and pp_number = #{ppNumber}</if>
+            <if test="customer != null and customer != ''"> and customer like concat('%',#{customer},'%') </if>
+        </where>
+        order by unique_id desc
+    </select>
+    <select id="leadIntoDetail" resultType="java.util.Map">
+        select  om_deliver_salve.om_code,
+               pp_number,
+               inv_attribute,inv_sort_id,inv_sort_root,unit_code,unit_name,
+               inv_code,
+               inv_name,
+               quantity,
+               price,
+               wi_quantity,
+               om_deliver_salve.remarks,
+               invoice_date as 'invoiceDate',
+                om_deliver_salve.unique_id,
+               work_type as work_type_id,
+               invoice_type as invoice_type_id,
+               form_config,
+               quantity-wi_quantity as surplus
+        from om_deliver_salve  left join om_deliver_master odm on om_deliver_salve.om_code = odm.om_code and om_deliver_salve.del_flag = 0
+            where om_deliver_salve.om_code = #{omCode} and quantity-wi_quantity > 0
+        order by om_deliver_salve.unique_id desc
+    </select>
+    <select id="selectWmWarehousesDTOList" resultType="com.njrsun.common.dto.WmWarehouseDTO">
+        select unique_id, code, name, sort_id, warehouse_mgr, warehouse_oper, in_type, out_type, enable_location, period, start_period, form_config, create_date, create_by, update_date, update_by, version, del_flag, arrival_type
+        from wm_warehouses
+        <where>
+            <if test="code != null and code != ''"> and code = #{code} and del_flag = 0</if>
+        </where>
+    </select>
+    <select id="selectOmDeliverSalveForUpdate" resultType="com.njrsun.modules.om.domain.OmDeliverSalve">
+        select unique_id, om_code, pp_number, inv_sort_root, inv_sort_id, inv_code, inv_name, inv_attribute, unit_code, unit_name, quantity, price, amount, tax, bill_name, pkg_type, piece, piece_type, wo_config, wo_invoice, wo_invoice_id, wo_type, wo_type_id, wo_date, wo_code, wo_unique_id, wo_quantity, wi_quantity, wi_quantity_r, remarks, create_time, create_by, update_time, update_by, del_flag
+        from om_deliver_salve  where unique_id =#{woUnqiueId} for update
+    </select>
+    <select id="selectSumQuantity" resultType="com.njrsun.modules.om.domain.OmDeliverSalve">
+        <foreach collection="list" separator=";"  item="item" index="index">
+        select om_code, sum(quantity-wi_quantity) as quantity from om_deliver_salve where om_code  =  #{item}
+    </foreach>
+    </select>
+
+    <select id="selectOmDeliverSalveById" resultType="com.njrsun.modules.om.domain.OmDeliverSalve">
+        select  unique_id, om_code, pp_number, inv_sort_root, inv_sort_id, inv_code, inv_name, inv_attribute, unit_code, unit_name, quantity, price, amount, tax, bill_name, pkg_type, piece, piece_type, wo_config, wo_invoice, wo_invoice_id, wo_type, wo_type_id, wo_date, wo_code, wo_unique_id, wo_quantity, wi_quantity, wi_quantity_r, remarks, create_time, create_by, update_time, update_by, del_flag
+        from om_deliver_salve where unique_id = #{id}
+    </select>
+
+    <select id="selectOmDeliverMasterForUpdate" resultType="com.njrsun.modules.om.domain.OmDeliverMaster">
+        <include refid="selectOmDeliverMasterVo"></include>
+        where om_code = #{code}
+        for update
+    </select>
+
+    <insert id="insertOmDeliverMaster" parameterType="OmDeliverMaster" useGeneratedKeys="true" keyProperty="uniqueId">
+        insert into om_deliver_master
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="omCode != null and omCode != ''">om_code,</if>
+            <if test="invoiceDate != null">invoice_date,</if>
+            <if test="invoiceStatus != null">invoice_status,</if>
+            <if test="invoiceType != null">invoice_type,</if>
+            <if test="workStatus != null">work_status,</if>
+            <if test="workType != null">work_type,</if>
+            <if test="workDept != null">work_dept,</if>
+            <if test="workStaff != null">work_staff,</if>
+            <if test="checkDate != null">check_date,</if>
+            <if test="params.loginId != null">user_oper,</if>
+            <if test="userCheck != null">user_check,</if>
+            <if test="remarks != null">remarks,</if>
+            <if test="customer != null">customer,</if>
+            <if test="customerId != null">customer_id,</if>
+            <if test="deliverDate != null">deliver_date,</if>
+            <if test="whCode != null and whCode != ''">wh_code,</if>
+            <if test="storageNo != null">storage_no,</if>
+            <if test="contact != null">contact,</if>
+            <if test="mobile != null">mobile,</if>
+            <if test="addr != null">addr,</if>
+            <if test="delFlag != null">del_flag,</if>
+            create_date,
+            <if test="createBy != null">create_by,</if>
+            <if test="formConfig != null">form_config,</if>
+         </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="omCode != null and omCode != ''">#{omCode},</if>
+            <if test="invoiceDate != null">#{invoiceDate},</if>
+            <if test="invoiceStatus != null">#{invoiceStatus},</if>
+            <if test="invoiceType != null">#{invoiceType},</if>
+            <if test="workStatus != null">#{workStatus},</if>
+            <if test="workType != null">#{workType},</if>
+            <if test="workDept != null">#{workDept},</if>
+            <if test="workStaff != null">#{workStaff},</if>
+            <if test="checkDate != null">#{checkDate},</if>
+            <if test="params.loginId != null">${params.loginId},</if>
+            <if test="userCheck != null">#{userCheck},</if>
+            <if test="remarks != null">#{remarks},</if>
+            <if test="customer != null">#{customer},</if>
+            <if test="customerId != null">#{customerId},</if>
+            <if test="deliverDate != null">#{deliverDate},</if>
+            <if test="whCode != null and whCode != ''">#{whCode},</if>
+            <if test="storageNo != null">#{storageNo},</if>
+            <if test="contact != null">#{contact},</if>
+            <if test="mobile != null">#{mobile},</if>
+            <if test="addr != null">#{addr},</if>
+            <if test="delFlag != null">#{delFlag},</if>
+            SysDate(),
+            <if test="createBy != null">#{createBy},</if>
+            <if test="formConfig != null">#{formConfig},</if>
+         </trim>
+    </insert>
+
+    <update id="updateOmDeliverMaster" parameterType="OmDeliverMaster">
+        update om_deliver_master
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="omCode != null and omCode != ''">om_code = #{omCode},</if>
+            <if test="invoiceDate != null">invoice_date = #{invoiceDate},</if>
+            <if test="invoiceStatus != null">invoice_status = #{invoiceStatus},</if>
+            <if test="invoiceType != null">invoice_type = #{invoiceType},</if>
+            <if test="workStatus != null">work_status = #{workStatus},</if>
+            <if test="workType != null">work_type = #{workType},</if>
+            <if test="workDept != null">work_dept = #{workDept},</if>
+            <if test="workStaff != null">work_staff = #{workStaff},</if>
+            <if test="checkDate != null">check_date = #{checkDate},</if>
+            <if test="userOper != null">user_oper = #{userOper},</if>
+            <if test="userCheck != null">user_check = #{userCheck},</if>
+            <if test="remarks != null">remarks = #{remarks},</if>
+            <if test="customer != null">customer = #{customer},</if>
+            <if test="customerId != null">customer_id = #{customerId},</if>
+            <if test="deliverDate != null">deliver_date = #{deliverDate},</if>
+            <if test="whCode != null and whCode != ''">wh_code = #{whCode},</if>
+            <if test="storageNo != null">storage_no = #{storageNo},</if>
+            <if test="contact != null">contact = #{contact},</if>
+            <if test="mobile != null">mobile = #{mobile},</if>
+            <if test="addr != null">addr = #{addr},</if>
+            <if test="delFlag != null">del_flag = #{delFlag},</if>
+            <if test="formConfig!=null">form_config = #{formConfig},</if>
+            update_date = SysDate(),
+            <if test="updateBy != null">update_by = #{updateBy},</if>
+            version = version + 1 ,
+        </trim>
+        where unique_id = #{uniqueId} and version = #{version}
+        <include refid="com.njrsun.modules.om.mapper.OmOrderMasterMapper.baseDataScope"/>
+    </update>
+
+    <update id="deleteOmDeliverMasterById" parameterType="String">
+        update om_deliver_master set del_flag = 1 where om_code = #{omCode}
+
+    </update>
+
+    <update id="deleteOmDeliverMasterByCodes">
+        <foreach collection="list" separator=";" index="index" item="item">
+            update   om_deliver_master set del_flag = 1  where om_code = #{item.omCode}
+            <include refid="com.njrsun.modules.om.mapper.OmOrderMasterMapper.batchDataScope"/>
+        </foreach>
+    </update>
+    
+    <update id="deleteOmDeliverSalveByOmCodes" parameterType="String">
+        update   om_deliver_salve set del_flag = 1  where om_code in
+        <foreach item="omCode" collection="array" open="(" separator="," close=")">
+            #{omCode}
+        </foreach>
+    </update>
+
+    <delete id="deleteOmDeliverSalveByOmCode" parameterType="Long">
+        delete from om_deliver_salve where om_code = #{omCode}
+    </delete>
+    <update id="deleteOmDeliverSalveIds">
+        update om_deliver_salve set del_flag = 1 where unique_id in
+        <foreach collection="array" separator="," index="index" item="item" close=")" open="(">
+            #{item}
+        </foreach>
+
+    </update>
+    <update id="updateOmDeliverSlave">
+        <foreach collection="list" item="item" index="index" separator=";">
+            update om_deliver_salve
+            <trim suffixOverrides="," prefix="SET">
+                <if test="item.ppNumber != null">pp_number = #{item.ppNumber},</if>
+                <if test="item.invSortRoot != null"> inv_sort_root = #{item.invSortRoot},</if>
+                <if test="item.invSortId != null"> inv_sort_id = #{item.invSortId},</if>
+                <if test="item.invCode != null"> inv_code = #{item.invCode},</if>
+                <if test="item.invName != null"> inv_name = #{item.invName},</if>
+                <if test="item.invAttribute != null"> inv_attribute = #{item.invAttribute},</if>
+                <if test="item.unitCode != null"> unit_code = #{item.unitCode},</if>
+                <if test="item.unitName != null"> unit_name = #{item.unitName},</if>
+                <if test="item.quantity != null"> quantity = #{item.quantity},</if>
+                <if test="item.price != null"> price = #{item.price},</if>
+                <if test="item.amount != null"> amount = #{item.amount},</if>
+                <if test="item.woCode != null"> wo_code = #{item.woCode},</if>
+                <if test="item.woUniqueId != null"> wo_unique_id = #{item.woUniqueId},</if>
+                <if test="item.woQuantity != null"> wo_quantity = #{item.woQuantity},</if>
+                <if test="item.wiQuantityR != null"> wi_quantity_r = #{item.wiQuantityR},</if>
+                <if test="item.wiQuantity != null"> wi_quantity = #{item.wiQuantity},</if>
+                <if test="item.woInvoice != null">wo_invoice =#{item.woInvoice},</if>
+                <if test="item.woInvoiceId != null">wo_invoice_id = #{item.woInvoiceId},</if>
+                <if test="item.remarks != null"> remarks = #{item.remarks},</if>
+                update_time  =SysDate(),
+                <if test="item.updateBy != null"> update_by = #{item.updateBy},</if>
+                <if test="item.pkgType != null">pkg_type = #{item.pkgType},</if>
+                <if test="item.piece != null">piece = #{item.piece},</if>
+                <if test="item.tax != null">tax = #{item.tax},</if>
+                <if test="item.billName != null">bill_name =#{item.billName},</if>
+                <if test="item.pieceType != null">piece_type = #{item.pieceType},</if>
+                <if test="item.woDate != null">wo_date = #{item.woDate},</if>
+                <if test="item.woType != null">wo_type = #{item.woType},</if>
+                <if test="item.woTypeId != null">wo_type_id = #{item.woTypeId},</if>
+            </trim>
+            where unique_id = #{item.uniqueId}
+        </foreach>
+
+
+
+    </update>
+    <update id="updateCheck">
+        update om_deliver_master
+            <trim prefix="SET" suffixOverrides=",">
+        <if test="userName != null"> user_check = #{userName},check_date= SysDate(),</if>
+        <if test="userName == null">user_check ='',check_date=null,</if>
+        invoice_status = #{status},
+    </trim>
+        where om_code = #{item.omCode}
+        <include refid="com.njrsun.modules.om.mapper.OmOrderMasterMapper.batchDataScope"/>
+    </update>
+    <update id="updateWorkStatus">
+    update om_deliver_master set work_status = #{value} where om_code = #{item.omCode}
+    <include refid="com.njrsun.modules.om.mapper.OmOrderMasterMapper.batchDataScope"/>
+
+    </update>
+    <update id="changeQuantity">
+        update om_deliver_salve set wi_quantity = wi_quantity + #{amount} where unique_id = #{id}
+    </update>
+
+    <update id="changeQuantity_r">
+        update om_deliver_salve set wi_quantity_r = wi_quantity_r + #{quantity} where om_code = #{woCode} and unique_id = #{id}
+    </update>
+
+    <update id="changeWorkStatusByCode">
+        update om_deliver_master set work_status = #{status} where om_code = #{omCode}
+    </update>
+    <update id="systemOpenClose">
+        update om_deliver_master set work_status= #{status} where om_code= #{code}
+        <if test="status=='3'">
+               and 0 = (select sum(quantity-wi_quantity) as cnt from om_deliver_salve where om_code= #{code} and del_flag=0 )
+        </if>
+    </update>
+
+    <insert id="batchOmDeliverSalve">
+        insert into om_deliver_salve(om_code, pp_number, inv_sort_root, inv_sort_id, inv_code, inv_name, inv_attribute, unit_code, unit_name, quantity, price, amount, tax, bill_name, pkg_type, piece, piece_type, wo_code, wo_unique_id, remarks, create_time, create_by,wo_quantity,wo_invoice,wo_invoice_id,wo_date,wo_type,wo_type_id,wo_config) values
+		<foreach item="item" index="index" collection="list" separator=",">
+            (  #{item.omCode}, #{item.ppNumber}, #{item.invSortRoot}, #{item.invSortId}, #{item.invCode}, #{item.invName}, #{item.invAttribute}, #{item.unitCode}, #{item.unitName}, #{item.quantity}, #{item.price}, #{item.amount}, #{item.tax}, #{item.billName}, #{item.pkgType}, #{item.piece}, #{item.pieceType}, #{item.woCode}, #{item.woUniqueId}, #{item.remarks},SysDate(), #{item.createBy},#{item.woQuantity},#{item.woInvoice},#{item.woInvoiceId},#{item.woDate},#{item.woType},#{item.woTypeId},#{item.woConfig})
+        </foreach>
+    </insert>
+</mapper>

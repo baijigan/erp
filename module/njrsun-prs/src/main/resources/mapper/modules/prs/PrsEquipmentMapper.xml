@@ -1,0 +1,76 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.njrsun.modules.prs.mapper.PrsEquipmentMapper">
+    
+    <resultMap type="com.njrsun.modules.prs.domain.PrsEquipment" id="PrsEquipmentResult">
+        <result property="uniqueId"    column="unique_id"    />
+        <result property="name"    column="name"    />
+        <result property="workType" column="work_type"/>
+        <result property="orderId" column="order_id"/>
+        <result property="status" column="status"/>
+        <result property="updateBy" column="update_by"/>
+        <result property="createBy" column="creat_by"/>
+        <result property="updateDate" column="update_date"/>
+        <result property="uniqueId" column="unique_id"/>
+        <result property="prsCode" column="prs_code"/>
+        <result property="invoiceDate" column="invoice_date"/>
+        <result property="invoiceStatus" column="invoice_status"/>
+        <result property="invoiceType" column="invoice_type"/>
+        <result property="workStatus" column="work_status"/>
+        <result property="workType" column="work_type"/>
+        <result property="workDept" column="work_dept"/>
+        <result property="checkDate" column="check_date"/>
+        <result property="userOper" column="user_oper"/>
+        <result property="userCheck" column="user_check"/>
+        <result property="remarks" column="remarks"/>
+        <result property="delFlag" column="del_flag"/>
+        <result property="createDate" column="create_date"/>
+        <result property="createBy" column="create_by"/>
+        <result property="updateDate" column="update_date"/>
+        <result property="updateBy" column="update_by"/>
+        <result property="version" column="version"/>
+    </resultMap>
+
+    <sql id="selectPrsEquipmentVo">
+        select unique_id,code, name,work_type,order_id,status,create_by,update_date,update_by from prs_equipment
+    </sql>
+
+    <select id="selectPrsEquipmentList" parameterType="com.njrsun.modules.prs.domain.PrsEquipment" resultMap="PrsEquipmentResult">
+        select pe.unique_id,pe.code, pe.name,work_type,order_id,status,create_by,update_date,update_by from prs_equipment pe
+        <where>
+            <if test="name != null  and name != ''"> and pe.name like concat('%', #{name}, '%')</if>
+            <if test="workType != null and workType != ''"> and work_type = #{workType}</if>
+        </where>
+        order by order_id
+    </select>
+    
+    <select id="selectPrsEquipmentById" parameterType="Long" resultMap="PrsEquipmentResult">
+        <include refid="selectPrsEquipmentVo"/>
+        where unique_id = #{uniqueId}
+    </select>
+
+    <update id="updatePrsEquipment" parameterType="com.njrsun.modules.prs.domain.PrsEquipment">
+        update prs_equipment
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="name != null">name = #{name},</if>
+            <if test="workType != null">work_type = #{workType},</if>
+            <if test="status != null">status = #{status},</if>
+            update_date = SysDate(),
+        </trim>
+        where unique_id = #{uniqueId}
+    </update>
+
+    <delete id="deletePrsEquipmentById" parameterType="Long">
+        delete from prs_equipment where unique_id = #{uniqueId}
+    </delete>
+
+    <delete id="deletePrsEquipmentByIds" parameterType="String">
+        delete from prs_equipment where unique_id in 
+        <foreach item="uniqueId" collection="array" open="(" separator="," close=")">
+            #{uniqueId}
+        </foreach>
+    </delete>
+
+</mapper>

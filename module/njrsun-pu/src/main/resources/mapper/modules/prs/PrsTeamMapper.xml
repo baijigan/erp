@@ -1,0 +1,70 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.njrsun.modules.prs.mapper.PrsTeamMapper">
+
+
+    <sql id="selectPrsTeamVo">
+        select unique_id, work_type, code, name, order_id,status,create_by,update_by,update_date from prs_team
+    </sql>
+
+    <select id="selectPrsTeamList" parameterType="com.njrsun.modules.prs.domain.PrsTeam" resultType="com.njrsun.modules.prs.domain.PrsTeam">
+        <include refid="selectPrsTeamVo"/>
+        <where>  
+            <if test="workType != null  and workType != ''"> and work_type = #{workType}</if>
+            <if test="code != null  and code != ''"> and code = #{code}</if>
+            <if test="name != null  and name != ''"> and name like concat('%', #{name}, '%')</if>
+            <if test="orderId != null "> and order_id = #{orderId}</if>
+        </where>
+        order by order_id
+    </select>
+    
+    <select id="selectPrsTeamById" parameterType="Long"
+            resultType="com.njrsun.modules.prs.domain.PrsTeam">
+        select  unique_id, work_type, code, name, order_id,status,create_by,update_by,update_date
+        from prs_team where unique_id = #{uniqueId}
+    </select>
+    <select id="check" resultType="com.njrsun.modules.prs.domain.PrsTeam">
+        select  unique_id, work_type, code, name, order_id,status,create_by,update_by,update_date from prs_team where code = #{code} and work_type = #{workType}   and unique_id !=#{uniqueId}   limit 1
+    </select>
+
+    <insert id="insertPrsTeam" parameterType="com.njrsun.modules.prs.domain.PrsTeam" useGeneratedKeys="true" keyProperty="uniqueId">
+        insert into prs_team
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="workType != null">work_type,</if>
+            <if test="code != null and code != ''">code,</if>
+            <if test="name != null and name != ''">name,</if>
+            <if test="orderId != null">order_id,</if>
+            <if test="status != null">status,</if>
+            <if test="createBy != null">create_by,</if>
+            update_date,
+         </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="workType != null">#{workType},</if>
+            <if test="code != null and code != ''">#{code},</if>
+            <if test="orderId != null">#{orderId},</if>
+            <if test="status != null">#{status},</if>
+            <if test="createBy != null">#{createBy},</if>
+            SysDate(),
+         </trim>
+    </insert>
+
+    <delete id="deletePrsTeamById" parameterType="Long">
+        delete from prs_team where unique_id = #{uniqueId}
+    </delete>
+
+    <delete id="deletePrsTeamByIds" parameterType="Long">
+        delete from prs_team where unique_id in
+        <foreach item="uniqueId" collection="array" open="(" separator="," close=")">
+            #{uniqueId}
+        </foreach>
+    </delete>
+    
+
+
+    <delete id="deletePrsWorkerByTeamCode" parameterType="Long">
+        delete from prs_worker where team_code = #{teamCode}
+    </delete>
+
+</mapper>
