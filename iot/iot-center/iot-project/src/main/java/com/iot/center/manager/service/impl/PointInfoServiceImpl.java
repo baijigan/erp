@@ -139,6 +139,33 @@ public class PointInfoServiceImpl implements PointInfoService {
             }
 
 
+            List<Device> devices = deviceService.selectByDriverId(driver.getId());
+            Set<Long> deviceIds = devices.stream().map(Description::getId).collect(Collectors.toSet());
+
+            Map<Long, Map<String, AttributeInfo>> driverInfoMap = getDriverInfoMap(deviceIds, driverAttributeMap);
+            driverMetadata.setDriverInfoMap(driverInfoMap);
+
+            Map<Long, Device> deviceMap = getDeviceMap(devices);
+            driverMetadata.setDeviceMap(deviceMap);
+
+
+            LambdaQueryWrapper<Profile> profileQueryWrapper = Wrappers.<Profile>query().lambda();
+            profileQueryWrapper.eq(Profile::getTenantId, tenantId);
+            List<Profile> profileList = profileMapper.selectList(profileQueryWrapper);
+            profileList.forEach(profile -> {
+                List<Dictionary> pointDictionaryList = new ArrayList<>(16);
+                LambdaQueryWrapper<Point> queryWrapper = Wrappers.<Point>query().lambda();
+                queryWrapper.eq(Point::getProfileId, profile.getId());
+                queryWrapper.eq(Point::getTenantId, tenantId);
+                List<Point> pointList = pointMapper.selectList(queryWrapper);
+                pointList.forEach(point -> pointDictionaryList.add(new Dictionary().setLabel(point.getName()).setValue(point.getId())));
+
+                Dictionary profileDictionary = new Dictionary().setLabel(profile.getName()).setValue(profile.getId());
+                profileDictionary.setChildren(pointDictionaryList);
+
+                profileDictionaryList.add(profileDictionary);
+            });
+
 
             LambdaQueryWrapper<Profile> profileQueryWrapper = Wrappers.<Profile>query().lambda();
             profileQueryWrapper.eq(Profile::getTenantId, tenantId);
